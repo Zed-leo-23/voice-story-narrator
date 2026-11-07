@@ -4,8 +4,11 @@ then hands off to scripts/daily_pipeline.py.
 
 All actual secrets (ANTHROPIC_API_KEY, GITHUB_TOKEN, KAKAO_REST_API_KEY,
 KAKAO_REFRESH_TOKEN) are provided as Kaggle kernel Secrets (Add-ons >
-Secrets in the kernel editor), which Kaggle exposes as environment
-variables -- nothing is hardcoded here.
+Secrets in the kernel editor). Unlike GitHub Actions secrets, Kaggle
+does NOT expose attached secrets as environment variables by itself --
+they have to be pulled explicitly via kaggle_secrets.UserSecretsClient,
+which is what load_secrets_into_env() below does, so the rest of the
+pipeline can keep reading plain os.environ[...] like everywhere else.
 
 Your reference voice recording must be attached to this kernel as a
 private Kaggle Dataset (see SETUP_AUTOMATION.md); it shows up under
@@ -22,12 +25,37 @@ REPO_DIR = "/kaggle/working/voice-story-narrator"
 ENGINE_DIR = "/kaggle/working/voicestudio"
 
 
+SECRET_NAMES = [
+    "ANTHROPIC_API_KEY",
+    "GITHUB_TOKEN",
+    "KAKAO_REST_API_KEY",
+    "KAKAO_REFRESH_TOKEN",
+]
+
+
 def sh(cmd: list[str]) -> None:
     print("+", " ".join(cmd))
     subprocess.run(cmd, check=True)
 
 
+def load_secrets_into_env() -> None:
+    from kaggle_secrets import UserSecretsClient
+
+    client = UserSecretsClient()
+    for name in SECRET_NAMES:
+        try:
+            os.environ[name] = client.get_secret(name)
+            print(f"loaded secret: {name}")
+        except Exception as exc:
+            # Not attached to this kernel yet -- fine during incremental
+            # setup; downstream code will raise a clear error only if it
+            # actually needs this one.
+            print(f"secret not available yet: {name} ({exc})")
+
+
 def main() -> None:
+    load_secrets_into_env()
+
     if not os.path.isdir(REPO_DIR):
         sh(["git", "clone", "--depth", "1", REPO_URL, REPO_DIR])
     if not os.path.isdir(ENGINE_DIR):

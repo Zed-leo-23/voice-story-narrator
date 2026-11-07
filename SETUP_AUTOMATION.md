@@ -81,11 +81,16 @@ Kaggle 커널은 GitHub 저장소 파일을 직접 못 읽으니(공개 저장�
 1. 아래 "7. 최초 1회 수동 실행"을 먼저 해서 커널을 한 번 만드세요 (Secrets는 커널이 존재해야 등록 가능)
 2. https://www.kaggle.com/code/실제유저명/daily-science-narration 접속 → **Edit**
 3. 우측 **Add-ons → Secrets**
-4. 아래 4개를 각각 추가 (Label = 환경변수 이름과 동일하게, Attach 체크):
+4. 아래 4개를 각각 추가 (Label = 이름과 동일하게, Attach 체크):
    - `ANTHROPIC_API_KEY` = 4번에서 만든 키
    - `GITHUB_TOKEN` = 5번에서 만든 토큰
    - `KAKAO_REST_API_KEY` = 아래 7번에서 만든 카카오 REST API 키
    - `KAKAO_REFRESH_TOKEN` = 아래 7번에서 발급받은 refresh token
+
+> Kaggle Secrets는 GitHub Actions Secrets와 달리 **자동으로 환경변수가 되지 않습니다.**
+> Attach 체크만으로는 안 되고, 코드에서 `kaggle_secrets.UserSecretsClient`로 명시적으로
+> 꺼내와야 합니다. `kaggle_kernel/daily-science-narration.py`가 시작할 때 이 작업을 대신
+> 해주니, 위 4개 이름 그대로 Attach만 해두면 됩니다.
 
 ## 7. 카카오톡 "나에게 보내기" 설정 (가장 번거로운 부분, 최초 1회만)
 
