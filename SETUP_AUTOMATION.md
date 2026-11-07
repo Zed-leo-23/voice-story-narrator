@@ -131,7 +131,29 @@ service` 에러로 안정적으로 동작하지 않았습니다. 그래서 대�
 refresh_token은 보통 두 달 정도 유효합니다. 만료되면 7~9번 과정을 다시 한 번 해주셔야 해요
 (나중에 자동 재발급까지 필요하시면 말씀해주세요, 추가로 구성해드릴 수 있어요).
 
-## 8. 최초 1회 수동 실행 (테스트)
+## 8. (선택) Firebase Hosting으로 github.com 링크 가리기
+
+카카오톡에 보내는 링크가 `github.com`으로 보이는 게 싫다면, 무료 `*.web.app` 도메인으로
+직접 서빙하도록 바꿀 수 있습니다. 설정 안 하면 자동으로 GitHub Release 링크가 대신
+쓰이니, 지금 건너뛰어도 자동화 자체는 정상 작동합니다.
+
+1. https://console.firebase.google.com → **프로젝트 추가** → 아무 이름이나 입력해서 생성
+2. 왼쪽 메뉴 **빌드 → Hosting** → **시작하기**로 Hosting 활성화 (기본 사이트가
+   `프로젝트ID.web.app` 형태로 자동 생성됩니다)
+3. 톱니바퀴(프로젝트 설정) → **서비스 계정** 탭 → **새 비공개 키 생성** → JSON 파일 다운로드
+   - 기본 생성되는 서비스 계정에 Hosting 권한이 없다면: [Google Cloud 콘솔](https://console.cloud.google.com/iam-admin/iam)
+     → 해당 서비스 계정 찾기 → 역할에 **Firebase Hosting 관리자**(Firebase Hosting Admin) 추가
+4. 다운로드한 JSON 파일을 **통째로** 열어서 내용 전체를 복사
+5. GitHub 저장소 Secret 3개 추가:
+   - `FIREBASE_PROJECT_ID` = Firebase 프로젝트 ID (프로젝트 설정 화면 상단에 있음)
+   - `FIREBASE_SITE_ID` = 보통 프로젝트 ID와 동일 (Hosting 메뉴에 표시된 사이트 ID 확인)
+   - `FIREBASE_SERVICE_ACCOUNT_JSON` = 방금 복사한 JSON 파일 내용 전체 (따옴표 등 그대로,
+     한 줄로 붙여넣어도 되고 여러 줄 그대로 붙여넣어도 GitHub Secrets가 알아서 저장합니다)
+
+세 개 다 등록되면 다음 실행부터 카카오 링크가 `https://프로젝트ID.web.app/`로 바뀌고,
+그 페이지에 그날의 한글 날짜 제목과 오디오 플레이어가 뜹니다.
+
+## 9. 최초 1회 수동 실행 (테스트)
 
 로컬에 아무것도 설치할 필요 없이, GitHub 저장소 **Actions** 탭 → **Trigger daily Kaggle
 narration** → **Run workflow**로 수동 실행하면 됩니다 (이미 등록된 모든 GitHub Secrets를
@@ -141,7 +163,7 @@ narration** → **Run workflow**로 수동 실행하면 됩니다 (이미 등록
 확인하세요. 1~7번 Secrets를 다 등록하기 전까지는 실패하는 게 정상이니, 에러 메시지 보면서
 하나씩 채워나가면 됩니다. 끝까지 성공하면 카카오톡으로 메시지가 와야 합니다.
 
-## 9. GitHub Actions 스케줄 확인
+## 10. GitHub Actions 스케줄 확인
 
 `.github/workflows/daily-kaggle-trigger.yml`이 매일 UTC 19:00(한국시간 새벽 4시)에 자동으로
 `kaggle kernels push`를 실행합니다. 시간을 바꾸고 싶으면 그 파일의 `cron` 값을 수정하세요.

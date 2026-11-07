@@ -12,3 +12,4 @@ audioop-lts; python_version>='3.13'
 
 # Used by the daily automation pipeline (scripts/, kaggle_kernel/)
 requests
+google-auth

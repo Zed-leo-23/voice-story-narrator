@@ -1,7 +1,9 @@
 """Orchestrates the full daily pipeline:
 
   ScienceDaily RSS -> Claude rewrite -> narrate.py (voice clone) ->
-  GitHub Release upload -> KakaoTalk notification.
+  GitHub Release upload (backup/archive) -> Firebase Hosting (the link
+  actually sent, so KakaoTalk shows a *.web.app domain instead of
+  github.com) -> KakaoTalk notification.
 
 Designed to be called from a Kaggle kernel (see kaggle_kernel/), but has
 no Kaggle-specific code itself so it can be tested anywhere.
@@ -9,6 +11,8 @@ no Kaggle-specific code itself so it can be tested anywhere.
 Required environment variables: ANTHROPIC_API_KEY, GITHUB_TOKEN,
 KAKAO_REST_API_KEY, KAKAO_REFRESH_TOKEN. KAKAO_CLIENT_SECRET is required
 only if the Kakao app has "클라이언트 시크릿" (Client Secret) enabled.
+FIREBASE_PROJECT_ID, FIREBASE_SITE_ID, FIREBASE_SERVICE_ACCOUNT_JSON are
+optional -- without them the GitHub Release link is sent instead.
 """
 
 import datetime
@@ -20,8 +24,13 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from fetch_and_rewrite import build_todays_story  # noqa: E402
+from firebase_hosting import deploy_narration_page  # noqa: E402
 from github_release import upload_release_asset  # noqa: E402
 from kakao import send_link_to_me  # noqa: E402
+
+
+def korean_date_str(d: datetime.date) -> str:
+    return f"{d.year}년 {d.month}월 {d.day}일"
 
 
 AUDIO_EXTENSIONS = {"wav", "m4a", "mp3", "flac", "ogg", "aac"}
@@ -78,20 +87,43 @@ def main(
         check=True,
     )
 
-    print("[3/4] uploading to GitHub Release ...")
-    today = datetime.date.today().isoformat()
-    link = upload_release_asset(
+    today = datetime.date.today()
+    today_iso = today.isoformat()
+    title = f"{korean_date_str(today)}_어린이 과학뉴스"
+    wav_path = os.path.join(outdir, "full_story.wav")
+
+    print("[3/5] uploading to GitHub Release (backup/archive) ...")
+    backup_link = upload_release_asset(
         repo=repo_slug,
-        tag=f"daily-{today}",
-        title=f"어린이 과학 나레이션 {today}",
-        asset_path=os.path.join(outdir, "full_story.wav"),
+        tag=f"daily-{today_iso}",
+        title=title,
+        asset_path=wav_path,
         token=os.environ["GITHUB_TOKEN"],
     )
-    print("link:", link)
+    print("backup link:", backup_link)
 
-    print("[4/4] sending to KakaoTalk ...")
+    print("[4/5] publishing to Firebase Hosting ...")
+    firebase_project_id = os.environ.get("FIREBASE_PROJECT_ID")
+    firebase_site_id = os.environ.get("FIREBASE_SITE_ID")
+    firebase_sa_json = os.environ.get("FIREBASE_SERVICE_ACCOUNT_JSON")
+    if firebase_site_id and firebase_sa_json:
+        with open(wav_path, "rb") as f:
+            audio_bytes = f.read()
+        link = deploy_narration_page(
+            project_id=firebase_project_id or "",
+            site_id=firebase_site_id,
+            service_account_json=firebase_sa_json,
+            title=title,
+            audio_bytes=audio_bytes,
+        )
+        print("firebase link:", link)
+    else:
+        print("Firebase not configured (FIREBASE_SITE_ID / FIREBASE_SERVICE_ACCOUNT_JSON missing) -- falling back to the GitHub Release link.")
+        link = backup_link
+
+    print("[5/5] sending to KakaoTalk ...")
     send_link_to_me(
-        text=f"오늘의 어린이 과학기사 나레이션이 도착했어요 ({today})",
+        text=f"오늘의 어린이 과학기사 나레이션이 도착했어요 ({today_iso})",
         link=link,
         refresh_token=os.environ["KAKAO_REFRESH_TOKEN"],
         rest_api_key=os.environ["KAKAO_REST_API_KEY"],

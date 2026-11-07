@@ -19,6 +19,13 @@ repository.
 
 import os
 
+OPTIONAL_SECRETS = {
+    "KAKAO_CLIENT_SECRET",
+    "FIREBASE_PROJECT_ID",
+    "FIREBASE_SITE_ID",
+    "FIREBASE_SERVICE_ACCOUNT_JSON",
+}
+
 SECRET_ENV_MAPPING = {
     "ANTHROPIC_API_KEY": os.environ.get("ANTHROPIC_API_KEY", ""),
     # Named RELEASE_PAT on the GitHub Actions side because a repository
@@ -32,6 +39,12 @@ SECRET_ENV_MAPPING = {
     # then requires it on every token call, including refresh, not just the
     # initial login. Empty is fine (kakao.py treats it as optional).
     "KAKAO_CLIENT_SECRET": os.environ.get("KAKAO_CLIENT_SECRET", ""),
+    # Optional: hides github.com from the KakaoTalk link by serving the
+    # narration from a *.web.app Firebase Hosting site instead. Empty is
+    # fine -- daily_pipeline.py falls back to the GitHub Release link.
+    "FIREBASE_PROJECT_ID": os.environ.get("FIREBASE_PROJECT_ID", ""),
+    "FIREBASE_SITE_ID": os.environ.get("FIREBASE_SITE_ID", ""),
+    "FIREBASE_SERVICE_ACCOUNT_JSON": os.environ.get("FIREBASE_SERVICE_ACCOUNT_JSON", ""),
 }
 
 KERNEL_SCRIPT = os.path.join(
@@ -50,7 +63,8 @@ def main() -> None:
     with open(KERNEL_SCRIPT, encoding="utf-8") as f:
         original = f.read()
 
-    missing = [k for k, v in SECRET_ENV_MAPPING.items() if not v]
+    missing_required = [k for k, v in SECRET_ENV_MAPPING.items() if not v and k not in OPTIONAL_SECRETS]
+    missing_optional = [k for k, v in SECRET_ENV_MAPPING.items() if not v and k in OPTIONAL_SECRETS]
 
     header_lines = ["import os", ""]
     for key, value in SECRET_ENV_MAPPING.items():
@@ -60,8 +74,10 @@ def main() -> None:
     with open(KERNEL_SCRIPT, "w", encoding="utf-8") as f:
         f.write(header + original)
 
-    if missing:
-        print("warning: these GitHub repo secrets are empty/not set yet:", missing)
+    if missing_required:
+        print("warning: these GitHub repo secrets are empty/not set yet:", missing_required)
+    if missing_optional:
+        print("note: optional secrets not set (features using them are skipped):", missing_optional)
     print(f"injected secrets into {KERNEL_SCRIPT} (local checkout only, not committed)")
 
 
