@@ -74,6 +74,14 @@ def main() -> None:
         args.model, device_map=device, dtype=getattr(torch, tts_dtype_name(device))
     )
 
+    if args.ref_text is None:
+        # Auto-picking a passage from a reference clip needs a loaded ASR
+        # model. The library's own implicit fallback only reuses an ASR
+        # snapshot already cached by the desktop app's Model Catalogue and
+        # refuses to download one, so load it explicitly here instead.
+        logging.info("No --ref_text given; loading ASR for automatic reference transcription ...")
+        model.load_asr_model()
+
     gap = np.zeros(int(args.gap_seconds * model.sampling_rate), dtype=np.float32)
     pieces: list[np.ndarray] = []
 
