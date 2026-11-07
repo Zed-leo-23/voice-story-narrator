@@ -7,7 +7,7 @@
   "is_private": true,
   "enable_gpu": true,
   "enable_internet": true,
-  "dataset_sources": ["raon07/dochi-1-minwoo"],
+  "dataset_sources": ["raon07/dochi-1-minwoo-ver2"],
   "competition_sources": [],
   "kernel_sources": []
 }
