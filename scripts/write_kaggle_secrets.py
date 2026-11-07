@@ -28,6 +28,10 @@ SECRET_ENV_MAPPING = {
     "GITHUB_TOKEN": os.environ.get("RELEASE_PAT", ""),
     "KAKAO_REST_API_KEY": os.environ.get("KAKAO_REST_API_KEY", ""),
     "KAKAO_REFRESH_TOKEN": os.environ.get("KAKAO_REFRESH_TOKEN", ""),
+    # Only needed if the Kakao app has "클라이언트 시크릿" enabled -- Kakao
+    # then requires it on every token call, including refresh, not just the
+    # initial login. Empty is fine (kakao.py treats it as optional).
+    "KAKAO_CLIENT_SECRET": os.environ.get("KAKAO_CLIENT_SECRET", ""),
 }
 
 KERNEL_SCRIPT = os.path.join(

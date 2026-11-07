@@ -7,7 +7,8 @@ Designed to be called from a Kaggle kernel (see kaggle_kernel/), but has
 no Kaggle-specific code itself so it can be tested anywhere.
 
 Required environment variables: ANTHROPIC_API_KEY, GITHUB_TOKEN,
-KAKAO_REST_API_KEY, KAKAO_REFRESH_TOKEN.
+KAKAO_REST_API_KEY, KAKAO_REFRESH_TOKEN. KAKAO_CLIENT_SECRET is required
+only if the Kakao app has "클라이언트 시크릿" (Client Secret) enabled.
 """
 
 import datetime
@@ -94,6 +95,7 @@ def main(
         link=link,
         refresh_token=os.environ["KAKAO_REFRESH_TOKEN"],
         rest_api_key=os.environ["KAKAO_REST_API_KEY"],
+        client_secret=os.environ.get("KAKAO_CLIENT_SECRET"),
     )
     print("done.")
 
