@@ -42,7 +42,12 @@ def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     p.add_argument("--story", required=True, help="Text file; scenes separated by a blank line")
     p.add_argument("--ref_audio", required=True, help="Clean reference recording of your voice (wav)")
-    p.add_argument("--ref_text", required=True, help="Exact transcript of ref_audio")
+    p.add_argument(
+        "--ref_text",
+        default=None,
+        help="Exact transcript of ref_audio, trimmed to the same 3-10s passage as the audio. "
+        "Omit to let the engine auto-pick and transcribe the best short passage itself.",
+    )
     p.add_argument("--language", default="Korean")
     p.add_argument("--outdir", default="output")
     p.add_argument("--model", default="k2-fsa/OmniVoice")
