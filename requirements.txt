@@ -1,0 +1,11 @@
+# torch / torchaudio are already preinstalled with CUDA on Google Colab GPU runtimes.
+# Only install these on top.
+transformers>=5.10.0
+accelerate
+numpy
+soundfile
+pydub
+safetensors
+huggingface_hub
+sentencepiece
+audioop-lts; python_version>='3.13'
