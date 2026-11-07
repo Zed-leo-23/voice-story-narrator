@@ -1,0 +1,13 @@
+{
+  "id": "YOUR_KAGGLE_USERNAME/daily-science-narration",
+  "title": "Daily Science Narration",
+  "code_file": "daily-science-narration.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "dataset_sources": ["YOUR_KAGGLE_USERNAME/my-voice-reference"],
+  "competition_sources": [],
+  "kernel_sources": []
+}

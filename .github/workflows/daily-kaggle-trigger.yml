@@ -1,0 +1,31 @@
+name: Trigger daily Kaggle narration
+
+# This workflow does almost nothing by itself -- it's just the "alarm clock".
+# It asks Kaggle's free GPU to run kaggle_kernel/daily-science-narration.py,
+# which does the actual fetch -> rewrite -> narrate -> upload -> KakaoTalk work.
+
+on:
+  schedule:
+    # 19:00 UTC = 04:00 KST (adjust if you want a different delivery time;
+    # leave a few hours of buffer before "매일 아침" since generation can
+    # take a while on Kaggle's free GPU queue).
+    - cron: "0 19 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: pip install kaggle
+
+      - name: Push and run the Kaggle kernel
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+        run: kaggle kernels push -p kaggle_kernel/

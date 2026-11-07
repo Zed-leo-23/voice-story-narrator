@@ -1,4 +1,4 @@
-# torch / torchaudio are already preinstalled with CUDA on Google Colab GPU runtimes.
+# torch / torchaudio are already preinstalled with CUDA on Google Colab and Kaggle GPU runtimes.
 # Only install these on top.
 transformers>=5.10.0
 accelerate
@@ -9,3 +9,6 @@ safetensors
 huggingface_hub
 sentencepiece
 audioop-lts; python_version>='3.13'
+
+# Used by the daily automation pipeline (scripts/, kaggle_kernel/)
+requests
