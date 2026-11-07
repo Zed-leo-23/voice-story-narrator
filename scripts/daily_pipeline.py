@@ -63,14 +63,14 @@ def main(
 ) -> None:
     os.makedirs(outdir, exist_ok=True)
 
-    print("[1/4] fetching + rewriting today's science story ...")
-    story_text = build_todays_story()
+    print("[1/5] fetching + rewriting today's science story ...")
+    topic, story_text = build_todays_story(repo_slug=repo_slug, github_token=os.environ["GITHUB_TOKEN"])
     story_path = os.path.join(outdir, "today_story.txt")
     with open(story_path, "w", encoding="utf-8") as f:
         f.write(story_text)
     print(story_text[:200] + "...")
 
-    print("[2/4] generating narration ...")
+    print("[2/5] generating narration ...")
     ref_audio = find_reference_audio(ref_audio_search_dirs)
     print("reference audio:", ref_audio)
     env = os.environ.copy()
@@ -93,7 +93,7 @@ def main(
 
     today = datetime.date.today()
     today_iso = today.isoformat()
-    title = f"{korean_date_str(today)}_어린이 과학뉴스"
+    title = f"{korean_date_str(today)}_어린이 과학뉴스 ({topic})"
     wav_path = os.path.join(outdir, "full_story.wav")
 
     print("[3/5] uploading to GitHub Release (backup/archive) ...")
@@ -127,7 +127,7 @@ def main(
 
     print("[5/5] sending to KakaoTalk ...")
     send_link_to_me(
-        text=f"오늘의 어린이 과학기사 나레이션이 도착했어요 ({today_iso})",
+        text=f"오늘의 어린이 과학기사({topic})가 도착했어요 ({today_iso})",
         link=link,
         refresh_token=os.environ["KAKAO_REFRESH_TOKEN"],
         rest_api_key=os.environ["KAKAO_REST_API_KEY"],

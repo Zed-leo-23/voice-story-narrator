@@ -6,10 +6,10 @@ name: Trigger daily Kaggle narration
 
 on:
   schedule:
-    # 19:00 UTC = 04:00 KST (adjust if you want a different delivery time;
-    # leave a few hours of buffer before "매일 아침" since generation can
-    # take a while on Kaggle's free GPU queue).
-    - cron: "0 19 * * *"
+    # 21:50 UTC = 06:50 KST. Target delivery is 07:00 KST; this fires 10
+    # minutes early as a buffer since generation takes ~3-5 min plus
+    # whatever Kaggle's free GPU queue adds. Adjust if delivery drifts.
+    - cron: "50 21 * * *"
   workflow_dispatch: {}
 
 jobs:
