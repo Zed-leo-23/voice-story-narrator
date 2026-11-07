@@ -38,8 +38,21 @@ def upload_release_asset(repo: str, tag: str, title: str, asset_path: str, token
     resp.raise_for_status()
     release = resp.json()
 
-    upload_url = release["upload_url"].split("{")[0]
     filename = os.path.basename(asset_path)
+
+    # Re-running the same day (manual retest, or a retry) hits an existing
+    # release that may already have an asset with this exact filename --
+    # GitHub's upload API rejects a duplicate name with 422, so clear it
+    # first to make re-uploads idempotent.
+    for asset in release.get("assets", []):
+        if asset["name"] == filename:
+            requests.delete(
+                f"{API}/repos/{repo}/releases/assets/{asset['id']}",
+                headers=headers,
+                timeout=30,
+            ).raise_for_status()
+
+    upload_url = release["upload_url"].split("{")[0]
     content_type, _ = mimetypes.guess_type(filename)
     with open(asset_path, "rb") as f:
         up = requests.post(
