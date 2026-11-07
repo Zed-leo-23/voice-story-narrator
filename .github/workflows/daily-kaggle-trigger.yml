@@ -22,7 +22,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - run: pip install kaggle
+      - run: pip install six kaggle
 
       - name: Push and run the Kaggle kernel
         env:
