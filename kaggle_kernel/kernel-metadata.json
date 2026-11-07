@@ -1,5 +1,5 @@
 {
-  "id": "YOUR_KAGGLE_USERNAME/daily-science-narration",
+  "id": "raon07/daily-science-narration",
   "title": "Daily Science Narration",
   "code_file": "daily-science-narration.py",
   "language": "python",
@@ -7,7 +7,7 @@
   "is_private": true,
   "enable_gpu": true,
   "enable_internet": true,
-  "dataset_sources": ["YOUR_KAGGLE_USERNAME/my-voice-reference"],
+  "dataset_sources": ["raon07/dochi-1-minwoo"],
   "competition_sources": [],
   "kernel_sources": []
 }
