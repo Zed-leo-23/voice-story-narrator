@@ -11,7 +11,6 @@ KAKAO_REST_API_KEY, KAKAO_REFRESH_TOKEN.
 """
 
 import datetime
-import glob
 import os
 import subprocess
 import sys
@@ -24,12 +23,25 @@ from github_release import upload_release_asset  # noqa: E402
 from kakao import send_link_to_me  # noqa: E402
 
 
+AUDIO_EXTENSIONS = {"wav", "m4a", "mp3", "flac", "ogg", "aac"}
+
+
 def find_reference_audio(search_dirs: list[str]) -> str:
     for d in search_dirs:
-        for ext in ("wav", "m4a", "mp3", "flac"):
-            matches = sorted(glob.glob(os.path.join(d, "**", f"*.{ext}"), recursive=True))
-            if matches:
-                return matches[0]
+        if not os.path.isdir(d):
+            print(f"(search dir does not exist: {d})")
+            continue
+        all_files = []
+        for root, _dirs, files in os.walk(d):
+            for name in files:
+                all_files.append(os.path.join(root, name))
+        print(f"found {len(all_files)} file(s) under {d}:")
+        for f in all_files:
+            print(" ", f)
+        for f in sorted(all_files):
+            ext = os.path.splitext(f)[1].lstrip(".").lower()
+            if ext in AUDIO_EXTENSIONS:
+                return f
     raise SystemExit(f"No reference audio found under {search_dirs}")
 
 
