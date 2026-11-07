@@ -82,6 +82,10 @@ def main(
             "--ref_audio", ref_audio,
             "--language", "Korean",
             "--outdir", outdir,
+            # Slightly brisker than the 1.0 default -- aimed at a brighter,
+            # more awake morning feel. Tell Claude to tune this further if
+            # it's still not energetic enough (or overshoots).
+            "--speed", "1.05",
         ],
         env=env,
         check=True,
