@@ -24,6 +24,14 @@ jobs:
 
       - run: pip install six kaggle
 
+      - name: Inject secrets into the kernel script (not committed, local checkout only)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
+          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+          KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
+        run: python3 scripts/write_kaggle_secrets.py
+
       - name: Push and run the Kaggle kernel
         env:
           # Kaggle CLI >=1.8 uses this single-token auth, not username+key.
