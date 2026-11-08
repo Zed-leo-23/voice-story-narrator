@@ -90,7 +90,7 @@ def rewrite_for_kids(title: str, description: str, link: str) -> tuple[str, str]
         },
         json={
             "model": "claude-haiku-5-5",
-            "max_tokens": 4000,
+            "max_tokens": 8000,
             "system": SYSTEM_PROMPT,
             "messages": [{"role": "user", "content": user_prompt}],
         },
@@ -103,7 +103,27 @@ def rewrite_for_kids(title: str, description: str, link: str) -> tuple[str, str]
     first_line, _, rest = text.partition("\n")
     topic = first_line.split(":", 1)[-1].strip() if ":" in first_line else first_line.strip()
     story = rest.lstrip("\n").strip()
+
+    if data.get("stop_reason") == "max_tokens":
+        print("warning: Claude response hit max_tokens -- trimming any incomplete trailing scene")
+        story = _drop_incomplete_tail(story)
+
     return topic, story
+
+
+_SENTENCE_ENDERS = (".", "!", "?")
+
+
+def _drop_incomplete_tail(story: str) -> str:
+    """If generation was cut off mid-sentence, drop the last (incomplete)
+    scene so the narration never ends mid-word instead of just running
+    short by one scene."""
+    if story.endswith(_SENTENCE_ENDERS):
+        return story
+    scenes = story.split("\n\n")
+    if len(scenes) <= 1:
+        return story  # nothing safe to drop; ship it as-is rather than return empty
+    return "\n\n".join(scenes[:-1]).strip()
 
 
 def build_todays_story(repo_slug: str, github_token: str) -> tuple[str, str]:
