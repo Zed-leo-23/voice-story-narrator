@@ -15,6 +15,7 @@ import xml.etree.ElementTree as ET
 import requests
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import kst  # noqa: E402
 from topic_history import append_history, read_history  # noqa: E402
 
 SCIENCEDAILY_RSS = "https://www.sciencedaily.com/rss/top/science.xml"
@@ -73,7 +74,7 @@ def pick_unused_article(
 
 def rewrite_for_kids(title: str, description: str, link: str) -> tuple[str, str]:
     api_key = os.environ["ANTHROPIC_API_KEY"]
-    today = datetime.date.today().isoformat()
+    today = kst.today().isoformat()
     user_prompt = (
         f"오늘 날짜: {today}\n"
         f"뉴스 제목: {title}\n"
@@ -141,7 +142,7 @@ def build_todays_story(repo_slug: str, github_token: str) -> tuple[str, str]:
     append_history(
         repo_slug,
         github_token,
-        {"date": datetime.date.today().isoformat(), "title": title, "link": link, "topic": topic},
+        {"date": kst.today().isoformat(), "title": title, "link": link, "topic": topic},
     )
     return topic, story
 

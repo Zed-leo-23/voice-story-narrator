@@ -23,6 +23,7 @@ import sys
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+import kst  # noqa: E402
 from fetch_and_rewrite import build_todays_story  # noqa: E402
 from firebase_hosting import deploy_narration_page  # noqa: E402
 from github_release import upload_release_asset  # noqa: E402
@@ -91,7 +92,7 @@ def main(
         check=True,
     )
 
-    today = datetime.date.today()
+    today = kst.today()
     today_iso = today.isoformat()
     title = f"{korean_date_str(today)}_어린이 과학뉴스 ({topic})"
     wav_path = os.path.join(outdir, "full_story.wav")
