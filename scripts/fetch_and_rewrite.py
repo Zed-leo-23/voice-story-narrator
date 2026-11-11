@@ -27,13 +27,31 @@ PICK_PROMPT = """당신은 초등학생 아이들에게 매일 아침 들려줄 
 고르는 기준 (위에 있을수록 중요):
 1. 빼야 할 것: 재난, 사망, 질병, 의료, 전쟁, 범죄, 마약, 술, 성, 정치, 경제, 정책, 날씨 예보,
    무섭거나 슬픈 내용. 이런 기사는 아무리 흥미로워도 고르지 마세요.
-2. 초등학생이 듣자마자 우와 할 주제: 동물, 공룡과 화석, 우주와 행성, 우리 몸의 신기한 점,
-   바다, 곤충, 로봇, 기상천외한 발견.
-3. 최근 다룬 주제와 다른 분야를 고르세요. 어제 우주였다면 오늘은 동물처럼요.
-4. 최근에 쓴 매체와 다른 매체를 우선하세요.
-5. 설명이 짧게 끝나는 단순한 발견을 고르세요. 원리가 복잡한 연구는 피하세요.
+2. 오늘의 요청 분야가 주어지면, 그 분야에 맞는 기사만 고르세요. 맞는 기사가 하나도 없으면
+   억지로 고르지 말고 index를 -1로 하세요.
+3. 초등학생이 듣자마자 우와 할 주제: 동물, 공룡과 화석, 우주와 행성, 우리 몸의 신기한 점,
+   바다, 곤충, 로봇, 장난감과 발명, 기상천외한 발견.
+4. 최근 다룬 주제와 다른 분야를 고르세요. 어제 우주였다면 오늘은 동물처럼요.
+5. 최근에 쓴 매체와 다른 매체를 우선하세요.
+6. 설명이 짧게 끝나는 단순한 발견을 고르세요. 원리가 복잡한 연구는 피하세요.
 
-출력은 JSON 한 줄만: {"index": 후보 번호, "reason": "고른 이유 한 문장"}"""
+출력은 JSON 한 줄만: {"index": 후보 번호 또는 -1, "reason": "고른 이유 한 문장"}"""
+
+REQUESTS_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "automation_state", "requests.json"
+)
+
+
+def todays_requested_category() -> str | None:
+    """automation_state/requests.json maps a KST date ("2026-11-12") to a
+    category the family asked for that morning. Edit it on GitHub to
+    request a topic for a given day."""
+    try:
+        with open(REQUESTS_PATH, encoding="utf-8") as f:
+            requests_by_date = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return None
+    return requests_by_date.get(kst.today().isoformat())
 
 CHILD_NAME = os.environ.get("CHILD_NAME", "라온")
 NARRATOR = os.environ.get("NARRATOR", "아빠")
@@ -113,15 +131,22 @@ def _text(data: dict) -> str:
     return "".join(b["text"] for b in data["content"] if b.get("type") == "text").strip()
 
 
-def pick_article(candidates: list[dict], history: list[dict]) -> dict:
-    recent = history[-10:]
-    recent_lines = "\n".join(
-        f"- {h.get('date', '')}: {h.get('topic', '')} ({h.get('source', '사이언스데일리')})" for h in recent
+def _recent_lines(history: list[dict]) -> str:
+    return "\n".join(
+        f"- {h.get('date', '')}: {h.get('topic', '')} ({h.get('source', '사이언스데일리')})" for h in history[-10:]
     ) or "- 없음"
+
+
+def pick_article(candidates: list[dict], history: list[dict], category: str | None) -> dict | None:
+    """Returns the chosen article, or None when a category was requested
+    and no candidate fits it (the caller then tells a story instead)."""
     cand_lines = "\n".join(
         f"[{i}] {c['source']} | {c['title']} | {c['description'][:160]}" for i, c in enumerate(candidates)
     )
-    user = f"최근 다룬 주제:\n{recent_lines}\n\n후보 기사:\n{cand_lines}"
+    user = f"최근 다룬 주제:\n{_recent_lines(history)}\n\n"
+    if category:
+        user += f"오늘의 요청 분야: {category}\n\n"
+    user += f"후보 기사:\n{cand_lines}"
     try:
         raw = _text(_claude(PICK_PROMPT, user, 300))
         match = re.search(r"\{.*\}", raw, re.S)
@@ -130,20 +155,34 @@ def pick_article(candidates: list[dict], history: list[dict]) -> dict:
         if 0 <= idx < len(candidates):
             print("picked:", candidates[idx]["title"], "|", choice.get("reason", ""))
             return candidates[idx]
+        if category and idx == -1:
+            print("no news fits the requested category:", choice.get("reason", ""))
+            return None
         print("picker returned an out-of-range index, falling back:", raw)
     except Exception as exc:  # noqa: BLE001 -- picking must never block the morning run
-        print("picker failed, falling back to first candidate:", exc)
-    return candidates[0]
+        print("picker failed, falling back:", exc)
+    return None if category else candidates[0]
 
 
-def rewrite_for_kids(article: dict) -> tuple[str, str]:
-    user = (
-        f"오늘 날짜: {kst.today().isoformat()}\n"
-        f"출처: {article['source']}\n"
-        f"뉴스 제목: {article['title']}\n"
-        f"뉴스 요약: {article['description']}\n\n"
-        "위 뉴스로 아침 과학 이야기를 써주세요. 둘째 장면에서 출처를 위 이름 그대로 말해주세요."
-    )
+def rewrite_for_kids(article: dict | None, category: str | None = None, history: list[dict] | None = None) -> tuple[str, str]:
+    if article:
+        user = (
+            f"오늘 날짜: {kst.today().isoformat()}\n"
+            f"출처: {article['source']}\n"
+            f"뉴스 제목: {article['title']}\n"
+            f"뉴스 요약: {article['description']}\n\n"
+            "위 뉴스로 아침 과학 이야기를 써주세요. 둘째 장면에서 출처를 위 이름 그대로 말해주세요."
+        )
+    else:
+        user = (
+            f"오늘 날짜: {kst.today().isoformat()}\n"
+            f"오늘의 요청 분야: {category}\n"
+            f"최근 다룬 주제 (겹치지 않게):\n{_recent_lines(history or [])}\n\n"
+            "오늘은 뉴스 대신, 위 분야에 맞는 이야기를 하나 들려주세요. 아이가 알 만한 장난감이나 물건,"
+            " 기술 하나를 골라 그것이 처음 어떻게 만들어졌는지 들려주세요. 널리 알려진 확실한 사실만 쓰고,"
+            " 확실하지 않은 숫자, 날짜, 이름은 빼세요. 둘째 장면에서 오늘은 뉴스 대신 신기한 탄생 이야기를"
+            " 들려준다고 말해주세요."
+        )
     data = _claude(WRITE_PROMPT, user, 8000)
     text = _text(data)
 
@@ -183,10 +222,17 @@ def build_todays_story(repo_slug: str, github_token: str) -> tuple[str, str]:
     if not candidates:
         raise RuntimeError("No science news candidates from any feed")
 
-    article = pick_article(candidates, history)
-    print(f"source article: [{article['source']}] {article['title']}\n{article['link']}")
+    category = todays_requested_category()
+    if category:
+        print("requested category for today:", category)
 
-    topic, story = rewrite_for_kids(article)
+    article = pick_article(candidates, history, category)
+    if article:
+        print(f"source article: [{article['source']}] {article['title']}\n{article['link']}")
+    else:
+        print("telling a category story instead of a news article")
+
+    topic, story = rewrite_for_kids(article, category, history)
     print("topic:", topic)
 
     append_history(
@@ -194,9 +240,9 @@ def build_todays_story(repo_slug: str, github_token: str) -> tuple[str, str]:
         github_token,
         {
             "date": kst.today().isoformat(),
-            "source": article["source"],
-            "title": article["title"],
-            "link": article["link"],
+            "source": article["source"] if article else "탄생 이야기",
+            "title": article["title"] if article else f"{category} 이야기",
+            "link": article["link"] if article else f"story:{topic}",
             "topic": topic,
         },
     )

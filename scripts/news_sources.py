@@ -11,6 +11,9 @@ import requests
 # (name read aloud in the narration, feed url)
 FEEDS = [
     ("사이언스 뉴스 익스플로어스", "https://www.snexplores.org/feed"),
+    ("사이언스 뉴스 익스플로어스", "https://www.snexplores.org/topic/tech/feed"),
+    ("스미소니언 매거진", "https://www.smithsonianmag.com/rss/innovation/"),
+    ("사이언스데일리", "https://www.sciencedaily.com/rss/computers_math/robotics.xml"),
     ("미국항공우주국 나사", "https://www.nasa.gov/news-release/feed/"),
     ("스미소니언 매거진", "https://www.smithsonianmag.com/rss/smartnews-science/"),
     ("라이브 사이언스", "https://www.livescience.com/feeds/all"),
