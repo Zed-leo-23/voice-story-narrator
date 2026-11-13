@@ -65,7 +65,7 @@ def main(
     os.makedirs(outdir, exist_ok=True)
 
     print("[1/5] fetching + rewriting today's science story ...")
-    topic, story_text = build_todays_story(repo_slug=repo_slug, github_token=os.environ["GITHUB_TOKEN"])
+    topic, story_text, kind = build_todays_story(repo_slug=repo_slug, github_token=os.environ["GITHUB_TOKEN"])
     story_path = os.path.join(outdir, "today_story.txt")
     with open(story_path, "w", encoding="utf-8") as f:
         f.write(story_text)
@@ -94,7 +94,8 @@ def main(
 
     today = kst.today()
     today_iso = today.isoformat()
-    title = f"{korean_date_str(today)}_어린이 과학뉴스 ({topic})"
+    label = "오늘의 이야기" if kind == "script" else "어린이 과학뉴스"
+    title = f"{korean_date_str(today)}_{label} ({topic})"
     wav_path = os.path.join(outdir, "full_story.wav")
 
     print("[3/5] uploading to GitHub Release (backup/archive) ...")
@@ -128,7 +129,11 @@ def main(
 
     print("[5/5] sending to KakaoTalk ...")
     send_link_to_me(
-        text=f"오늘의 어린이 과학기사({topic})가 도착했어요 ({today_iso})",
+        text=(
+            f"오늘의 이야기({topic})가 도착했어요 ({today_iso})"
+            if kind == "script"
+            else f"오늘의 어린이 과학기사({topic})가 도착했어요 ({today_iso})"
+        ),
         link=link,
         refresh_token=os.environ["KAKAO_REFRESH_TOKEN"],
         rest_api_key=os.environ["KAKAO_REST_API_KEY"],

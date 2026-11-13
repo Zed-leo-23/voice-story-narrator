@@ -212,8 +212,49 @@ def _drop_incomplete_tail(story: str) -> str:
     return "\n\n".join(scenes[:-1]).strip()
 
 
-def build_todays_story(repo_slug: str, github_token: str) -> tuple[str, str]:
-    """Returns (topic, story_text)."""
+SCRIPTS_DIR = os.path.join(os.path.dirname(REQUESTS_PATH), "scripts")
+_UNSPEAKABLE = re.compile(r"[*#_~`>\[\]|]|[\U0001F000-\U0001FFFF☀-➿️]")
+
+
+def todays_custom_script() -> tuple[str, str] | None:
+    """automation_state/scripts/<KST date>.txt, if present, is read aloud as
+    written instead of the day's news. Optional first line "주제: 낱말"
+    becomes the topic; scenes are separated by blank lines."""
+    path = os.path.join(SCRIPTS_DIR, f"{kst.today().isoformat()}.txt")
+    if not os.path.exists(path):
+        return None
+    with open(path, encoding="utf-8") as f:
+        text = f.read().strip()
+    topic = "이야기"
+    first_line, _, rest = text.partition("\n")
+    if first_line.strip().startswith("주제") and ":" in first_line:
+        topic = first_line.split(":", 1)[1].strip() or topic
+        text = rest.strip()
+    # Markdown marks and emoji get read out or mangled by TTS; keep words and punctuation.
+    text = _UNSPEAKABLE.sub("", text)
+    text = re.sub(r"\n{3,}", "\n\n", text).strip()
+    return topic, text
+
+
+def build_todays_story(repo_slug: str, github_token: str) -> tuple[str, str, str]:
+    """Returns (topic, story_text, kind) where kind is "news" or "script"."""
+    custom = todays_custom_script()
+    if custom:
+        topic, story = custom
+        print(f"reading today's custom script (topic: {topic}, {len(story)} chars)")
+        append_history(
+            repo_slug,
+            github_token,
+            {
+                "date": kst.today().isoformat(),
+                "source": "보내준 스크립트",
+                "title": f"{topic} 이야기",
+                "link": f"script:{kst.today().isoformat()}",
+                "topic": topic,
+            },
+        )
+        return topic, story, "script"
+
     history = read_history(repo_slug, github_token)
     used_links = {h.get("link") for h in history}
 
@@ -246,11 +287,11 @@ def build_todays_story(repo_slug: str, github_token: str) -> tuple[str, str]:
             "topic": topic,
         },
     )
-    return topic, story
+    return topic, story, "news"
 
 
 if __name__ == "__main__":
-    t, s = build_todays_story(
+    t, s, _kind = build_todays_story(
         repo_slug=os.environ.get("REPO_SLUG", "Zed-leo-23/voice-story-narrator"),
         github_token=os.environ["GITHUB_TOKEN"],
     )
