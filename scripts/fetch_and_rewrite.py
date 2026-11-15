@@ -102,9 +102,12 @@ __PARENT__가 __CHILD__에게 직접 말하듯, 다정하고 신나는 반말로
 - 주제 줄을 뺀 본문은 7~9개 장면으로 나누고, 장면 사이는 반드시 빈 줄 하나로 구분하세요.
 - 음성합성으로 자연스럽게 읽히는 완결된 문장만 쓰세요.
 - 따옴표, 괄호, 별표, 이모지, 물결표 같은 특수문자는 쓰지 마세요. 물음표와 느낌표는 써도 돼요.
-- 주제 줄과 본문만 출력하고, 제목이나 설명은 쓰지 마세요.""".replace("__CALL__", CHILD_CALL).replace("__CHILD__", CHILD_BASE).replace(
-    "__PARENT__", NARRATOR
-)
+- 주제 줄과 본문만 출력하고, 제목이나 설명은 쓰지 마세요.""".replace("__CALL__", CHILD_CALL).replace("__CHILD__", CHILD_BASE)
+
+
+def write_prompt(narrator: str) -> str:
+    """The narrator (엄마/아빠) follows whichever recorded voice reads the story."""
+    return WRITE_PROMPT.replace("__PARENT__", narrator)
 
 
 def _claude(system: str, user: str, max_tokens: int) -> dict:
@@ -164,7 +167,12 @@ def pick_article(candidates: list[dict], history: list[dict], category: str | No
     return None if category else candidates[0]
 
 
-def rewrite_for_kids(article: dict | None, category: str | None = None, history: list[dict] | None = None) -> tuple[str, str]:
+def rewrite_for_kids(
+    article: dict | None,
+    category: str | None = None,
+    history: list[dict] | None = None,
+    narrator: str = NARRATOR,
+) -> tuple[str, str]:
     if article:
         user = (
             f"오늘 날짜: {kst.today().isoformat()}\n"
@@ -183,7 +191,7 @@ def rewrite_for_kids(article: dict | None, category: str | None = None, history:
             " 확실하지 않은 숫자, 날짜, 이름은 빼세요. 둘째 장면에서 오늘은 뉴스 대신 신기한 탄생 이야기를"
             " 들려준다고 말해주세요."
         )
-    data = _claude(WRITE_PROMPT, user, 8000)
+    data = _claude(write_prompt(narrator), user, 8000)
     text = _text(data)
 
     first_line, _, rest = text.partition("\n")
@@ -216,31 +224,39 @@ SCRIPTS_DIR = os.path.join(os.path.dirname(REQUESTS_PATH), "scripts")
 _UNSPEAKABLE = re.compile(r"[*#_~`>\[\]|]|[\U0001F000-\U0001FFFF☀-➿️]")
 
 
-def todays_custom_script() -> tuple[str, str] | None:
+def todays_custom_script() -> tuple[str, str, str | None] | None:
     """automation_state/scripts/<KST date>.txt, if present, is read aloud as
-    written instead of the day's news. Optional first line "주제: 낱말"
-    becomes the topic; scenes are separated by blank lines."""
+    written instead of the day's news. Optional header lines "주제: 낱말"
+    (topic) and "목소리: 엄마" (which recorded voice reads it) come first;
+    scenes are separated by blank lines. Returns (topic, text, voice)."""
     path = os.path.join(SCRIPTS_DIR, f"{kst.today().isoformat()}.txt")
     if not os.path.exists(path):
         return None
     with open(path, encoding="utf-8") as f:
         text = f.read().strip()
     topic = "이야기"
-    first_line, _, rest = text.partition("\n")
-    if first_line.strip().startswith("주제") and ":" in first_line:
-        topic = first_line.split(":", 1)[1].strip() or topic
+    voice = None
+    while True:
+        first_line, _, rest = text.partition("\n")
+        key, sep, value = first_line.partition(":")
+        if not sep or key.strip() not in ("주제", "목소리"):
+            break
+        if key.strip() == "주제":
+            topic = value.strip() or topic
+        else:
+            voice = value.strip() or None
         text = rest.strip()
     # Markdown marks and emoji get read out or mangled by TTS; keep words and punctuation.
     text = _UNSPEAKABLE.sub("", text)
     text = re.sub(r"\n{3,}", "\n\n", text).strip()
-    return topic, text
+    return topic, text, voice
 
 
-def build_todays_story(repo_slug: str, github_token: str) -> tuple[str, str, str]:
+def build_todays_story(repo_slug: str, github_token: str, narrator: str = NARRATOR) -> tuple[str, str, str]:
     """Returns (topic, story_text, kind) where kind is "news" or "script"."""
     custom = todays_custom_script()
     if custom:
-        topic, story = custom
+        topic, story, _voice = custom
         print(f"reading today's custom script (topic: {topic}, {len(story)} chars)")
         append_history(
             repo_slug,
@@ -273,7 +289,7 @@ def build_todays_story(repo_slug: str, github_token: str) -> tuple[str, str, str
     else:
         print("telling a category story instead of a news article")
 
-    topic, story = rewrite_for_kids(article, category, history)
+    topic, story = rewrite_for_kids(article, category, history, narrator)
     print("topic:", topic)
 
     append_history(

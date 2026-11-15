@@ -82,6 +82,17 @@ def main() -> None:
         logging.info("No --ref_text given; loading ASR for automatic reference transcription ...")
         model.load_asr_model()
 
+    # Build the voice sample once and reuse it for every scene, so all scenes
+    # clone from the same passage and transcript (generate(ref_audio=...)
+    # would redo the trimming and transcription per scene).
+    prompt = model.create_voice_clone_prompt(ref_audio=args.ref_audio, ref_text=args.ref_text)
+    logging.info(
+        "voice sample: %s | %.1fs | transcript: %s",
+        args.ref_audio,
+        prompt.ref_audio_tokens.shape[-1] / model.audio_tokenizer.config.frame_rate,
+        prompt.ref_text,
+    )
+
     gap = np.zeros(int(args.gap_seconds * model.sampling_rate), dtype=np.float32)
     pieces: list[np.ndarray] = []
 
@@ -90,8 +101,7 @@ def main() -> None:
         audios = model.generate(
             text=scene,
             language=args.language,
-            ref_audio=args.ref_audio,
-            ref_text=args.ref_text,
+            voice_clone_prompt=prompt,
             num_step=args.num_step,
             guidance_scale=args.guidance_scale,
             speed=args.speed,

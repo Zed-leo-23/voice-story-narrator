@@ -16,7 +16,9 @@ optional -- without them the GitHub Release link is sent instead.
 """
 
 import datetime
+import json
 import os
+import re
 import subprocess
 import sys
 
@@ -24,7 +26,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import kst  # noqa: E402
-from fetch_and_rewrite import build_todays_story  # noqa: E402
+from fetch_and_rewrite import build_todays_story, todays_custom_script  # noqa: E402
 from firebase_hosting import deploy_narration_page  # noqa: E402
 from github_release import upload_release_asset  # noqa: E402
 from kakao import send_link_to_me  # noqa: E402
@@ -37,7 +39,11 @@ def korean_date_str(d: datetime.date) -> str:
 AUDIO_EXTENSIONS = {"wav", "m4a", "mp3", "flac", "ogg", "aac"}
 
 
-def find_reference_audio(search_dirs: list[str]) -> str:
+VOICES_PATH = os.path.join(REPO_ROOT, "automation_state", "voices.json")
+
+
+def list_reference_audio(search_dirs: list[str]) -> list[str]:
+    audio = []
     for d in search_dirs:
         if not os.path.isdir(d):
             print(f"(search dir does not exist: {d})")
@@ -49,11 +55,62 @@ def find_reference_audio(search_dirs: list[str]) -> str:
         print(f"found {len(all_files)} file(s) under {d}:")
         for f in all_files:
             print(" ", f)
-        for f in sorted(all_files):
-            ext = os.path.splitext(f)[1].lstrip(".").lower()
-            if ext in AUDIO_EXTENSIONS:
-                return f
-    raise SystemExit(f"No reference audio found under {search_dirs}")
+        audio += [f for f in sorted(all_files) if os.path.splitext(f)[1].lstrip(".").lower() in AUDIO_EXTENSIONS]
+    if not audio:
+        raise SystemExit(f"No reference audio found under {search_dirs}")
+    return audio
+
+
+def _squash(s: str) -> str:
+    # "Yk voice.m4a", "yk_voice", "YK-Voice" all compare equal
+    return re.sub(r"[\s_\-]+", "", s).lower()
+
+
+def load_voices(path: str = VOICES_PATH) -> dict:
+    if not os.path.exists(path):
+        return {"active": "아빠", "voices": {"아빠": {"file": None, "ref_text": None}}}
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def resolve_voice(search_dirs: list[str], cfg: dict, wanted: str | None) -> tuple[str, str, str | None]:
+    """Pick the recording for the wanted voice (엄마/아빠).
+
+    A voice's "file" is a piece of the dataset file name (case, spaces, _ and -
+    ignored). A voice with file null takes any recording not claimed by another
+    voice -- so a parent can re-upload under any file name. If the wanted
+    voice's recording is missing, fall back to whatever voice is there.
+    Returns (voice name, audio path, exact transcript or None).
+    """
+    voices = cfg.get("voices", {})
+    wanted = wanted or cfg.get("active") or next(iter(voices), "아빠")
+    audio = list_reference_audio(search_dirs)
+
+    def owner(path: str) -> str | None:
+        stem = _squash(os.path.basename(path))
+        for name, v in voices.items():
+            if v.get("file") and _squash(v["file"]) in stem:
+                return name
+        return None
+
+    def files_for(name: str) -> list[str]:
+        v = voices.get(name, {})
+        if v.get("file"):
+            return [a for a in audio if owner(a) == name]
+        return [a for a in audio if owner(a) is None]
+
+    order = [wanted] + [n for n in voices if n != wanted]
+    for name in order:
+        found = files_for(name)
+        if found:
+            if name != wanted:
+                print(f"WARNING: no recording for voice '{wanted}' -- using '{name}' instead")
+            if len(found) > 1:
+                print(f"WARNING: {len(found)} recordings match voice '{name}', using the first: {found}")
+            return name, found[0], voices.get(name, {}).get("ref_text")
+    # Recordings exist but every one belongs to a voice not in the config.
+    print(f"WARNING: could not match any recording to a voice; using {audio[0]} as '{wanted}'")
+    return wanted, audio[0], None
 
 
 def main(
@@ -64,30 +121,39 @@ def main(
 ) -> None:
     os.makedirs(outdir, exist_ok=True)
 
+    print("[0/5] choosing today's voice ...")
+    custom = todays_custom_script()
+    voice, ref_audio, ref_text = resolve_voice(ref_audio_search_dirs, load_voices(), custom[2] if custom else None)
+    print(f"voice: {voice} | file: {ref_audio} | ref_text: {ref_text or '(auto transcribe)'}")
+
     print("[1/5] fetching + rewriting today's science story ...")
-    topic, story_text, kind = build_todays_story(repo_slug=repo_slug, github_token=os.environ["GITHUB_TOKEN"])
+    topic, story_text, kind = build_todays_story(
+        repo_slug=repo_slug, github_token=os.environ["GITHUB_TOKEN"], narrator=voice
+    )
     story_path = os.path.join(outdir, "today_story.txt")
     with open(story_path, "w", encoding="utf-8") as f:
         f.write(story_text)
     print(story_text[:200] + "...")
 
     print("[2/5] generating narration ...")
-    ref_audio = find_reference_audio(ref_audio_search_dirs)
-    print("reference audio:", ref_audio)
     env = os.environ.copy()
     env["PYTHONPATH"] = engine_path
+    cmd = [
+        sys.executable, os.path.join(REPO_ROOT, "narrate.py"),
+        "--story", story_path,
+        "--ref_audio", ref_audio,
+        "--language", "Korean",
+        "--outdir", outdir,
+        # Keep the recording's own pace: changing it made the clone sound
+        # less like the real person.
+        "--speed", "1.0",
+    ]
+    if ref_text:
+        # The exact words of the recording -- far better cloning than letting
+        # speech recognition guess them.
+        cmd += ["--ref_text", ref_text]
     subprocess.run(
-        [
-            sys.executable, os.path.join(REPO_ROOT, "narrate.py"),
-            "--story", story_path,
-            "--ref_audio", ref_audio,
-            "--language", "Korean",
-            "--outdir", outdir,
-            # Slightly brisker than the 1.0 default -- aimed at a brighter,
-            # more awake morning feel. Tell Claude to tune this further if
-            # it's still not energetic enough (or overshoots).
-            "--speed", "1.05",
-        ],
+        cmd,
         env=env,
         check=True,
     )
