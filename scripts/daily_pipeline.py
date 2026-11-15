@@ -40,6 +40,10 @@ AUDIO_EXTENSIONS = {"wav", "m4a", "mp3", "flac", "ogg", "aac"}
 
 
 VOICES_PATH = os.path.join(REPO_ROOT, "automation_state", "voices.json")
+VOICE_TEST_PATH = os.path.join(REPO_ROOT, "automation_state", "voice_test.json")
+
+# Engine settings a voice can override in voices.json ("settings").
+DEFAULT_SETTINGS = {"chunk_seconds": 15.0, "chunk_threshold": 30.0, "guidance_scale": 2.0, "num_step": 32}
 
 
 def list_reference_audio(search_dirs: list[str]) -> list[str]:
@@ -71,6 +75,52 @@ def load_voices(path: str = VOICES_PATH) -> dict:
         return {"active": "아빠", "voices": {"아빠": {"file": None, "ref_text": None}}}
     with open(path, encoding="utf-8") as f:
         return json.load(f)
+
+
+def voice_settings(cfg: dict, name: str) -> dict:
+    return {**DEFAULT_SETTINGS, **(cfg.get("voices", {}).get(name, {}).get("settings") or {})}
+
+
+def todays_voice_test() -> dict | None:
+    """automation_state/voice_test.json with today's KST date -> make comparison
+    samples instead of the story. Any other date is ignored, so a leftover
+    file can't hijack a later morning."""
+    if not os.path.exists(VOICE_TEST_PATH):
+        return None
+    with open(VOICE_TEST_PATH, encoding="utf-8") as f:
+        test = json.load(f)
+    return test if test.get("date") == kst.today().isoformat() else None
+
+
+def run_voice_test(test: dict, engine_path: str, voice: str, ref_audio: str, ref_text: str | None,
+                   repo_slug: str, outdir: str) -> None:
+    print(f"[voice test] {voice} samples: {test.get('variants') or 'A-D defaults'}")
+    env = os.environ.copy()
+    env["PYTHONPATH"] = engine_path
+    cmd = [
+        sys.executable, os.path.join(REPO_ROOT, "scripts", "voice_test.py"),
+        "--text", test["text"],
+        "--ref_audio", ref_audio,
+        "--outdir", outdir,
+    ]
+    if ref_text:
+        cmd += ["--ref_text", ref_text]
+    if test.get("variants"):
+        cmd += ["--variants", json.dumps(test["variants"])]
+    subprocess.run(cmd, env=env, check=True)
+
+    today_iso = kst.today().isoformat()
+    for name in sorted(os.listdir(outdir)):
+        if name.startswith("sample_") and name.endswith(".wav"):
+            link = upload_release_asset(
+                repo=repo_slug,
+                tag=f"voice-test-{today_iso}",
+                title=f"{korean_date_str(kst.today())}_{voice} 목소리 비교 샘플",
+                asset_path=os.path.join(outdir, name),
+                token=os.environ["GITHUB_TOKEN"],
+            )
+            print("uploaded:", link)
+    print("voice test done (no KakaoTalk message).")
 
 
 def resolve_voice(search_dirs: list[str], cfg: dict, wanted: str | None) -> tuple[str, str, str | None]:
@@ -123,8 +173,15 @@ def main(
 
     print("[0/5] choosing today's voice ...")
     custom = todays_custom_script()
-    voice, ref_audio, ref_text = resolve_voice(ref_audio_search_dirs, load_voices(), custom[2] if custom else None)
-    print(f"voice: {voice} | file: {ref_audio} | ref_text: {ref_text or '(auto transcribe)'}")
+    voices_cfg = load_voices()
+    voice, ref_audio, ref_text = resolve_voice(ref_audio_search_dirs, voices_cfg, custom[2] if custom else None)
+    settings = voice_settings(voices_cfg, voice)
+    print(f"voice: {voice} | file: {ref_audio} | ref_text: {ref_text or '(auto transcribe)'} | settings: {settings}")
+
+    test = todays_voice_test()
+    if test:
+        run_voice_test(test, engine_path, voice, ref_audio, ref_text, repo_slug, outdir)
+        return
 
     print("[1/5] fetching + rewriting today's science story ...")
     topic, story_text, kind = build_todays_story(
@@ -147,6 +204,10 @@ def main(
         # Keep the recording's own pace: changing it made the clone sound
         # less like the real person.
         "--speed", "1.0",
+        "--chunk_seconds", str(settings["chunk_seconds"]),
+        "--chunk_threshold", str(settings["chunk_threshold"]),
+        "--guidance_scale", str(settings["guidance_scale"]),
+        "--num_step", str(int(settings["num_step"])),
     ]
     if ref_text:
         # The exact words of the recording -- far better cloning than letting

@@ -54,6 +54,19 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--num_step", type=int, default=32, help="Diffusion steps; higher = better quality, slower")
     p.add_argument("--guidance_scale", type=float, default=2.0)
     p.add_argument("--speed", type=float, default=1.0)
+    p.add_argument(
+        "--chunk_seconds",
+        type=float,
+        default=15.0,
+        help="Split a long scene into pieces of about this many seconds; every piece re-reads "
+        "the voice sample, so shorter pieces drift less from the real voice",
+    )
+    p.add_argument(
+        "--chunk_threshold",
+        type=float,
+        default=30.0,
+        help="Only split scenes estimated to be longer than this many seconds",
+    )
     p.add_argument("--gap_seconds", type=float, default=0.6, help="Silence inserted between scenes")
     return p
 
@@ -105,6 +118,8 @@ def main() -> None:
             num_step=args.num_step,
             guidance_scale=args.guidance_scale,
             speed=args.speed,
+            audio_chunk_duration=args.chunk_seconds,
+            audio_chunk_threshold=args.chunk_threshold,
         )
         wav = audios[0].squeeze().detach().cpu().float().numpy()
         scene_path = os.path.join(args.outdir, f"scene_{i:02d}.wav")
