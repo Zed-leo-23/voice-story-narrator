@@ -29,8 +29,13 @@ def main() -> None:
     logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--text", required=True)
-    p.add_argument("--ref_audio", required=True)
+    p.add_argument("--ref_audio", default=None)
     p.add_argument("--ref_text", default=None)
+    p.add_argument(
+        "--refs",
+        default=None,
+        help='JSON object name -> [audio path, transcript or null]; a variant picks one with "ref"',
+    )
     p.add_argument("--language", default="Korean")
     p.add_argument("--outdir", default="output")
     p.add_argument("--variants", default=None, help="JSON object label -> settings (default: A-D)")
@@ -42,17 +47,26 @@ def main() -> None:
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model = OmniVoice.from_pretrained(args.model, device_map=device, dtype=getattr(torch, tts_dtype_name(device)))
-    if args.ref_text is None:
-        model.load_asr_model()
-    prompt = model.create_voice_clone_prompt(ref_audio=args.ref_audio, ref_text=args.ref_text)
-    logging.info("voice sample: %s | transcript: %s", args.ref_audio, prompt.ref_text)
+    refs = json.loads(args.refs) if args.refs else {"main": [args.ref_audio, args.ref_text]}
+    prompts: dict = {}
+
+    def prompt_for(name: str):
+        # One voice sample per recording piece, reused by every variant using it.
+        if name not in prompts:
+            path, text = refs[name]
+            if text is None and getattr(model, "_asr_pipe", None) is None:
+                model.load_asr_model()
+            prompts[name] = model.create_voice_clone_prompt(ref_audio=path, ref_text=text)
+            logging.info("voice sample %s: %s | transcript: %s", name, path, prompts[name].ref_text)
+        return prompts[name]
 
     for label, cfg in variants.items():
-        logging.info("sample %s: %s", label, cfg)
+        ref_name = cfg.get("ref") or next(iter(refs))
+        logging.info("sample %s (%s): %s", label, ref_name, cfg)
         audios = model.generate(
             text=args.text,
             language=args.language,
-            voice_clone_prompt=prompt,
+            voice_clone_prompt=prompt_for(ref_name),
             speed=1.0,
             num_step=int(cfg["num_step"]),
             guidance_scale=float(cfg["guidance_scale"]),

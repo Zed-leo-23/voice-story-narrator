@@ -89,24 +89,57 @@ def todays_voice_test() -> dict | None:
         return None
     with open(VOICE_TEST_PATH, encoding="utf-8") as f:
         test = json.load(f)
-    return test if test.get("date") == kst.today().isoformat() else None
+    dates = test.get("dates") or [test.get("date")]
+    return test if kst.today().isoformat() in dates else None
 
 
-def run_voice_test(test: dict, engine_path: str, voice: str, ref_audio: str, ref_text: str | None,
-                   repo_slug: str, outdir: str) -> None:
-    print(f"[voice test] {voice} samples: {test.get('variants') or 'A-D defaults'}")
+# Comparison samples for a two-paragraph recording: which piece, which settings.
+_SHORT_STRONG = {"chunk_seconds": 6.0, "chunk_threshold": 8.0, "guidance_scale": 3.0, "num_step": 32}
+PART_VARIANTS = {
+    "1": {**DEFAULT_SETTINGS, "ref": "part1"},
+    "2": {**_SHORT_STRONG, "ref": "part1"},
+    "3": {**_SHORT_STRONG, "ref": "part2"},
+    "4": {**_SHORT_STRONG, "ref": "full"},
+}
+
+
+def prepare_refs(engine_path: str, ref_audio: str, ref_text, outdir: str) -> dict:
+    """name -> (audio path, transcript or None). A transcript given as two
+    paragraphs means the recording is cut at the pause between them, since
+    the engine takes at most 20s of audio with a transcript."""
+    if isinstance(ref_text, list) and len(ref_text) == 2:
+        env = os.environ.copy()
+        env["PYTHONPATH"] = engine_path
+        out = subprocess.run(
+            [sys.executable, os.path.join(REPO_ROOT, "scripts", "cut_reference.py"),
+             "--audio", ref_audio, "--outdir", os.path.join(outdir, "ref")],
+            env=env, check=True, capture_output=True, text=True,
+        ).stdout
+        print(out.strip())
+        parts = json.loads(out.strip().splitlines()[-1])
+        return {
+            "part1": (parts["part1"], ref_text[0]),
+            "part2": (parts["part2"], ref_text[1]),
+            "full": (ref_audio, None),
+        }
+    if isinstance(ref_text, list):
+        ref_text = " ".join(ref_text)
+    return {"main": (ref_audio, ref_text)}
+
+
+def run_voice_test(test: dict, engine_path: str, voice: str, refs: dict, repo_slug: str, outdir: str) -> None:
+    variants = test.get("variants") or (PART_VARIANTS if "part1" in refs else None)
+    print(f"[voice test] {voice} samples: {variants or 'A-D defaults'}")
     env = os.environ.copy()
     env["PYTHONPATH"] = engine_path
     cmd = [
         sys.executable, os.path.join(REPO_ROOT, "scripts", "voice_test.py"),
         "--text", test["text"],
-        "--ref_audio", ref_audio,
+        "--refs", json.dumps({k: list(v) for k, v in refs.items()}, ensure_ascii=False),
         "--outdir", outdir,
     ]
-    if ref_text:
-        cmd += ["--ref_text", ref_text]
-    if test.get("variants"):
-        cmd += ["--variants", json.dumps(test["variants"])]
+    if variants:
+        cmd += ["--variants", json.dumps(variants)]
     subprocess.run(cmd, env=env, check=True)
 
     today_iso = kst.today().isoformat()
@@ -149,6 +182,11 @@ def resolve_voice(search_dirs: list[str], cfg: dict, wanted: str | None) -> tupl
             return [a for a in audio if owner(a) == name]
         return [a for a in audio if owner(a) is None]
 
+    if not files_for(wanted) and len(audio) == 1:
+        # Only one recording uploaded (maybe under a new file name): it's the voice asked for.
+        print(f"WARNING: '{audio[0]}' doesn't match voice '{wanted}' by name, but it's the only recording -- using it")
+        return wanted, audio[0], voices.get(wanted, {}).get("ref_text")
+
     order = [wanted] + [n for n in voices if n != wanted]
     for name in order:
         found = files_for(name)
@@ -176,12 +214,16 @@ def main(
     voices_cfg = load_voices()
     voice, ref_audio, ref_text = resolve_voice(ref_audio_search_dirs, voices_cfg, custom[2] if custom else None)
     settings = voice_settings(voices_cfg, voice)
-    print(f"voice: {voice} | file: {ref_audio} | ref_text: {ref_text or '(auto transcribe)'} | settings: {settings}")
+    refs = prepare_refs(engine_path, ref_audio, ref_text, outdir)
 
     test = todays_voice_test()
     if test:
-        run_voice_test(test, engine_path, voice, ref_audio, ref_text, repo_slug, outdir)
+        run_voice_test(test, engine_path, voice, refs, repo_slug, outdir)
         return
+
+    use = voices_cfg.get("voices", {}).get(voice, {}).get("use") or next(iter(refs))
+    ref_audio, ref_text = refs.get(use) or next(iter(refs.values()))
+    print(f"voice: {voice} | piece: {use} | file: {ref_audio} | ref_text: {ref_text or '(auto transcribe)'} | settings: {settings}")
 
     print("[1/5] fetching + rewriting today's science story ...")
     topic, story_text, kind = build_todays_story(
