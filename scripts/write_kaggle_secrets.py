@@ -24,6 +24,7 @@ OPTIONAL_SECRETS = {
     "FIREBASE_PROJECT_ID",
     "FIREBASE_SITE_ID",
     "FIREBASE_SERVICE_ACCOUNT_JSON",
+    "STORY_SCRIPT",
 }
 
 SECRET_ENV_MAPPING = {
@@ -45,6 +46,8 @@ SECRET_ENV_MAPPING = {
     "FIREBASE_PROJECT_ID": os.environ.get("FIREBASE_PROJECT_ID", ""),
     "FIREBASE_SITE_ID": os.environ.get("FIREBASE_SITE_ID", ""),
     "FIREBASE_SERVICE_ACCOUNT_JSON": os.environ.get("FIREBASE_SERVICE_ACCOUNT_JSON", ""),
+    # Not a secret: a manual run can name a story file to read instead of the news.
+    "STORY_SCRIPT": os.environ.get("STORY_SCRIPT", ""),
 }
 
 KERNEL_SCRIPT = os.path.join(

@@ -182,7 +182,8 @@ def resolve_voice(search_dirs: list[str], cfg: dict, wanted: str | None) -> tupl
             return [a for a in audio if owner(a) == name]
         return [a for a in audio if owner(a) is None]
 
-    if not files_for(wanted) and len(audio) == 1:
+    if not files_for(wanted) and len(audio) == 1 and owner(audio[0]) is None:
+        # (A lone recording already named for another voice stays that voice's.)
         # Only one recording uploaded (maybe under a new file name): it's the voice asked for.
         print(f"WARNING: '{audio[0]}' doesn't match voice '{wanted}' by name, but it's the only recording -- using it")
         return wanted, audio[0], voices.get(wanted, {}).get("ref_text")
@@ -270,7 +271,8 @@ def main(
     print("[3/5] uploading to GitHub Release (backup/archive) ...")
     backup_link = upload_release_asset(
         repo=repo_slug,
-        tag=f"daily-{today_iso}",
+        # Stories get their own release so they never overwrite the day's news audio.
+        tag=f"{'story' if kind == 'script' else 'daily'}-{today_iso}",
         title=title,
         asset_path=wav_path,
         token=os.environ["GITHUB_TOKEN"],

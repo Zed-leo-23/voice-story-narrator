@@ -229,9 +229,18 @@ def todays_custom_script() -> tuple[str, str, str | None] | None:
     written instead of the day's news. Optional header lines "주제: 낱말"
     (topic) and "목소리: 엄마" (which recorded voice reads it) come first;
     scenes are separated by blank lines. Returns (topic, text, voice)."""
-    path = os.path.join(SCRIPTS_DIR, f"{kst.today().isoformat()}.txt")
-    if not os.path.exists(path):
-        return None
+    requested = os.environ.get("STORY_SCRIPT", "").strip()
+    if requested:
+        # A manual run names a story file; it wins over the date file.
+        if not re.fullmatch(r"[A-Za-z0-9_.-]+\.txt", requested) or ".." in requested:
+            raise SystemExit(f"STORY_SCRIPT must be a plain .txt file name in automation_state/scripts/, got {requested!r}")
+        path = os.path.join(SCRIPTS_DIR, requested)
+        if not os.path.exists(path):
+            raise SystemExit(f"STORY_SCRIPT file not found: {path}")
+    else:
+        path = os.path.join(SCRIPTS_DIR, f"{kst.today().isoformat()}.txt")
+        if not os.path.exists(path):
+            return None
     with open(path, encoding="utf-8") as f:
         text = f.read().strip()
     topic = "이야기"
