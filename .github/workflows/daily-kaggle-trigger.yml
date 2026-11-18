@@ -10,7 +10,12 @@ on:
     # minutes early as a buffer since generation takes ~3-5 min plus
     # whatever Kaggle's free GPU queue adds. Adjust if delivery drifts.
     - cron: "50 21 * * *"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      story:
+        description: "Read this file from automation_state/scripts/ (e.g. dad-octopus.txt) instead of today's news. Leave empty for the news."
+        required: false
+        default: ""
 
 jobs:
   trigger:
@@ -34,6 +39,8 @@ jobs:
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
           FIREBASE_SITE_ID: ${{ secrets.FIREBASE_SITE_ID }}
           FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+          # Not a secret: which story file a manual run reads (empty on the schedule).
+          STORY_SCRIPT: ${{ inputs.story }}
         run: python3 scripts/write_kaggle_secrets.py
 
       - name: Push and run the Kaggle kernel
