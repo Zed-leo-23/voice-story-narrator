@@ -1,12 +1,5 @@
 [
   {
-    "date": "2026-11-16",
-    "source": "사이언스 뉴스 익스플로어스",
-    "title": "This teen piloted an underwater robot to study kelp forests",
-    "link": "https://www.snexplores.org/article/underwater-robot-kelp-forests-jic",
-    "topic": "바다"
-  },
-  {
     "date": "2026-11-17",
     "source": "사이언스 뉴스 익스플로어스",
     "title": "Scientists Say: Abyssal Zone",
@@ -208,5 +201,12 @@
     "title": "원피스 3화 이야기",
     "link": "script:2026-11-20",
     "topic": "원피스 3화"
+  },
+  {
+    "date": "2026-11-20",
+    "source": "보내준 스크립트",
+    "title": "원피스 4화 이야기",
+    "link": "script:2026-11-20",
+    "topic": "원피스 4화"
   }
 ]
