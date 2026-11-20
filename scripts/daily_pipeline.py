@@ -124,6 +124,25 @@ def prepare_refs(engine_path: str, ref_audio: str, ref_text, outdir: str) -> dic
         }
     if isinstance(ref_text, list):
         ref_text = " ".join(ref_text)
+    if ref_text and len(re.findall(r"[.!?…]", ref_text)) >= 2:
+        # A long recording's own words only fit the engine for <=20s, and a
+        # passage the engine cuts by length can end mid-word -- the clone then
+        # tacks that fragment onto its lines. Cut whole sentences at pauses.
+        env = os.environ.copy()
+        env["PYTHONPATH"] = engine_path
+        try:
+            out = subprocess.run(
+                [sys.executable, os.path.join(REPO_ROOT, "scripts", "cut_reference.py"),
+                 "--audio", ref_audio, "--outdir", os.path.join(outdir, "ref"), "--transcript", ref_text],
+                env=env, check=True, capture_output=True, text=True,
+            ).stdout
+            print(out.strip())
+            found = json.loads(out.strip().splitlines()[-1])
+        except (subprocess.CalledProcessError, ValueError, IndexError) as exc:
+            print(f"WARNING: sentence passage cut failed ({exc!r}) -- using the whole recording")
+            found = {}
+        if found.get("passage"):
+            return {"main": (found["passage"], found["text"]), "full": (ref_audio, None)}
     return {"main": (ref_audio, ref_text)}
 
 
