@@ -1,11 +1,5 @@
 [
   {
-    "date": "2026-11-09",
-    "title": "A hidden limit of space and time could unlock electronics 100,000 times faster",
-    "link": "https://www.sciencedaily.com/releases/2026/11/261106174537.htm",
-    "topic": "전자"
-  },
-  {
     "date": "2026-11-10",
     "source": "사이언스 뉴스 익스플로어스",
     "title": "Scientists Say: Occultation",
@@ -207,5 +201,12 @@
     "title": "원피스 5화 이야기",
     "link": "script:2026-11-20",
     "topic": "원피스 5화"
+  },
+  {
+    "date": "2026-11-20",
+    "source": "보내준 스크립트",
+    "title": "원피스 6화 이야기",
+    "link": "script:2026-11-20",
+    "topic": "원피스 6화"
   }
 ]
