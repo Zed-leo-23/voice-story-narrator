@@ -1,12 +1,6 @@
 [
   {
     "date": "2026-11-07",
-    "title": "Don't miss: Meteor showers, fireballs, and a supermoon light up November's night sky",
-    "link": "https://www.sciencedaily.com/releases/2026/11/261105224547.htm",
-    "topic": "밤하늘"
-  },
-  {
-    "date": "2026-11-07",
     "title": "NASA’s Swift telescope falls to Earth after nearly 22 years in space",
     "link": "https://www.sciencedaily.com/releases/2026/11/261105224545.htm",
     "topic": "우주 망원경"
@@ -205,5 +199,12 @@
     "title": "원피스 3화 이야기",
     "link": "script:2026-11-20",
     "topic": "원피스 3화"
+  },
+  {
+    "date": "2026-11-20",
+    "source": "보내준 스크립트",
+    "title": "원피스 4화 이야기",
+    "link": "script:2026-11-20",
+    "topic": "원피스 4화"
   }
 ]
