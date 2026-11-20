@@ -13,6 +13,7 @@ Usage:
 """
 
 import argparse
+import difflib
 import json
 import logging
 import os
@@ -62,6 +63,32 @@ def split_speakers(scene: str, known: dict[str, str], default: str) -> list[tupl
         else:
             segments.append((voice, text))
     return segments
+
+
+_SENT = re.compile(r"(?<=[.!?…])\s+")
+
+
+def _bare(text: str) -> str:
+    return re.sub(r"[^\w]", "", text or "")
+
+
+def match_hint(heard: str, hint: str, threshold: float = 0.9) -> tuple[str | None, float]:
+    """The run of whole sentences in hint that reads like heard (the passage's
+    own transcription), to fix its spelling. None if no run is close enough --
+    then the heard words stay, since they are what the audio actually says."""
+    sentences = [x.strip() for x in _SENT.split(hint.strip()) if x.strip()]
+    target, best, best_ratio = _bare(heard), None, 0.0
+    for i in range(len(sentences)):
+        for j in range(i + 1, len(sentences) + 1):
+            cand = " ".join(sentences[i:j])
+            ratio = difflib.SequenceMatcher(None, target, _bare(cand)).ratio()
+            if ratio > best_ratio:
+                best, best_ratio = cand, ratio
+    # Same length too: a spelling fix keeps the syllable count, while a stray
+    # "습니다" at an edge adds syllables the known sentences don't have.
+    if best is None or best_ratio < threshold or abs(len(_bare(best)) - len(target)) > 1:
+        return None, best_ratio
+    return best, best_ratio
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -128,9 +155,12 @@ def main() -> None:
         "num_step": args.num_step,
     }
     if args.voices:
-        voices = {k: (v[0], v[1], {**base, **(v[2] or {})}) for k, v in json.loads(args.voices).items()}
+        voices = {
+            k: (v[0], v[1], {**base, **((v[2] if len(v) > 2 else None) or {})}, v[3] if len(v) > 3 else None)
+            for k, v in json.loads(args.voices).items()
+        }
     elif args.ref_audio:
-        voices = {"main": (args.ref_audio, args.ref_text, base)}
+        voices = {"main": (args.ref_audio, args.ref_text, base, None)}
     else:
         raise SystemExit("Give --voices or --ref_audio")
     default = args.default_voice if args.default_voice in voices else next(iter(voices))
@@ -144,7 +174,7 @@ def main() -> None:
         # One voice sample per voice, reused for every line it reads.
         if name in prompts:
             return prompts[name]
-        audio, text, _ = voices[name]
+        audio, text, _, hint = voices[name]
         if text is not None:
             try:
                 prompts[name] = model.create_voice_clone_prompt(ref_audio=audio, ref_text=text)
@@ -158,6 +188,15 @@ def main() -> None:
                 logging.info("loading ASR for automatic reference transcription ...")
                 model.load_asr_model()
             prompts[name] = model.create_voice_clone_prompt(ref_audio=audio, ref_text=None)
+            if hint:
+                # The sample's words must match its audio exactly, or the clone
+                # tacks the unmatched sounds onto its own lines. Keep what was
+                # heard; only swap in the known wording when it is the same text.
+                heard = prompts[name].ref_text
+                fixed, ratio = match_hint(heard, hint)
+                logging.info("voice %s heard: %s | hint match %.2f -> %s", name, heard, ratio, fixed or "(keep heard)")
+                if fixed:
+                    prompts[name] = model.create_voice_clone_prompt(ref_audio=audio, ref_text=fixed)
         p = prompts[name]
         logging.info(
             "voice sample %s: %s | %.1fs | transcript: %s",

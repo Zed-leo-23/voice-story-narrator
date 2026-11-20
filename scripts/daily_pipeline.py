@@ -142,7 +142,10 @@ def prepare_refs(engine_path: str, ref_audio: str, ref_text, outdir: str) -> dic
             print(f"WARNING: sentence passage cut failed ({exc!r}) -- using the whole recording")
             found = {}
         if found.get("passage"):
-            return {"main": (found["passage"], found["text"]), "full": (ref_audio, None)}
+            # No transcript attached here: narrate.py transcribes the exact
+            # passage (so words and audio match) and uses this whole
+            # transcript only to fix the spelling of whole sentences.
+            return {"main": (found["passage"], None), "full": (ref_audio, None), "hint": ref_text}
     return {"main": (ref_audio, ref_text)}
 
 
@@ -154,7 +157,7 @@ def run_voice_test(test: dict, engine_path: str, voice: str, refs: dict, repo_sl
     cmd = [
         sys.executable, os.path.join(REPO_ROOT, "scripts", "voice_test.py"),
         "--text", test["text"],
-        "--refs", json.dumps({k: list(v) for k, v in refs.items()}, ensure_ascii=False),
+        "--refs", json.dumps({k: list(v) for k, v in refs.items() if k != "hint"}, ensure_ascii=False),
         "--outdir", outdir,
     ]
     if variants:
@@ -315,11 +318,12 @@ def run_once(
         return
 
     def pick_piece(name: str, refs: dict) -> tuple[str, str | None]:
-        use = voices_cfg.get("voices", {}).get(name, {}).get("use") or next(iter(refs))
-        return refs.get(use) or next(iter(refs.values()))
+        pieces = {k: v for k, v in refs.items() if k != "hint"}
+        use = voices_cfg.get("voices", {}).get(name, {}).get("use") or next(iter(pieces))
+        return pieces.get(use) or next(iter(pieces.values()))
 
-    # name -> [audio, transcript, settings]; the default voice reads untagged lines.
-    table = {voice: [*pick_piece(voice, refs), settings]}
+    # name -> [audio, transcript, settings, transcript hint]; the default voice reads untagged lines.
+    table = {voice: [*pick_piece(voice, refs), settings, refs.get("hint")]}
     print(f"voice: {voice} ({voice_title(voices_cfg, voice)}) | file: {table[voice][0]} | ref_text: {table[voice][1] or '(auto transcribe)'} | settings: {settings}")
 
     print("[1/5] fetching + rewriting today's science story ...")
@@ -341,7 +345,7 @@ def run_once(
                 aliases[name] = voice
                 continue
             v_refs = prepare_refs(engine_path, path, voices_cfg["voices"][name].get("ref_text"), os.path.join(outdir, f"voice_{len(table)}"))
-            table[name] = [*pick_piece(name, v_refs), voice_settings(voices_cfg, name)]
+            table[name] = [*pick_piece(name, v_refs), voice_settings(voices_cfg, name), v_refs.get("hint")]
             print(f"character voice: {name} | file: {table[name][0]} | ref_text: {table[name][1] or '(auto transcribe)'}")
     for tag, name in tag_map(voices_cfg).items():
         if tag != name.lower():
