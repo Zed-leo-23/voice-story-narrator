@@ -14,13 +14,6 @@
     "topic": "레고"
   },
   {
-    "date": "2026-11-15",
-    "source": "보내준 스크립트",
-    "title": "레고 이야기",
-    "link": "script:2026-11-15",
-    "topic": "레고"
-  },
-  {
     "date": "2026-11-16",
     "source": "사이언스 뉴스 익스플로어스",
     "title": "This teen piloted an underwater robot to study kelp forests",
@@ -208,5 +201,12 @@
     "title": "원피스 6화 이야기",
     "link": "script:2026-11-20",
     "topic": "원피스 6화"
+  },
+  {
+    "date": "2026-11-20",
+    "source": "보내준 스크립트",
+    "title": "원피스 1화 이야기",
+    "link": "script:2026-11-20",
+    "topic": "원피스 1화"
   }
 ]
