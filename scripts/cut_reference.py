@@ -75,12 +75,12 @@ def pauses(wav: np.ndarray, sr: int = SR, min_seconds: float = 0.15) -> list[tup
 
 
 def sentence_passage(wav: np.ndarray, sentences: list[str], sr: int = SR,
-                     lo: float = 6.0, hi: float = 15.0, target: float = 11.0) -> tuple[int, int, str] | None:
+                     lo: float = 6.0, hi: float = 15.0, target: float = 11.0) -> tuple[int, int, str, list[int]] | None:
     """A stretch of whole sentences, cut in pauses, whose words are known.
 
     Each sentence boundary is estimated from the sentences' lengths and snapped
     to the nearest real pause; only boundaries that land in a pause can be a
-    passage edge. Returns (start sample, end sample, transcript) or None.
+    passage edge. Returns (start, end, transcript, inner sentence edges) or None.
     """
     runs = pauses(wav, sr)
     if len(sentences) < 2 or not runs:
@@ -112,8 +112,55 @@ def sentence_passage(wav: np.ndarray, sentences: list[str], sr: int = SR,
             if not (lo <= dur <= hi) or not (0.75 <= dur / expect <= 1.33):
                 continue
             if best is None or abs(dur - target) < abs(best[0] - target):
-                best = (dur, edges[i], edges[j], " ".join(sentences[i:j]))
+                inner_edges = [e for e in edges[i + 1:j] if e is not None]
+                best = (dur, edges[i], edges[j], " ".join(sentences[i:j]), inner_edges)
     return None if best is None else best[1:]
+
+
+def clean_passage(wav: np.ndarray, start: int, end: int, inner: list[int], sr: int = SR,
+                  speech_ratio: float = 0.15, gap: float = 0.25) -> tuple[np.ndarray, int]:
+    """Drop breaths from a voice sample: the clone copies every habit of its
+    sample, so an inhale between sentences comes back as a "허아?" between its
+    own sentences. Edges are trimmed to the speech, and each quiet stretch
+    around a sentence boundary (breath included) becomes a short true silence.
+    Returns (clean audio, number of gaps cleaned)."""
+    seg = wav[start:end]
+    n = len(seg) // FRAME
+    if n < 3:
+        return seg, 0
+    rms = np.sqrt(np.mean(seg[: n * FRAME].reshape(n, FRAME) ** 2, axis=1))
+    speech = rms >= rms.max() * speech_ratio
+    idx = np.flatnonzero(speech)
+    if idx.size == 0:
+        return seg, 0
+    first = max(0, idx[0] * FRAME - int(0.05 * sr))
+    last = min(len(seg), (idx[-1] + 1) * FRAME + int(0.12 * sr))
+    silence = np.zeros(int(gap * sr), dtype=seg.dtype)
+    fade = int(0.01 * sr)
+    pieces, cursor, cleaned = [], first, 0
+    for e in sorted(inner):
+        k = (e - start) // FRAME
+        if not (0 <= k < n) or speech[k]:
+            continue
+        a, b = k, k
+        while a > 0 and not speech[a - 1]:
+            a -= 1
+        while b < n - 1 and not speech[b + 1]:
+            b += 1
+        a_s, b_s = a * FRAME, (b + 1) * FRAME
+        if a_s <= cursor or b_s >= last:
+            continue
+        head = seg[cursor:a_s].copy()
+        if len(head) > fade:
+            head[-fade:] *= np.linspace(1, 0, fade, dtype=seg.dtype)
+        pieces += [head, silence]
+        cursor = b_s
+        cleaned += 1
+    tail = seg[cursor:last].copy()
+    if cleaned and len(tail) > fade:
+        tail[:fade] *= np.linspace(0, 1, fade, dtype=seg.dtype)
+    pieces.append(tail)
+    return np.concatenate(pieces), cleaned
 
 
 def main() -> None:
@@ -134,11 +181,13 @@ def main() -> None:
             print("no clean sentence passage found")
             print(json.dumps({"passage": None}))
             return
-        start, end, text = found
+        start, end, text, inner = found
+        clean, gaps = clean_passage(wav, start, end, inner)
         path = os.path.join(args.outdir, "ref_passage.wav")
-        sf.write(path, wav[start:end], SR)
-        print(f"passage {start / SR:.1f}-{end / SR:.1f}s ({(end - start) / SR:.1f}s): {text}")
-        print(json.dumps({"passage": path, "text": text, "seconds": round((end - start) / SR, 1)}, ensure_ascii=False))
+        sf.write(path, clean, SR)
+        print(f"passage {start / SR:.1f}-{end / SR:.1f}s ({(end - start) / SR:.1f}s -> {len(clean) / SR:.1f}s, "
+              f"{gaps} breath gap(s) cleaned): {text}")
+        print(json.dumps({"passage": path, "text": text, "seconds": round(len(clean) / SR, 1)}, ensure_ascii=False))
         return
 
     cut, found = find_cut(wav)
