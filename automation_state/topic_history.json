@@ -1,13 +1,6 @@
 [
   {
     "date": "2026-11-19",
-    "source": "보내준 스크립트",
-    "title": "원피스 1화 이야기",
-    "link": "script:2026-11-19",
-    "topic": "원피스 1화"
-  },
-  {
-    "date": "2026-11-19",
     "source": "사이언스 뉴스 익스플로어스",
     "title": "A new flying drone uses touch to perch like a bird",
     "link": "https://www.snexplores.org/article/flying-drone-perch-like-bird",
@@ -208,5 +201,12 @@
     "title": "원피스 6화 이야기",
     "link": "script:2026-11-20",
     "topic": "원피스 6화"
+  },
+  {
+    "date": "2026-11-20",
+    "source": "보내준 스크립트",
+    "title": "원피스 1화 이야기",
+    "link": "script:2026-11-20",
+    "topic": "원피스 1화"
   }
 ]
