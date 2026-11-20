@@ -254,6 +254,22 @@ def main() -> None:
         )
         return audios[0]
 
+    def hear(wav) -> str:
+        """Transcribe made audio. Whisper reads 30s at a time; a longer line
+        needs timestamp mode, or the recognizer refuses it."""
+        arr = (wav.detach().cpu().float().numpy() if torch.is_tensor(wav) else np.asarray(wav, dtype=np.float32)).reshape(-1)
+        out = model._asr_pipe({"array": arr, "sampling_rate": model.sampling_rate},
+                              return_timestamps=len(arr) > 28 * model.sampling_rate)
+        return out["text"].strip()
+
+    def check(text: str, wav) -> tuple[int, int] | None:
+        # The check must never cost a line: on any failure keep the audio as is.
+        try:
+            return edge_extra(hear(wav), text)
+        except Exception as exc:  # noqa: BLE001
+            logging.warning("  edge check skipped (%s)", exc)
+            return None
+
     def speak(name: str, text: str) -> np.ndarray:
         """Make a line, listen to it, and re-make it if stray words (a sample's
         leftover "습니다") are heard before or after the expected text."""
@@ -263,7 +279,11 @@ def main() -> None:
         best, best_extra = None, None
         for attempt in range(args.retries + 1):
             audio = make(name, text)
-            lead, trail = edge_extra(model.transcribe((audio.detach().cpu().float(), model.sampling_rate)), text)
+            res = check(text, audio)
+            if res is None:
+                best, best_extra = audio, None
+                break
+            lead, trail = res
             extra = lead + trail
             if best is None or extra < best_extra:
                 best, best_extra = audio, extra
@@ -282,7 +302,11 @@ def main() -> None:
                 if lo is None and hi is None:
                     continue
                 trial = wav[lo or 0: hi or len(wav)]
-                heard = model.transcribe((torch.from_numpy(trial), model.sampling_rate))
+                try:
+                    heard = hear(trial)
+                except Exception as exc:  # noqa: BLE001
+                    logging.warning("  edge trim skipped (%s)", exc)
+                    break
                 lead, trail = edge_extra(heard, text)
                 missing = len(_bare(text)) - len(_bare(heard))
                 if lead + trail < best_extra and missing <= 2:
