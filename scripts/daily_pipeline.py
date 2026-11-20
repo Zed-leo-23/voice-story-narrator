@@ -192,6 +192,15 @@ def find_voice_file(audio: list[str], cfg: dict, name: str) -> str | None:
     return hits[0] if hits else None
 
 
+def release_tag(kind: str, today_iso: str) -> str:
+    """News: daily-<date>. A story run by file name: story-<file> (so a series made
+    the same day keeps every episode). A date-file story: story-<date>."""
+    if kind != "script":
+        return f"daily-{today_iso}"
+    named = os.environ.get("STORY_SCRIPT", "").strip()
+    return f"story-{os.path.splitext(named)[0]}" if named else f"story-{today_iso}"
+
+
 def resolve_voice(search_dirs: list[str], cfg: dict, wanted: str | None) -> tuple[str, str, str | None]:
     """Pick the recording for the wanted voice (엄마/아빠).
 
@@ -242,6 +251,31 @@ def resolve_voice(search_dirs: list[str], cfg: dict, wanted: str | None) -> tupl
 
 
 def main(
+    engine_path: str,
+    ref_audio_search_dirs: list[str],
+    repo_slug: str = "Zed-leo-23/voice-story-narrator",
+    outdir: str = "output",
+) -> None:
+    # STORY_SCRIPT may list several story files ("a.txt,b.txt"): make each in
+    # turn, so a whole series goes out in one run. One failing story doesn't
+    # stop the rest.
+    stories = [n.strip() for n in os.environ.get("STORY_SCRIPT", "").split(",") if n.strip()]
+    if len(stories) <= 1:
+        return run_once(engine_path, ref_audio_search_dirs, repo_slug, outdir)
+    failed = []
+    for name in stories:
+        print(f"\n===== story {name} =====")
+        os.environ["STORY_SCRIPT"] = name
+        try:
+            run_once(engine_path, ref_audio_search_dirs, repo_slug, os.path.join(outdir, os.path.splitext(name)[0]))
+        except (Exception, SystemExit) as exc:  # noqa: BLE001 -- report and carry on with the next story
+            print(f"story {name} failed: {exc!r}")
+            failed.append(name)
+    if failed:
+        raise SystemExit(f"these stories failed: {failed}")
+
+
+def run_once(
     engine_path: str,
     ref_audio_search_dirs: list[str],
     repo_slug: str = "Zed-leo-23/voice-story-narrator",
@@ -333,7 +367,7 @@ def main(
     backup_link = upload_release_asset(
         repo=repo_slug,
         # Stories get their own release so they never overwrite the day's news audio.
-        tag=f"{'story' if kind == 'script' else 'daily'}-{today_iso}",
+        tag=release_tag(kind, today_iso),
         title=title,
         asset_path=wav_path,
         token=os.environ["GITHUB_TOKEN"],
