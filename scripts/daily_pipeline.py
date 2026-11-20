@@ -156,6 +156,42 @@ def run_voice_test(test: dict, engine_path: str, voice: str, refs: dict, repo_sl
     print("voice test done (no KakaoTalk message).")
 
 
+def voice_title(cfg: dict, name: str) -> str:
+    """What the story calls the reader (엄마/아빠); a voice without one is called by its name."""
+    return cfg.get("voices", {}).get(name, {}).get("호칭") or name
+
+
+def tag_map(cfg: dict) -> dict[str, str]:
+    """Every tag a script line may start with -> voice name (names and aliases)."""
+    known = {n.lower(): n for n in cfg.get("voices", {})}
+    for alias, name in (cfg.get("aliases") or {}).items():
+        if name in cfg.get("voices", {}):
+            known[alias.lower()] = name
+    return known
+
+
+_SPEAKER = re.compile(r"^\s*([^\s:：]{1,16})\s*[:：]")
+
+
+def story_speakers(text: str, cfg: dict) -> list[str]:
+    """Voices named by "이름: 대사" lines in a script, in order of first use."""
+    known, found = tag_map(cfg), []
+    for line in text.splitlines():
+        m = _SPEAKER.match(line)
+        if m and m.group(1).lower() in known and known[m.group(1).lower()] not in found:
+            found.append(known[m.group(1).lower()])
+    return found
+
+
+def find_voice_file(audio: list[str], cfg: dict, name: str) -> str | None:
+    """A character voice's own recording by file name; no borrowing another voice's."""
+    v = cfg.get("voices", {}).get(name, {})
+    if not v.get("file"):
+        return None
+    hits = [a for a in audio if _squash(v["file"]) in _squash(os.path.basename(a))]
+    return hits[0] if hits else None
+
+
 def resolve_voice(search_dirs: list[str], cfg: dict, wanted: str | None) -> tuple[str, str, str | None]:
     """Pick the recording for the wanted voice (엄마/아빠).
 
@@ -188,7 +224,10 @@ def resolve_voice(search_dirs: list[str], cfg: dict, wanted: str | None) -> tupl
         print(f"WARNING: '{audio[0]}' doesn't match voice '{wanted}' by name, but it's the only recording -- using it")
         return wanted, audio[0], voices.get(wanted, {}).get("ref_text")
 
-    order = [wanted] + [n for n in voices if n != wanted]
+    # Fall back to a voice the story can still call by the same name (reviewer -> 아빠 fun) first.
+    title = voices.get(wanted, {}).get("호칭")
+    same = [n for n in voices if n != wanted and title and voices[n].get("호칭") == title]
+    order = [wanted] + same + [n for n in voices if n != wanted and n not in same]
     for name in order:
         found = files_for(name)
         if found:
@@ -222,14 +261,38 @@ def main(
         run_voice_test(test, engine_path, voice, refs, repo_slug, outdir)
         return
 
-    use = voices_cfg.get("voices", {}).get(voice, {}).get("use") or next(iter(refs))
-    ref_audio, ref_text = refs.get(use) or next(iter(refs.values()))
-    print(f"voice: {voice} | piece: {use} | file: {ref_audio} | ref_text: {ref_text or '(auto transcribe)'} | settings: {settings}")
+    def pick_piece(name: str, refs: dict) -> tuple[str, str | None]:
+        use = voices_cfg.get("voices", {}).get(name, {}).get("use") or next(iter(refs))
+        return refs.get(use) or next(iter(refs.values()))
+
+    # name -> [audio, transcript, settings]; the default voice reads untagged lines.
+    table = {voice: [*pick_piece(voice, refs), settings]}
+    print(f"voice: {voice} ({voice_title(voices_cfg, voice)}) | file: {table[voice][0]} | ref_text: {table[voice][1] or '(auto transcribe)'} | settings: {settings}")
 
     print("[1/5] fetching + rewriting today's science story ...")
     topic, story_text, kind = build_todays_story(
-        repo_slug=repo_slug, github_token=os.environ["GITHUB_TOKEN"], narrator=voice
+        repo_slug=repo_slug, github_token=os.environ["GITHUB_TOKEN"], narrator=voice_title(voices_cfg, voice)
     )
+
+    # Character voices named in a script ("devil: 흐하하!") get their own recordings.
+    aliases: dict[str, str] = {}
+    speakers = story_speakers(story_text, voices_cfg) if kind == "script" else []
+    if speakers:
+        audio = list_reference_audio(ref_audio_search_dirs)
+        for name in speakers:
+            if name in table:
+                continue
+            path = find_voice_file(audio, voices_cfg, name)
+            if not path:
+                print(f"WARNING: no recording for voice '{name}' -- its lines are read by '{voice}'")
+                aliases[name] = voice
+                continue
+            v_refs = prepare_refs(engine_path, path, voices_cfg["voices"][name].get("ref_text"), os.path.join(outdir, f"voice_{len(table)}"))
+            table[name] = [*pick_piece(name, v_refs), voice_settings(voices_cfg, name)]
+            print(f"character voice: {name} | file: {table[name][0]} | ref_text: {table[name][1] or '(auto transcribe)'}")
+    for tag, name in tag_map(voices_cfg).items():
+        if tag != name.lower():
+            aliases[tag] = name
     story_path = os.path.join(outdir, "today_story.txt")
     with open(story_path, "w", encoding="utf-8") as f:
         f.write(story_text)
@@ -241,7 +304,9 @@ def main(
     cmd = [
         sys.executable, os.path.join(REPO_ROOT, "narrate.py"),
         "--story", story_path,
-        "--ref_audio", ref_audio,
+        "--voices", json.dumps(table, ensure_ascii=False),
+        "--default_voice", voice,
+        "--aliases", json.dumps(aliases, ensure_ascii=False),
         "--language", "Korean",
         "--outdir", outdir,
         # Keep the recording's own pace: changing it made the clone sound
@@ -252,10 +317,6 @@ def main(
         "--guidance_scale", str(settings["guidance_scale"]),
         "--num_step", str(int(settings["num_step"])),
     ]
-    if ref_text:
-        # The exact words of the recording -- far better cloning than letting
-        # speech recognition guess them.
-        cmd += ["--ref_text", ref_text]
     subprocess.run(
         cmd,
         env=env,

@@ -1,5 +1,5 @@
 {
-  "active": "아빠",
+  "active": "reviewer",
   "voices": {
     "엄마": {
       "file": "yk voice",
@@ -13,7 +13,8 @@
         "chunk_threshold": 8.0,
         "guidance_scale": 3.0,
         "num_step": 32
-      }
+      },
+      "호칭": "엄마"
     },
     "아빠": {
       "file": "fun ver voice",
@@ -25,7 +26,56 @@
         "guidance_scale": 3.0,
         "num_step": 32
       },
-      "note": "50초 fun ver 녹음. 대본(참고용, 코드는 읽지 않음): 라온아 좋은 아침! 잘잤으? 오늘은 하늘이 정말 맑고 바람도 시운하다 아빠는 아침에 일어나서 그르니까~ 창문을 활짝열고오 따듯한 우유를 한잔 먹었찌이~ 강라온 어젯밤에 무슨 꿈꿧서어~? 오늘은 아빠랑 바다에 사는 문어 이야기를 들어볼꺼야~ 문어는 다리가 여덟개나 있고 몸색깔을 마음대로 바꿀 수 있대에 정말 신기하지? 구로니까아~ 다시 자 그럼 다시 시작해볼까?"
+      "note": "50초 fun ver 녹음. 대본(참고용, 코드는 읽지 않음): 라온아 좋은 아침! 잘잤으? 오늘은 하늘이 정말 맑고 바람도 시운하다 아빠는 아침에 일어나서 그르니까~ 창문을 활짝열고오 따듯한 우유를 한잔 먹었찌이~ 강라온 어젯밤에 무슨 꿈꿧서어~? 오늘은 아빠랑 바다에 사는 문어 이야기를 들어볼꺼야~ 문어는 다리가 여덟개나 있고 몸색깔을 마음대로 바꿀 수 있대에 정말 신기하지? 구로니까아~ 다시 자 그럼 다시 시작해볼까?",
+      "호칭": "아빠"
+    },
+    "reviewer": {
+      "file": "reviewer",
+      "ref_text": null,
+      "use": "main",
+      "settings": {
+        "chunk_seconds": 6.0,
+        "chunk_threshold": 8.0,
+        "guidance_scale": 3.0,
+        "num_step": 32
+      },
+      "호칭": "아빠",
+      "note": "해설과 아침 뉴스 목소리. 녹음 대사를 받으면 ref_text에 넣기"
+    },
+    "owner": {
+      "file": "owner",
+      "ref_text": null,
+      "use": "main",
+      "settings": {
+        "chunk_seconds": 6.0,
+        "chunk_threshold": 8.0,
+        "guidance_scale": 3.0,
+        "num_step": 32
+      },
+      "note": "등장인물 목소리"
+    },
+    "devil": {
+      "file": "devil",
+      "ref_text": null,
+      "use": "main",
+      "settings": {
+        "chunk_seconds": 6.0,
+        "chunk_threshold": 8.0,
+        "guidance_scale": 3.0,
+        "num_step": 32
+      },
+      "note": "악당 등장인물 목소리"
     }
+  },
+  "aliases": {
+    "해설": "reviewer",
+    "리뷰어": "reviewer",
+    "악당": "devil",
+    "데빌": "devil",
+    "주인": "owner",
+    "오너": "owner",
+    "웃긴": "아빠",
+    "fun": "아빠",
+    "펀": "아빠"
   }
 }
