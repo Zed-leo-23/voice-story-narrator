@@ -118,24 +118,29 @@ def sentence_passage(wav: np.ndarray, sentences: list[str], sr: int = SR,
 
 
 def clean_passage(wav: np.ndarray, start: int, end: int, inner: list[int], sr: int = SR,
-                  speech_ratio: float = 0.15, gap: float = 0.25) -> tuple[np.ndarray, int]:
+                  pad: float = 0.2, middle: float = 0.1) -> tuple[np.ndarray, int]:
     """Drop breaths from a voice sample: the clone copies every habit of its
     sample, so an inhale between sentences comes back as a "허아?" between its
-    own sentences. Edges are trimmed to the speech, and each quiet stretch
-    around a sentence boundary (breath included) becomes a short true silence.
+    own sentences. Only the middle of each quiet stretch at a sentence boundary
+    becomes true silence; `pad` seconds next to the speech are kept, because a
+    soft sentence ending ("...니다") must stay -- a sample cut short of the words
+    its transcript says makes the clone tack those words onto every line.
     Returns (clean audio, number of gaps cleaned)."""
     seg = wav[start:end]
     n = len(seg) // FRAME
     if n < 3:
         return seg, 0
     rms = np.sqrt(np.mean(seg[: n * FRAME].reshape(n, FRAME) ** 2, axis=1))
-    speech = rms >= rms.max() * speech_ratio
+    # Loud word cores; the soft tail of a word (and its onset) lives within
+    # `pad` of a core and is kept, a breath further out in the pause is not.
+    speech = rms >= rms.max() * 0.15
     idx = np.flatnonzero(speech)
     if idx.size == 0:
         return seg, 0
-    first = max(0, idx[0] * FRAME - int(0.05 * sr))
-    last = min(len(seg), (idx[-1] + 1) * FRAME + int(0.12 * sr))
-    silence = np.zeros(int(gap * sr), dtype=seg.dtype)
+    keep = int(pad * sr)
+    first = max(0, idx[0] * FRAME - keep)
+    last = min(len(seg), (idx[-1] + 1) * FRAME + keep)
+    silence = np.zeros(int(middle * sr), dtype=seg.dtype)
     fade = int(0.01 * sr)
     pieces, cursor, cleaned = [], first, 0
     for e in sorted(inner):
@@ -147,14 +152,14 @@ def clean_passage(wav: np.ndarray, start: int, end: int, inner: list[int], sr: i
             a -= 1
         while b < n - 1 and not speech[b + 1]:
             b += 1
-        a_s, b_s = a * FRAME, (b + 1) * FRAME
-        if a_s <= cursor or b_s >= last:
-            continue
-        head = seg[cursor:a_s].copy()
+        cut_a, cut_b = a * FRAME + keep, (b + 1) * FRAME - keep
+        if cut_b - cut_a < int(0.05 * sr) or cut_a <= cursor or cut_b >= last:
+            continue  # pause too short to hold a breath beyond the kept edges
+        head = seg[cursor:cut_a].copy()
         if len(head) > fade:
             head[-fade:] *= np.linspace(1, 0, fade, dtype=seg.dtype)
         pieces += [head, silence]
-        cursor = b_s
+        cursor = cut_b
         cleaned += 1
     tail = seg[cursor:last].copy()
     if cleaned and len(tail) > fade:

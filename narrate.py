@@ -91,6 +91,39 @@ def match_hint(heard: str, hint: str, threshold: float = 0.9) -> tuple[str | Non
     return best, best_ratio
 
 
+def edge_extra(heard: str, expected: str) -> tuple[int, int]:
+    """Syllables heard before / after the expected text (spaces and marks
+    ignored): a stray "습니다" at a line's start or end shows up here."""
+    h, x = _bare(heard), _bare(expected)
+    blocks = [b for b in difflib.SequenceMatcher(None, h, x, autojunk=False).get_matching_blocks() if b.size]
+    if not blocks:
+        return len(h), 0
+    first, last = blocks[0], blocks[-1]
+    lead = max(0, first.a - first.b)
+    trail = max(0, (len(h) - (last.a + last.size)) - (len(x) - (last.b + last.size)))
+    return lead, trail
+
+
+def silence_split(wav: np.ndarray, sr: int, min_gap: float = 0.2) -> list[int]:
+    """Sample positions in the middle of each silence of at least min_gap."""
+    frame = int(0.02 * sr)
+    n = len(wav) // frame
+    if n < 3:
+        return []
+    rms = np.sqrt(np.mean(wav[: n * frame].reshape(n, frame) ** 2, axis=1))
+    quiet = rms < rms.max() * 0.02
+    cuts, start = [], None
+    for i in range(n + 1):
+        q = i < n and quiet[i]
+        if q and start is None:
+            start = i
+        elif not q and start is not None:
+            if (i - start) * frame >= min_gap * sr and start > 0 and i < n:
+                cuts.append((start + i) // 2 * frame)
+            start = None
+    return cuts
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     p.add_argument("--story", required=True, help="Text file; scenes separated by a blank line")
@@ -127,6 +160,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p.add_argument("--default_voice", default=None, help="Voice for untagged lines (default: first in --voices)")
     p.add_argument("--aliases", default=None, help='JSON: extra tag -> voice name, e.g. {"해설": "reviewer"}')
+    p.add_argument("--retries", type=int, default=2, help="Re-make a line up to this many times when stray words are heard at its edges")
     p.add_argument("--segment_gap_seconds", type=float, default=0.3, help="Silence between speakers in one scene")
     p.add_argument("--gap_seconds", type=float, default=0.6, help="Silence inserted between scenes")
     return p
@@ -204,7 +238,9 @@ def main() -> None:
         )
         return p
 
-    def speak(name: str, text: str) -> np.ndarray:
+    stats = {"lines": 0, "flagged": 0, "still": 0}
+
+    def make(name: str, text: str):
         cfg = voices[name][2]
         audios = model.generate(
             text=text,
@@ -216,7 +252,45 @@ def main() -> None:
             audio_chunk_duration=float(cfg["chunk_seconds"]),
             audio_chunk_threshold=float(cfg["chunk_threshold"]),
         )
-        return audios[0].squeeze().detach().cpu().float().numpy()
+        return audios[0]
+
+    def speak(name: str, text: str) -> np.ndarray:
+        """Make a line, listen to it, and re-make it if stray words (a sample's
+        leftover "습니다") are heard before or after the expected text."""
+        stats["lines"] += 1
+        if getattr(model, "_asr_pipe", None) is None:
+            model.load_asr_model()
+        best, best_extra = None, None
+        for attempt in range(args.retries + 1):
+            audio = make(name, text)
+            lead, trail = edge_extra(model.transcribe((audio.detach().cpu().float(), model.sampling_rate)), text)
+            extra = lead + trail
+            if best is None or extra < best_extra:
+                best, best_extra = audio, extra
+            if lead < 2 and trail < 2:
+                break
+            if attempt == 0:
+                stats["flagged"] += 1
+            logging.info("  %s: stray sound at the edges (before %d, after %d syllables) -- retry %d",
+                         name, lead, trail, attempt + 1)
+        wav = best.squeeze().detach().cpu().float().numpy()
+        if best_extra is not None and best_extra >= 2:
+            # Last resort: a stray word usually sits behind a short silence at
+            # the very start or end -- drop that piece if the rest then reads right.
+            cuts = silence_split(wav, model.sampling_rate)
+            for lo, hi in ((cuts[0] if cuts else None, None), (None, cuts[-1] if cuts else None)):
+                if lo is None and hi is None:
+                    continue
+                trial = wav[lo or 0: hi or len(wav)]
+                heard = model.transcribe((torch.from_numpy(trial), model.sampling_rate))
+                lead, trail = edge_extra(heard, text)
+                missing = len(_bare(text)) - len(_bare(heard))
+                if lead + trail < best_extra and missing <= 2:
+                    logging.info("  %s: cut a stray piece at the %s", name, "start" if lo else "end")
+                    wav, best_extra = trial, lead + trail
+            if best_extra >= 2:
+                stats["still"] += 1
+        return wav
 
     gap = np.zeros(int(args.gap_seconds * model.sampling_rate), dtype=np.float32)
     seg_gap = np.zeros(int(args.segment_gap_seconds * model.sampling_rate), dtype=np.float32)
@@ -238,6 +312,8 @@ def main() -> None:
         if i != len(scenes):
             pieces.append(gap)
 
+    logging.info("edge check: %d line(s), %d had stray sounds, %d still had them after retries",
+                 stats["lines"], stats["flagged"], stats["still"])
     full = np.concatenate(pieces)
     full_path = os.path.join(args.outdir, "full_story.wav")
     sf.write(full_path, full, model.sampling_rate)
