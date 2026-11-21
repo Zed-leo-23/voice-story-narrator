@@ -262,39 +262,61 @@ def main() -> None:
                               return_timestamps=len(arr) > 28 * model.sampling_rate)
         return out["text"].strip()
 
-    def check(text: str, wav) -> tuple[int, int] | None:
-        # The check must never cost a line: on any failure keep the audio as is.
+    levels: list[float] = []  # loudness of the lines kept so far
+
+    def level(wav) -> float:
+        arr = wav.squeeze().detach().cpu().float().numpy() if torch.is_tensor(wav) else wav
+        frame = int(0.02 * model.sampling_rate)
+        n = len(arr) // frame
+        if n == 0:
+            return 0.0
+        return float(np.percentile(np.sqrt(np.mean(arr[: n * frame].reshape(n, frame) ** 2, axis=1)), 90))
+
+    def judge(text: str, wav) -> dict | None:
+        """Listen to a made line. Flags: a stray word at its start/end (a
+        sample's leftover "습니다"), stray syllables inside it (a fragment
+        like "호피" tacked on between sentences), words missing, or a line
+        made in a whisper. None if the check itself failed."""
         try:
-            return edge_extra(hear(wav), text)
-        except Exception as exc:  # noqa: BLE001
-            logging.warning("  edge check skipped (%s)", exc)
+            heard = hear(wav)
+        except Exception as exc:  # noqa: BLE001 -- the check must never cost a line
+            logging.warning("  line check skipped (%s)", exc)
             return None
+        lead, trail = edge_extra(heard, text)
+        h, x = len(_bare(heard)), max(1, len(_bare(text)))
+        r = {"lead": lead, "trail": trail, "extra": max(0, h - x), "cover": h / x,
+             "quiet": len(levels) >= 3 and level(wav) < 0.35 * float(np.median(levels))}
+        r["bad"] = lead >= 2 or trail >= 2 or r["extra"] >= 4 or r["cover"] < 0.6 or r["quiet"]
+        r["score"] = lead + trail + r["extra"] + (20 if r["cover"] < 0.6 else 0) + (20 if r["quiet"] else 0)
+        return r
 
     def speak(name: str, text: str) -> np.ndarray:
-        """Make a line, listen to it, and re-make it if stray words (a sample's
-        leftover "습니다") are heard before or after the expected text."""
+        """Make a line, listen to it, and re-make it (up to --retries times)
+        when it comes out with stray sounds, missing words or in a whisper."""
         stats["lines"] += 1
         if getattr(model, "_asr_pipe", None) is None:
             model.load_asr_model()
-        best, best_extra = None, None
+        best, best_r = None, None
         for attempt in range(args.retries + 1):
             audio = make(name, text)
-            res = check(text, audio)
-            if res is None:
-                best, best_extra = audio, None
+            r = judge(text, audio)
+            if r is None:
+                best, best_r = audio, None
                 break
-            lead, trail = res
-            extra = lead + trail
-            if best is None or extra < best_extra:
-                best, best_extra = audio, extra
-            if lead < 2 and trail < 2:
+            if best is None or r["score"] < best_r["score"]:
+                best, best_r = audio, r
+            if not r["bad"]:
                 break
             if attempt == 0:
                 stats["flagged"] += 1
-            logging.info("  %s: stray sound at the edges (before %d, after %d syllables) -- retry %d",
-                         name, lead, trail, attempt + 1)
+            logging.info("  %s: retry %d -- stray before %d / after %d / inside %d syllables, heard %.0f%%%s",
+                         name, attempt + 1, r["lead"], r["trail"], r["extra"], 100 * r["cover"],
+                         ", whispered" if r["quiet"] else "")
         wav = best.squeeze().detach().cpu().float().numpy()
-        if best_extra is not None and best_extra >= 2:
+        if best_r is None:
+            return wav
+        edge = best_r["lead"] + best_r["trail"]
+        if edge >= 2:
             # Last resort: a stray word usually sits behind a short silence at
             # the very start or end -- drop that piece if the rest then reads right.
             cuts = silence_split(wav, model.sampling_rate)
@@ -309,11 +331,18 @@ def main() -> None:
                     break
                 lead, trail = edge_extra(heard, text)
                 missing = len(_bare(text)) - len(_bare(heard))
-                if lead + trail < best_extra and missing <= 2:
+                if lead + trail < edge and missing <= 2:
                     logging.info("  %s: cut a stray piece at the %s", name, "start" if lo else "end")
-                    wav, best_extra = trial, lead + trail
-            if best_extra >= 2:
-                stats["still"] += 1
+                    wav, edge = trial, lead + trail
+            best_r["bad"] = edge >= 2 or best_r["extra"] >= 4 or best_r["cover"] < 0.6 or best_r["quiet"]
+        if best_r["quiet"] and levels:
+            # Still a whisper after the retries: at least bring it up to the others' level.
+            gain = min(4.0, 0.7 * float(np.median(levels)) / max(level(wav), 1e-6))
+            wav = np.clip(wav * gain, -1.0, 1.0)
+            logging.info("  %s: whispered line raised x%.1f", name, gain)
+        if best_r["bad"]:
+            stats["still"] += 1
+        levels.append(level(wav))
         return wav
 
     gap = np.zeros(int(args.gap_seconds * model.sampling_rate), dtype=np.float32)
@@ -336,7 +365,7 @@ def main() -> None:
         if i != len(scenes):
             pieces.append(gap)
 
-    logging.info("edge check: %d line(s), %d had stray sounds, %d still had them after retries",
+    logging.info("line check: %d line(s), %d needed a retry, %d still not clean after retries",
                  stats["lines"], stats["flagged"], stats["still"])
     full = np.concatenate(pieces)
     full_path = os.path.join(args.outdir, "full_story.wav")
