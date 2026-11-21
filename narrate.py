@@ -125,6 +125,41 @@ def pieces_of(text: str, max_seconds: float, rate: float = 5.0, min_seconds: flo
     return out
 
 
+def squeal_spans(wav: np.ndarray, sr: int, min_frames: int = 3) -> list[tuple[int, int]]:
+    """Sample ranges where the voice turned into a whistle: loud 50 ms frames
+    whose strongest pitch is above 1.2 kHz and tonal (a laugh like "흐흐흐" or
+    a drawn-out "~아" sometimes comes out as a 1.4-2.2 kHz "삐이잉").
+    Speech's strongest peak sits lower, and hissing "ㅅ" sounds are noisy."""
+    n = int(0.05 * sr)
+    frames = len(wav) // n
+    if frames < min_frames:
+        return []
+    rms = np.sqrt(np.mean(wav[: frames * n].reshape(frames, n) ** 2, axis=1))
+    loud = rms[rms > 1e-4]
+    if loud.size == 0:
+        return []
+    ref = float(np.percentile(loud, 90))
+    win = np.hanning(n)
+    freqs = np.fft.rfftfreq(n, 1 / sr)
+    hit = np.zeros(frames, dtype=bool)
+    for i in range(frames):
+        if rms[i] < 0.4 * ref:
+            continue
+        spec = np.abs(np.fft.rfft(wav[i * n:(i + 1) * n] * win)) + 1e-9
+        flat = float(np.exp(np.mean(np.log(spec))) / np.mean(spec))
+        hit[i] = freqs[int(np.argmax(spec))] > 1200 and flat < 0.4
+    spans, start = [], None
+    for i in range(frames + 1):
+        h = i < frames and hit[i]
+        if h and start is None:
+            start = i
+        elif not h and start is not None:
+            if i - start >= min_frames:
+                spans.append((start * n, i * n))
+            start = None
+    return spans
+
+
 def silence_split(wav: np.ndarray, sr: int, min_gap: float = 0.2) -> list[int]:
     """Sample positions in the middle of each silence of at least min_gap."""
     frame = int(0.02 * sr)
@@ -314,8 +349,11 @@ def main() -> None:
         h, x = len(_bare(heard)), max(1, len(_bare(text)))
         r = {"lead": lead, "trail": trail, "extra": max(0, h - x), "cover": h / x,
              "quiet": len(levels.get(name, [])) >= 2 and level(wav) < 0.35 * float(np.median(levels[name]))}
-        r["bad"] = lead >= 1 or trail >= 1 or r["extra"] >= 3 or r["cover"] < 0.6 or r["quiet"]
-        r["score"] = lead + trail + r["extra"] + (20 if r["cover"] < 0.6 else 0) + (20 if r["quiet"] else 0)
+        arr = wav.squeeze().detach().cpu().float().numpy() if torch.is_tensor(wav) else wav
+        r["squeal"] = len(squeal_spans(arr, model.sampling_rate))
+        r["bad"] = lead >= 1 or trail >= 1 or r["extra"] >= 3 or r["cover"] < 0.6 or r["quiet"] or r["squeal"] > 0
+        r["score"] = (lead + trail + r["extra"] + (20 if r["cover"] < 0.6 else 0) + (20 if r["quiet"] else 0)
+                      + 15 * r["squeal"])
         return r
 
     def speak_piece(name: str, text: str) -> np.ndarray:
@@ -339,7 +377,7 @@ def main() -> None:
                 stats["flagged"] += 1
             logging.info("  %s: retry %d -- stray before %d / after %d / inside %d syllables, heard %.0f%%%s",
                          name, attempt + 1, r["lead"], r["trail"], r["extra"], 100 * r["cover"],
-                         ", whispered" if r["quiet"] else "")
+                         (", whispered" if r["quiet"] else "") + (", whistle" if r["squeal"] else ""))
         wav = best.squeeze().detach().cpu().float().numpy()
         if best_r is None:
             return even_out(name, wav)
@@ -362,6 +400,19 @@ def main() -> None:
                 if lead + trail < edge and missing <= 2:
                     logging.info("  %s: cut a stray piece at the %s", name, "start" if lo else "end")
                     wav, edge = trial, lead + trail
+            best_r["bad"] = edge >= 1 or best_r["extra"] >= 3 or best_r["cover"] < 0.6 or best_r["quiet"]
+        # Only a clear whistle (0.2 s or longer) is cut: a shorter hit may be a high vowel.
+        spans = squeal_spans(wav, model.sampling_rate, min_frames=4)
+        if spans:
+            # Still whistling after the retries: silence just those bits (with short fades).
+            wav = wav.copy()
+            fade = int(0.02 * model.sampling_rate)
+            for a, b in spans:
+                a2, b2 = max(0, a - fade), min(len(wav), b + fade)
+                wav[a2:a] *= np.linspace(1, 0, a - a2, dtype=wav.dtype)
+                wav[a:b] = 0
+                wav[b:b2] *= np.linspace(0, 1, b2 - b, dtype=wav.dtype)
+            logging.info("  %s: silenced %d whistle bit(s)", name, len(spans))
             best_r["bad"] = edge >= 1 or best_r["extra"] >= 3 or best_r["cover"] < 0.6 or best_r["quiet"]
         if best_r["bad"]:
             stats["still"] += 1
