@@ -120,7 +120,8 @@ def pieces_of(text: str, max_seconds: float, rate: float = 5.0, min_seconds: flo
         else:
             out.append(sent)
     if len(out) > 1 and est(out[-1]) < min_seconds:
-        out[-2] += " " + out.pop()
+        last = out.pop()
+        out[-1] += " " + last
     return out
 
 
