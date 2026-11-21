@@ -182,8 +182,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--default_voice", default=None, help="Voice for untagged lines (default: first in --voices)")
     p.add_argument("--aliases", default=None, help='JSON: extra tag -> voice name, e.g. {"해설": "reviewer"}')
     p.add_argument("--retries", type=int, default=2, help="Re-make a line up to this many times when stray words are heard at its edges")
-    p.add_argument("--segment_gap_seconds", type=float, default=0.3, help="Silence between speakers in one scene")
-    p.add_argument("--gap_seconds", type=float, default=0.6, help="Silence inserted between scenes")
+    p.add_argument("--segment_gap_seconds", type=float, default=0.4, help="Silence between speakers in one scene")
+    p.add_argument("--gap_seconds", type=float, default=0.9, help="Silence inserted between scenes")
     return p
 
 
@@ -269,7 +269,7 @@ def main() -> None:
             voice_clone_prompt=prompt_for(name),
             num_step=int(cfg["num_step"]),
             guidance_scale=float(cfg["guidance_scale"]),
-            speed=args.speed,
+            speed=float(cfg.get("speed", args.speed)),  # a voice may read slower or faster
             # Pieces are already split by sentence (pieces_of): the engine
             # must not split them again, or a whisper or stray sound inside
             # one of its own chunks slips past the per-piece check.
@@ -377,7 +377,7 @@ def main() -> None:
         peak = float(np.abs(wav).max())
         return wav * (0.97 / peak) if peak > 0.97 else wav
 
-    piece_gap = np.zeros(int(0.2 * model.sampling_rate), dtype=np.float32)
+    piece_gap = np.zeros(int(0.35 * model.sampling_rate), dtype=np.float32)
 
     def speak(name: str, text: str) -> np.ndarray:
         """A line in pieces of whole sentences (about chunk_seconds each),
