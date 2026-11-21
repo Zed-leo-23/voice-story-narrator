@@ -104,6 +104,26 @@ def edge_extra(heard: str, expected: str) -> tuple[int, int]:
     return lead, trail
 
 
+_PIECE_END = re.compile(r"(?<=[.!?…~])\s+")
+
+
+def pieces_of(text: str, max_seconds: float, rate: float = 5.0, min_seconds: float = 2.0) -> list[str]:
+    """Whole sentences grouped into pieces of at most max_seconds (estimated
+    at `rate` syllables a second); a piece shorter than min_seconds is joined
+    to its neighbour, since a very short piece is the one made in a whisper or
+    padded with stray sounds."""
+    est = lambda t: len(_bare(t)) / rate  # noqa: E731
+    out: list[str] = []
+    for sent in (x.strip() for x in _PIECE_END.split(text.strip()) if x.strip()):
+        if out and (est(out[-1]) < min_seconds or est(out[-1] + sent) <= max_seconds):
+            out[-1] += " " + sent
+        else:
+            out.append(sent)
+    if len(out) > 1 and est(out[-1]) < min_seconds:
+        out[-2] += " " + out.pop()
+    return out
+
+
 def silence_split(wav: np.ndarray, sr: int, min_gap: float = 0.2) -> list[int]:
     """Sample positions in the middle of each silence of at least min_gap."""
     frame = int(0.02 * sr)
@@ -249,8 +269,11 @@ def main() -> None:
             num_step=int(cfg["num_step"]),
             guidance_scale=float(cfg["guidance_scale"]),
             speed=args.speed,
+            # Pieces are already split by sentence (pieces_of): the engine
+            # must not split them again, or a whisper or stray sound inside
+            # one of its own chunks slips past the per-piece check.
             audio_chunk_duration=float(cfg["chunk_seconds"]),
-            audio_chunk_threshold=float(cfg["chunk_threshold"]),
+            audio_chunk_threshold=1e6,
         )
         return audios[0]
 
@@ -286,12 +309,12 @@ def main() -> None:
         h, x = len(_bare(heard)), max(1, len(_bare(text)))
         r = {"lead": lead, "trail": trail, "extra": max(0, h - x), "cover": h / x,
              "quiet": len(levels) >= 3 and level(wav) < 0.35 * float(np.median(levels))}
-        r["bad"] = lead >= 2 or trail >= 2 or r["extra"] >= 4 or r["cover"] < 0.6 or r["quiet"]
+        r["bad"] = lead >= 1 or trail >= 1 or r["extra"] >= 3 or r["cover"] < 0.6 or r["quiet"]
         r["score"] = lead + trail + r["extra"] + (20 if r["cover"] < 0.6 else 0) + (20 if r["quiet"] else 0)
         return r
 
-    def speak(name: str, text: str) -> np.ndarray:
-        """Make a line, listen to it, and re-make it (up to --retries times)
+    def speak_piece(name: str, text: str) -> np.ndarray:
+        """Make a piece, listen to it, and re-make it (up to --retries times)
         when it comes out with stray sounds, missing words or in a whisper."""
         stats["lines"] += 1
         if getattr(model, "_asr_pipe", None) is None:
@@ -316,7 +339,7 @@ def main() -> None:
         if best_r is None:
             return wav
         edge = best_r["lead"] + best_r["trail"]
-        if edge >= 2:
+        if edge >= 1:
             # Last resort: a stray word usually sits behind a short silence at
             # the very start or end -- drop that piece if the rest then reads right.
             cuts = silence_split(wav, model.sampling_rate)
@@ -334,7 +357,7 @@ def main() -> None:
                 if lead + trail < edge and missing <= 2:
                     logging.info("  %s: cut a stray piece at the %s", name, "start" if lo else "end")
                     wav, edge = trial, lead + trail
-            best_r["bad"] = edge >= 2 or best_r["extra"] >= 4 or best_r["cover"] < 0.6 or best_r["quiet"]
+            best_r["bad"] = edge >= 1 or best_r["extra"] >= 3 or best_r["cover"] < 0.6 or best_r["quiet"]
         if best_r["quiet"] and levels:
             # Still a whisper after the retries: at least bring it up to the others' level.
             gain = min(4.0, 0.7 * float(np.median(levels)) / max(level(wav), 1e-6))
@@ -344,6 +367,24 @@ def main() -> None:
             stats["still"] += 1
         levels.append(level(wav))
         return wav
+
+    piece_gap = np.zeros(int(0.2 * model.sampling_rate), dtype=np.float32)
+
+    def speak(name: str, text: str) -> np.ndarray:
+        """A line in pieces of whole sentences (about chunk_seconds each),
+        each made and checked on its own, joined by a short pause."""
+        out: list[np.ndarray] = []
+        for k, piece in enumerate(pieces_of(text, float(voices[name][2]["chunk_seconds"]))):
+            wav = speak_piece(name, piece)
+            fade = min(len(wav) // 4, int(0.01 * model.sampling_rate))
+            if fade:
+                wav = wav.copy()
+                wav[:fade] *= np.linspace(0, 1, fade, dtype=wav.dtype)
+                wav[-fade:] *= np.linspace(1, 0, fade, dtype=wav.dtype)
+            if k:
+                out.append(piece_gap)
+            out.append(wav)
+        return np.concatenate(out)
 
     gap = np.zeros(int(args.gap_seconds * model.sampling_rate), dtype=np.float32)
     seg_gap = np.zeros(int(args.segment_gap_seconds * model.sampling_rate), dtype=np.float32)
