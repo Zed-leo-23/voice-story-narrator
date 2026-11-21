@@ -286,7 +286,11 @@ def main() -> None:
                               return_timestamps=len(arr) > 28 * model.sampling_rate)
         return out["text"].strip()
 
-    levels: list[float] = []  # loudness of the lines kept so far
+    levels: dict[str, list[float]] = {}  # per voice: loudness of the pieces made so far
+    # Every piece is brought to one loudness: the engine copies each voice
+    # sample's own volume, so a quietly recorded voice came out ten times
+    # softer than the narrator. 0.075 is the narrator's usual level.
+    target_level = 0.075
 
     def level(wav) -> float:
         arr = wav.squeeze().detach().cpu().float().numpy() if torch.is_tensor(wav) else wav
@@ -296,7 +300,7 @@ def main() -> None:
             return 0.0
         return float(np.percentile(np.sqrt(np.mean(arr[: n * frame].reshape(n, frame) ** 2, axis=1)), 90))
 
-    def judge(text: str, wav) -> dict | None:
+    def judge(name: str, text: str, wav) -> dict | None:
         """Listen to a made line. Flags: a stray word at its start/end (a
         sample's leftover "습니다"), stray syllables inside it (a fragment
         like "호피" tacked on between sentences), words missing, or a line
@@ -309,7 +313,7 @@ def main() -> None:
         lead, trail = edge_extra(heard, text)
         h, x = len(_bare(heard)), max(1, len(_bare(text)))
         r = {"lead": lead, "trail": trail, "extra": max(0, h - x), "cover": h / x,
-             "quiet": len(levels) >= 3 and level(wav) < 0.35 * float(np.median(levels))}
+             "quiet": len(levels.get(name, [])) >= 2 and level(wav) < 0.35 * float(np.median(levels[name]))}
         r["bad"] = lead >= 1 or trail >= 1 or r["extra"] >= 3 or r["cover"] < 0.6 or r["quiet"]
         r["score"] = lead + trail + r["extra"] + (20 if r["cover"] < 0.6 else 0) + (20 if r["quiet"] else 0)
         return r
@@ -323,7 +327,7 @@ def main() -> None:
         best, best_r = None, None
         for attempt in range(args.retries + 1):
             audio = make(name, text)
-            r = judge(text, audio)
+            r = judge(name, text, audio)
             if r is None:
                 best, best_r = audio, None
                 break
@@ -338,7 +342,7 @@ def main() -> None:
                          ", whispered" if r["quiet"] else "")
         wav = best.squeeze().detach().cpu().float().numpy()
         if best_r is None:
-            return wav
+            return even_out(name, wav)
         edge = best_r["lead"] + best_r["trail"]
         if edge >= 1:
             # Last resort: a stray word usually sits behind a short silence at
@@ -359,15 +363,19 @@ def main() -> None:
                     logging.info("  %s: cut a stray piece at the %s", name, "start" if lo else "end")
                     wav, edge = trial, lead + trail
             best_r["bad"] = edge >= 1 or best_r["extra"] >= 3 or best_r["cover"] < 0.6 or best_r["quiet"]
-        if best_r["quiet"] and levels:
-            # Still a whisper after the retries: at least bring it up to the others' level.
-            gain = min(4.0, 0.7 * float(np.median(levels)) / max(level(wav), 1e-6))
-            wav = np.clip(wav * gain, -1.0, 1.0)
-            logging.info("  %s: whispered line raised x%.1f", name, gain)
         if best_r["bad"]:
             stats["still"] += 1
-        levels.append(level(wav))
-        return wav
+        return even_out(name, wav)
+
+    def even_out(name: str, wav: np.ndarray) -> np.ndarray:
+        """Bring a piece to the common loudness (no louder than full scale)."""
+        lv = level(wav)
+        levels.setdefault(name, []).append(lv)
+        if lv <= 1e-5:
+            return wav
+        wav = wav * min(15.0, max(0.25, target_level / lv))
+        peak = float(np.abs(wav).max())
+        return wav * (0.97 / peak) if peak > 0.97 else wav
 
     piece_gap = np.zeros(int(0.2 * model.sampling_rate), dtype=np.float32)
 
