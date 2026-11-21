@@ -103,10 +103,31 @@ PART_VARIANTS = {
 }
 
 
-def prepare_refs(engine_path: str, ref_audio: str, ref_text, outdir: str) -> dict:
+def prepare_refs(engine_path: str, ref_audio: str, ref_text, outdir: str, whole: bool = False) -> dict:
     """name -> (audio path, transcript or None). A transcript given as two
     paragraphs means the recording is cut at the pause between them, since
-    the engine takes at most 20s of audio with a transcript."""
+    the engine takes at most 20s of audio with a transcript. `whole`: a short
+    recording made to be the sample as is -- keep all of it, minus breaths."""
+    if whole and ref_text:
+        env = os.environ.copy()
+        env["PYTHONPATH"] = engine_path
+        try:
+            out = subprocess.run(
+                [sys.executable, os.path.join(REPO_ROOT, "scripts", "cut_reference.py"),
+                 "--audio", ref_audio, "--outdir", os.path.join(outdir, "ref"), "--whole"],
+                env=env, check=True, capture_output=True, text=True,
+            ).stdout
+            print(out.strip())
+            found = json.loads(out.strip().splitlines()[-1])
+        except (subprocess.CalledProcessError, ValueError, IndexError) as exc:
+            print(f"WARNING: whole-recording clean-up failed ({exc!r})")
+            found = {}
+        if found.get("passage"):
+            # As with a cut passage: narrate.py hears the sample's own words
+            # and uses the script only to fix their spelling.
+            text = " ".join(ref_text) if isinstance(ref_text, list) else ref_text
+            return {"main": (found["passage"], None), "full": (ref_audio, None), "hint": text}
+        print("WARNING: recording not usable whole (over 20s?) -- cutting sentences instead")
     if isinstance(ref_text, list) and len(ref_text) == 2:
         env = os.environ.copy()
         env["PYTHONPATH"] = engine_path
@@ -310,7 +331,8 @@ def run_once(
     voices_cfg = load_voices()
     voice, ref_audio, ref_text = resolve_voice(ref_audio_search_dirs, voices_cfg, custom[2] if custom else None)
     settings = voice_settings(voices_cfg, voice)
-    refs = prepare_refs(engine_path, ref_audio, ref_text, outdir)
+    refs = prepare_refs(engine_path, ref_audio, ref_text, outdir,
+                        whole=bool(voices_cfg.get("voices", {}).get(voice, {}).get("whole")))
 
     test = todays_voice_test()
     if test:
@@ -344,7 +366,8 @@ def run_once(
                 print(f"WARNING: no recording for voice '{name}' -- its lines are read by '{voice}'")
                 aliases[name] = voice
                 continue
-            v_refs = prepare_refs(engine_path, path, voices_cfg["voices"][name].get("ref_text"), os.path.join(outdir, f"voice_{len(table)}"))
+            v_refs = prepare_refs(engine_path, path, voices_cfg["voices"][name].get("ref_text"), os.path.join(outdir, f"voice_{len(table)}"),
+                                  whole=bool(voices_cfg["voices"][name].get("whole")))
             table[name] = [*pick_piece(name, v_refs), voice_settings(voices_cfg, name), v_refs.get("hint")]
             print(f"character voice: {name} | file: {table[name][0]} | ref_text: {table[name][1] or '(auto transcribe)'}")
     for tag, name in tag_map(voices_cfg).items():

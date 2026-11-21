@@ -168,17 +168,43 @@ def clean_passage(wav: np.ndarray, start: int, end: int, inner: list[int], sr: i
     return np.concatenate(pieces), cleaned
 
 
+def whole_passage(wav: np.ndarray, sr: int = SR, max_seconds: float = 20.0) -> tuple[np.ndarray, int] | None:
+    """A short recording kept whole: edge silence trimmed and breaths in its
+    pauses removed (each pause's middle is a cleaning point). None if the
+    result is longer than the engine takes with a transcript, or silent."""
+    runs = pauses(wav, sr)
+    inner = [(a + b) // 2 for a, b in runs if a > 0 and b < len(wav)]
+    clean, gaps = clean_passage(wav, 0, len(wav), inner, sr)
+    if len(clean) < 1.0 * sr or len(clean) > max_seconds * sr:
+        return None
+    return clean, gaps
+
+
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--audio", required=True)
     p.add_argument("--outdir", required=True)
     p.add_argument("--transcript", default=None, help="Whole transcript: cut a passage of whole sentences instead")
+    p.add_argument("--whole", action="store_true", help="Short recording: keep all of it, only drop edge silence and breaths")
     args = p.parse_args()
 
     from omnivoice.utils.audio import load_audio  # engine loader: handles m4a
 
     wav = load_audio(args.audio, SR).squeeze(0).numpy().astype(np.float32)
     os.makedirs(args.outdir, exist_ok=True)
+
+    if args.whole:
+        found = whole_passage(wav)
+        if found is None:
+            print("recording too long or silent for whole mode")
+            print(json.dumps({"passage": None}))
+            return
+        clean, gaps = found
+        path = os.path.join(args.outdir, "ref_passage.wav")
+        sf.write(path, clean, SR)
+        print(f"whole recording {len(wav) / SR:.1f}s -> {len(clean) / SR:.1f}s, {gaps} breath gap(s) cleaned")
+        print(json.dumps({"passage": path, "text": None, "seconds": round(len(clean) / SR, 1)}))
+        return
 
     if args.transcript is not None:
         found = sentence_passage(wav, split_sentences(args.transcript))
