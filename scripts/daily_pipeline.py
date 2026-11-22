@@ -438,6 +438,14 @@ def run_once(
         token=os.environ["GITHUB_TOKEN"],
     )
     print("backup link:", backup_link)
+    timeline_path = os.path.join(outdir, "timeline.json")
+    if os.path.exists(timeline_path):
+        # Scene and line times, for making the video later. Optional: never fail the run over it.
+        try:
+            upload_release_asset(repo=repo_slug, tag=release_tag(kind, today_iso), title=title,
+                                 asset_path=timeline_path, token=os.environ["GITHUB_TOKEN"])
+        except Exception as exc:  # noqa: BLE001
+            print(f"timeline upload skipped: {exc!r}")
 
     print("[4/5] publishing to Firebase Hosting ...")
     firebase_project_id = os.environ.get("FIREBASE_PROJECT_ID")

@@ -451,15 +451,29 @@ def main() -> None:
     seg_gap = np.zeros(int(args.segment_gap_seconds * model.sampling_rate), dtype=np.float32)
     pieces: list[np.ndarray] = []
 
+    # Where every scene and line sits in the final audio, for syncing pictures,
+    # subtitles and sound effects to it later (timeline.json).
+    timeline: list[dict] = []
+    sr = model.sampling_rate
+    clock = 0  # samples so far in the full story
+
     for i, scene in enumerate(scenes, 1):
         segments = split_speakers(scene, known, default)
         logging.info("[%d/%d] generating (%s): %s...", i, len(scenes), ", ".join(v for v, _ in segments), scene[:50])
         parts: list[np.ndarray] = []
+        lines: list[dict] = []
+        at = clock
         for j, (name, text) in enumerate(segments):
             if j:
                 parts.append(seg_gap)
-            parts.append(speak(name, text))
+                at += len(seg_gap)
+            line_wav = speak(name, text)
+            parts.append(line_wav)
+            lines.append({"voice": name, "text": text, "start": round(at / sr, 3), "end": round((at + len(line_wav)) / sr, 3)})
+            at += len(line_wav)
         wav = np.concatenate(parts)
+        timeline.append({"scene": i, "start": round(clock / sr, 3), "end": round((clock + len(wav)) / sr, 3), "lines": lines})
+        clock += len(wav) + (len(gap) if i != len(scenes) else 0)
         scene_path = os.path.join(args.outdir, f"scene_{i:02d}.wav")
         sf.write(scene_path, wav, model.sampling_rate)
         logging.info("  saved %s", scene_path)
@@ -474,6 +488,8 @@ def main() -> None:
     full_path = os.path.join(args.outdir, "full_story.wav")
     sf.write(full_path, full, model.sampling_rate)
     logging.info("Done. Full narration: %s (%.1fs)", full_path, len(full) / model.sampling_rate)
+    with open(os.path.join(args.outdir, "timeline.json"), "w", encoding="utf-8") as f:
+        json.dump({"duration": round(len(full) / sr, 3), "scenes": timeline}, f, ensure_ascii=False, indent=1)
 
 
 if __name__ == "__main__":
