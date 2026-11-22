@@ -219,6 +219,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--retries", type=int, default=2, help="Re-make a line up to this many times when stray words are heard at its edges")
     p.add_argument("--segment_gap_seconds", type=float, default=0.4, help="Silence between speakers in one scene")
     p.add_argument("--gap_seconds", type=float, default=0.9, help="Silence inserted between scenes")
+    p.add_argument("--tail_seconds", type=float, default=2.0, help="Quiet left after the last word, so the ending can sink in")
     return p
 
 
@@ -468,6 +469,7 @@ def main() -> None:
 
     logging.info("line check: %d line(s), %d needed a retry, %d still not clean after retries",
                  stats["lines"], stats["flagged"], stats["still"])
+    pieces.append(np.zeros(int(args.tail_seconds * model.sampling_rate), dtype=np.float32))
     full = np.concatenate(pieces)
     full_path = os.path.join(args.outdir, "full_story.wav")
     sf.write(full_path, full, model.sampling_rate)
