@@ -1,4 +1,4 @@
-underground-monster.txt failed (2026-11-22)
+nail-mouse.txt failed (2026-11-22)
 
 Traceback (most recent call last):
   File "/kaggle/working/voice-story-narrator/scripts/daily_pipeline.py", line 326, in main
@@ -9,18 +9,18 @@ Traceback (most recent call last):
 subprocess.CalledProcessError: Command 'narrate.py' returned non-zero exit status 1.
 
 --- narrate.log (end) ---
-2026-11-22 04:12:58,989 INFO 8 scene(s) found in /kaggle/working/output/underground-monster/today_story.txt
-2026-11-22 04:12:59,223 INFO Loading OmniVoice (k2-fsa/OmniVoice) on cuda ...
-2026-11-22 04:12:59,378 INFO HTTP Request: GET https://huggingface.co/api/models/k2-fsa/OmniVoice/revision/main "HTTP/1.1 200 OK"
+2026-11-22 04:13:21,655 INFO 7 scene(s) found in /kaggle/working/output/nail-mouse/today_story.txt
+2026-11-22 04:13:21,885 INFO Loading OmniVoice (k2-fsa/OmniVoice) on cuda ...
+2026-11-22 04:13:22,012 INFO HTTP Request: GET https://huggingface.co/api/models/k2-fsa/OmniVoice/revision/main "HTTP/1.1 200 OK"
 
 Loading weights:   0%|          | 0/313 [00:00<?, ?it/s]
-Loading weights:   1%|▏         | 4/313 [00:00<00:29, 10.48it/s]
-Loading weights:  86%|████████▋ | 270/313 [00:00<00:00, 731.96it/s]
-Loading weights: 100%|██████████| 313/313 [00:00<00:00, 595.28it/s]
-2026-11-22 04:13:00,458 INFO HTTP Request: GET https://huggingface.co/api/models/k2-fsa/OmniVoice "HTTP/1.1 200 OK"
-2026-11-22 04:13:00,509 INFO HTTP Request: GET https://huggingface.co/api/models/k2-fsa/OmniVoice/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
-2026-11-22 04:13:00,560 INFO HTTP Request: GET https://huggingface.co/api/models/k2-fsa/OmniVoice/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
-2026-11-22 04:13:01,541 INFO HTTP Request: GET https://huggingface.co/api/models/k2-fsa/OmniVoice "HTTP/1.1 200 OK"
+Loading weights:   1%|▏         | 4/313 [00:00<00:22, 13.45it/s]
+Loading weights:  75%|███████▌  | 236/313 [00:00<00:00, 759.75it/s]
+Loading weights: 100%|██████████| 313/313 [00:00<00:00, 661.88it/s]
+2026-11-22 04:13:23,046 INFO HTTP Request: GET https://huggingface.co/api/models/k2-fsa/OmniVoice "HTTP/1.1 200 OK"
+2026-11-22 04:13:23,100 INFO HTTP Request: GET https://huggingface.co/api/models/k2-fsa/OmniVoice/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-11-22 04:13:23,152 INFO HTTP Request: GET https://huggingface.co/api/models/k2-fsa/OmniVoice/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-11-22 04:13:24,135 INFO HTTP Request: GET https://huggingface.co/api/models/k2-fsa/OmniVoice "HTTP/1.1 200 OK"
 Traceback (most recent call last):
   File "/kaggle/working/voice-story-narrator/narrate.py", line 480, in <module>
     main()
