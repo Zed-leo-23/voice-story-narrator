@@ -28,6 +28,9 @@ REPO_URL = "https://github.com/Zed-leo-23/voice-story-narrator"
 ENGINE_URL = "https://github.com/debpalash/voicestudio"
 REPO_DIR = "/kaggle/working/voice-story-narrator"
 ENGINE_DIR = "/kaggle/working/voicestudio"
+# The engine changes almost daily upstream; a new version on 2026-11-22 refused
+# to load the model. Use one tested version, and move this pin on purpose.
+ENGINE_COMMIT = "54465ec203e7a7d68894a09d89c1f6002bc70e59"
 
 
 def sh(cmd: list[str]) -> None:
@@ -39,7 +42,9 @@ def main() -> None:
     if not os.path.isdir(REPO_DIR):
         sh(["git", "clone", "--depth", "1", REPO_URL, REPO_DIR])
     if not os.path.isdir(ENGINE_DIR):
-        sh(["git", "clone", "--depth", "1", ENGINE_URL, ENGINE_DIR])
+        sh(["git", "init", "-q", ENGINE_DIR])
+        sh(["git", "-C", ENGINE_DIR, "fetch", "-q", "--depth", "1", ENGINE_URL, ENGINE_COMMIT])
+        sh(["git", "-C", ENGINE_DIR, "checkout", "-q", "FETCH_HEAD"])
     sh(["pip", "install", "-q", "-r", f"{REPO_DIR}/requirements.txt"])
 
     sys.path.insert(0, f"{REPO_DIR}/scripts")
