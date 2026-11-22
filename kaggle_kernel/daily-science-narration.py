@@ -33,8 +33,9 @@ ENGINE_DIR = "/kaggle/working/voicestudio"
 ENGINE_COMMIT = "54465ec203e7a7d68894a09d89c1f6002bc70e59"
 
 
-def sh(cmd: list[str]) -> None:
-    print("+", " ".join(cmd))
+def sh(cmd: list[str], redact: str | None = None) -> None:
+    shown = [c.replace(redact, "***") for c in cmd] if redact else cmd
+    print("+", " ".join(shown))
     subprocess.run(cmd, check=True)
 
 
@@ -47,7 +48,10 @@ def main() -> None:
     # and re-clone so a push to main actually takes effect the next run.
     if os.path.isdir(REPO_DIR):
         sh(["rm", "-rf", REPO_DIR])
-    sh(["git", "clone", "--depth", "1", REPO_URL, REPO_DIR])
+    # voice-story-narrator is a private repo -- an unauthenticated clone 404s.
+    token = os.environ.get("GITHUB_TOKEN", "")
+    repo_url = REPO_URL.replace("https://", f"https://x-access-token:{token}@") if token else REPO_URL
+    sh(["git", "clone", "--depth", "1", repo_url, REPO_DIR], redact=token or None)
     if not os.path.isdir(ENGINE_DIR):
         sh(["git", "init", "-q", ENGINE_DIR])
         sh(["git", "-C", ENGINE_DIR, "fetch", "-q", "--depth", "1", ENGINE_URL, ENGINE_COMMIT])
