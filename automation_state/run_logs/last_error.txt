@@ -1,0 +1,56 @@
+samani.txt failed (2026-11-22)
+
+Traceback (most recent call last):
+  File "/kaggle/working/voice-story-narrator/scripts/daily_pipeline.py", line 326, in main
+    run_once(engine_path, ref_audio_search_dirs, repo_slug, out)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/kaggle/working/voice-story-narrator/scripts/daily_pipeline.py", line 423, in run_once
+    raise subprocess.CalledProcessError(proc.returncode, "narrate.py")
+subprocess.CalledProcessError: Command 'narrate.py' returned non-zero exit status 1.
+
+--- narrate.log (end) ---
+2026-11-22 04:12:15,993 INFO 7 scene(s) found in /kaggle/working/output/samani/today_story.txt
+2026-11-22 04:12:16,251 INFO Loading OmniVoice (k2-fsa/OmniVoice) on cuda ...
+2026-11-22 04:12:16,372 INFO HTTP Request: GET https://huggingface.co/api/agent-harnesses "HTTP/1.1 200 OK"
+2026-11-22 04:12:16,424 INFO HTTP Request: GET https://huggingface.co/api/models/k2-fsa/OmniVoice/revision/main "HTTP/1.1 200 OK"
+2026-11-22 04:12:16,473 INFO HTTP Request: HEAD https://huggingface.co/k2-fsa/OmniVoice/resolve/3fc979d1cd72492cd679c5ac2611e0d7ac047ba1/adapter_config.json "HTTP/1.1 404 Not Found"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-11-22 04:12:16,473 WARNING Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-11-22 04:12:16,517 INFO HTTP Request: HEAD https://huggingface.co/k2-fsa/OmniVoice/resolve/3fc979d1cd72492cd679c5ac2611e0d7ac047ba1/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-11-22 04:12:16,534 INFO HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/k2-fsa/OmniVoice/3fc979d1cd72492cd679c5ac2611e0d7ac047ba1/config.json?%2Fk2-fsa%2FOmniVoice%2Fresolve%2F3fc979d1cd72492cd679c5ac2611e0d7ac047ba1%2Fconfig.json=&etag=%22dd518e816a5c4c8eba90820bb7efa49ceafbe223%22 "HTTP/1.1 200 OK"
+2026-11-22 04:12:16,552 INFO HTTP Request: GET https://huggingface.co/api/resolve-cache/models/k2-fsa/OmniVoice/3fc979d1cd72492cd679c5ac2611e0d7ac047ba1/config.json?%2Fk2-fsa%2FOmniVoice%2Fresolve%2F3fc979d1cd72492cd679c5ac2611e0d7ac047ba1%2Fconfig.json=&etag=%22dd518e816a5c4c8eba90820bb7efa49ceafbe223%22 "HTTP/1.1 200 OK"
+2026-11-22 04:12:16,613 INFO HTTP Request: HEAD https://huggingface.co/k2-fsa/OmniVoice/resolve/3fc979d1cd72492cd679c5ac2611e0d7ac047ba1/model.safetensors "HTTP/1.1 302 Found"
+2026-11-22 04:12:16,734 INFO HTTP Request: GET https://huggingface.co/api/models/k2-fsa/OmniVoice/xet-read-token/3fc979d1cd72492cd679c5ac2611e0d7ac047ba1 "HTTP/1.1 200 OK"
+
+Loading weights:   0%|          | 0/313 [00:00<?, ?it/s]
+Loading weights:   1%|▏         | 4/313 [00:00<00:22, 13.98it/s]
+Loading weights:  77%|███████▋  | 242/313 [00:00<00:00, 795.78it/s]
+Loading weights: 100%|██████████| 313/313 [00:00<00:00, 683.43it/s]
+2026-11-22 04:12:32,712 INFO HTTP Request: GET https://huggingface.co/api/models/k2-fsa/OmniVoice "HTTP/1.1 200 OK"
+2026-11-22 04:12:32,760 INFO HTTP Request: HEAD https://huggingface.co/k2-fsa/OmniVoice/resolve/3fc979d1cd72492cd679c5ac2611e0d7ac047ba1/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-11-22 04:12:32,777 INFO HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/k2-fsa/OmniVoice/3fc979d1cd72492cd679c5ac2611e0d7ac047ba1/tokenizer_config.json?%2Fk2-fsa%2FOmniVoice%2Fresolve%2F3fc979d1cd72492cd679c5ac2611e0d7ac047ba1%2Ftokenizer_config.json=&etag=%22a7fb6f8558cce2a23d4cbb186a4a740bd2d9d481%22 "HTTP/1.1 200 OK"
+2026-11-22 04:12:32,793 INFO HTTP Request: GET https://huggingface.co/api/resolve-cache/models/k2-fsa/OmniVoice/3fc979d1cd72492cd679c5ac2611e0d7ac047ba1/tokenizer_config.json?%2Fk2-fsa%2FOmniVoice%2Fresolve%2F3fc979d1cd72492cd679c5ac2611e0d7ac047ba1%2Ftokenizer_config.json=&etag=%22a7fb6f8558cce2a23d4cbb186a4a740bd2d9d481%22 "HTTP/1.1 200 OK"
+2026-11-22 04:12:32,847 INFO HTTP Request: GET https://huggingface.co/api/models/k2-fsa/OmniVoice/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-11-22 04:12:32,902 INFO HTTP Request: GET https://huggingface.co/api/models/k2-fsa/OmniVoice/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-11-22 04:12:32,946 INFO HTTP Request: HEAD https://huggingface.co/k2-fsa/OmniVoice/resolve/3fc979d1cd72492cd679c5ac2611e0d7ac047ba1/vocab.json "HTTP/1.1 404 Not Found"
+2026-11-22 04:12:32,992 INFO HTTP Request: HEAD https://huggingface.co/k2-fsa/OmniVoice/resolve/3fc979d1cd72492cd679c5ac2611e0d7ac047ba1/merges.txt "HTTP/1.1 404 Not Found"
+2026-11-22 04:12:33,040 INFO HTTP Request: HEAD https://huggingface.co/k2-fsa/OmniVoice/resolve/3fc979d1cd72492cd679c5ac2611e0d7ac047ba1/tokenizer.json "HTTP/1.1 302 Found"
+2026-11-22 04:12:33,475 INFO HTTP Request: HEAD https://huggingface.co/k2-fsa/OmniVoice/resolve/3fc979d1cd72492cd679c5ac2611e0d7ac047ba1/added_tokens.json "HTTP/1.1 404 Not Found"
+2026-11-22 04:12:33,523 INFO HTTP Request: HEAD https://huggingface.co/k2-fsa/OmniVoice/resolve/3fc979d1cd72492cd679c5ac2611e0d7ac047ba1/special_tokens_map.json "HTTP/1.1 404 Not Found"
+2026-11-22 04:12:33,569 INFO HTTP Request: HEAD https://huggingface.co/k2-fsa/OmniVoice/resolve/3fc979d1cd72492cd679c5ac2611e0d7ac047ba1/chat_template.jinja "HTTP/1.1 307 Temporary Redirect"
+2026-11-22 04:12:33,585 INFO HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/k2-fsa/OmniVoice/3fc979d1cd72492cd679c5ac2611e0d7ac047ba1/chat_template.jinja?%2Fk2-fsa%2FOmniVoice%2Fresolve%2F3fc979d1cd72492cd679c5ac2611e0d7ac047ba1%2Fchat_template.jinja=&etag=%2201be9b307daa2d425f7c168c9fb145a286e0afb4%22 "HTTP/1.1 200 OK"
+2026-11-22 04:12:33,602 INFO HTTP Request: GET https://huggingface.co/api/resolve-cache/models/k2-fsa/OmniVoice/3fc979d1cd72492cd679c5ac2611e0d7ac047ba1/chat_template.jinja?%2Fk2-fsa%2FOmniVoice%2Fresolve%2F3fc979d1cd72492cd679c5ac2611e0d7ac047ba1%2Fchat_template.jinja=&etag=%2201be9b307daa2d425f7c168c9fb145a286e0afb4%22 "HTTP/1.1 200 OK"
+2026-11-22 04:12:34,574 INFO HTTP Request: GET https://huggingface.co/api/models/k2-fsa/OmniVoice "HTTP/1.1 200 OK"
+Traceback (most recent call last):
+  File "/kaggle/working/voice-story-narrator/narrate.py", line 480, in <module>
+    main()
+    ~~~~^^
+  File "/kaggle/working/voice-story-narrator/narrate.py", line 238, in main
+    model = OmniVoice.from_pretrained(
+        args.model, device_map=device, dtype=getattr(torch, tts_dtype_name(device))
+    )
+  File "/kaggle/working/voicestudio/omnivoice/models/omnivoice.py", line 616, in from_pretrained
+    raise OmniVoiceModelAssetError(
+    ...<3 lines>...
+    )
+omnivoice.models.omnivoice.OmniVoiceModelAssetError: Failed to load OmniVoice model asset: eustlb/higgs-audio-v2-tokenizer (the checkpoint has no bundled audio_tokenizer and this caller has no licence guard for the fallback tokenizer)
