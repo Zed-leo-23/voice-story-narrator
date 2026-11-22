@@ -30,6 +30,8 @@ from fetch_and_rewrite import build_todays_story, todays_custom_script  # noqa: 
 from firebase_hosting import deploy_narration_page  # noqa: E402
 from github_release import upload_release_asset  # noqa: E402
 from kakao import send_link_to_me  # noqa: E402
+from run_log import report_error, tail  # noqa: E402
+import traceback  # noqa: E402
 
 
 def korean_date_str(d: datetime.date) -> str:
@@ -303,16 +305,28 @@ def main(
     # turn, so a whole series goes out in one run. One failing story doesn't
     # stop the rest.
     stories = [n.strip() for n in os.environ.get("STORY_SCRIPT", "").split(",") if n.strip()]
+
+    def report(name: str, out: str) -> None:
+        # Save the error and the narration log's end to the repo: readable without opening Kaggle.
+        report_error(repo_slug, os.environ.get("GITHUB_TOKEN", ""), f"{name or 'news'} failed ({kst.today().isoformat()})",
+                     traceback.format_exc() + "\n--- narrate.log (end) ---\n" + tail(os.path.join(out, "narrate.log")))
+
     if len(stories) <= 1:
-        return run_once(engine_path, ref_audio_search_dirs, repo_slug, outdir)
+        try:
+            return run_once(engine_path, ref_audio_search_dirs, repo_slug, outdir)
+        except (Exception, SystemExit):
+            report(stories[0] if stories else "", outdir)
+            raise
     failed = []
     for name in stories:
         print(f"\n===== story {name} =====")
         os.environ["STORY_SCRIPT"] = name
+        out = os.path.join(outdir, os.path.splitext(name)[0])
         try:
-            run_once(engine_path, ref_audio_search_dirs, repo_slug, os.path.join(outdir, os.path.splitext(name)[0]))
+            run_once(engine_path, ref_audio_search_dirs, repo_slug, out)
         except (Exception, SystemExit) as exc:  # noqa: BLE001 -- report and carry on with the next story
             print(f"story {name} failed: {exc!r}")
+            report(name, out)
             failed.append(name)
     if failed:
         raise SystemExit(f"these stories failed: {failed}")
@@ -397,11 +411,16 @@ def run_once(
         "--guidance_scale", str(settings["guidance_scale"]),
         "--num_step", str(int(settings["num_step"])),
     ]
-    subprocess.run(
-        cmd,
-        env=env,
-        check=True,
-    )
+    # Print the narration log as it comes and keep a copy, so a failure can be reported.
+    log_path = os.path.join(outdir, "narrate.log")
+    with open(log_path, "w", encoding="utf-8") as log:
+        proc = subprocess.Popen(cmd, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors="replace")
+        for line in proc.stdout:
+            print(line, end="")
+            log.write(line)
+        proc.wait()
+    if proc.returncode:
+        raise subprocess.CalledProcessError(proc.returncode, "narrate.py")
 
     today = kst.today()
     today_iso = today.isoformat()
