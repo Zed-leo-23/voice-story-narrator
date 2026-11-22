@@ -39,8 +39,15 @@ def sh(cmd: list[str]) -> None:
 
 
 def main() -> None:
-    if not os.path.isdir(REPO_DIR):
-        sh(["git", "clone", "--depth", "1", REPO_URL, REPO_DIR])
+    # /kaggle/working survives across saved versions of this same kernel, so
+    # skipping the clone when REPO_DIR already exists (as this used to do)
+    # means every run after the first keeps using whatever commit happened
+    # to be checked out that first time -- silently stale, never the
+    # "latest code on GitHub" the docstring above promises. Always discard
+    # and re-clone so a push to main actually takes effect the next run.
+    if os.path.isdir(REPO_DIR):
+        sh(["rm", "-rf", REPO_DIR])
+    sh(["git", "clone", "--depth", "1", REPO_URL, REPO_DIR])
     if not os.path.isdir(ENGINE_DIR):
         sh(["git", "init", "-q", ENGINE_DIR])
         sh(["git", "-C", ENGINE_DIR, "fetch", "-q", "--depth", "1", ENGINE_URL, ENGINE_COMMIT])
