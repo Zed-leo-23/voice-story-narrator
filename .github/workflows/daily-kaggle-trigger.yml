@@ -6,10 +6,10 @@ name: Trigger daily Kaggle narration
 
 on:
   schedule:
-    # 21:50 UTC = 06:50 KST. Target delivery is 07:00 KST; this fires 10
-    # minutes early as a buffer since generation takes ~3-5 min plus
-    # whatever Kaggle's free GPU queue adds. Adjust if delivery drifts.
-    - cron: "50 21 * * *"
+    # 20:47 UTC = 05:47 KST, for delivery before 07:00 KST. GitHub starts
+    # scheduled runs late (35-47 min late in Nov 2026: 06:50 fired at
+    # 07:24-07:37), then Kaggle's free GPU queue and the ~10 min run add more.
+    - cron: "47 20 * * *"
   workflow_dispatch:
     inputs:
       story:
