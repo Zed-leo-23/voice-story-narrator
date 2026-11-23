@@ -2,13 +2,6 @@
   {
     "date": "2026-11-21",
     "source": "보내준 스크립트",
-    "title": "원피스 6화 이야기",
-    "link": "script:2026-11-21",
-    "topic": "원피스 6화"
-  },
-  {
-    "date": "2026-11-21",
-    "source": "보내준 스크립트",
     "title": "마인크래프트 과학극장 이야기",
     "link": "script:2026-11-21",
     "topic": "마인크래프트 과학극장"
@@ -208,5 +201,12 @@
     "title": "Scientists Say: Noise",
     "link": "https://www.snexplores.org/article/scientists-say-noise-definition-pronunciation",
     "topic": "잡음"
+  },
+  {
+    "date": "2026-11-24",
+    "source": "사이언스 뉴스 익스플로어스",
+    "title": "Analyze This: Color might explain baboon’s link to Egyptian god",
+    "link": "https://www.snexplores.org/article/baboon-color-egyptian-moon-god",
+    "topic": "원숭이"
   }
 ]
