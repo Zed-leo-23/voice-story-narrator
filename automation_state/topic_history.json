@@ -23,13 +23,6 @@
   {
     "date": "2026-11-21",
     "source": "보내준 스크립트",
-    "title": "마인크래프트 과학극장 이야기",
-    "link": "script:2026-11-21",
-    "topic": "마인크래프트 과학극장"
-  },
-  {
-    "date": "2026-11-21",
-    "source": "보내준 스크립트",
     "title": "가난한 과부와 수상한 외상 손님 이야기",
     "link": "script:2026-11-21",
     "topic": "가난한 과부와 수상한 외상 손님"
@@ -208,5 +201,12 @@
     "title": "Meet the first new living cat species described in more than a century",
     "link": "https://www.snexplores.org/article/new-living-cat-species",
     "topic": "고양이"
+  },
+  {
+    "date": "2026-11-26",
+    "source": "사이언스 뉴스 익스플로어스",
+    "title": "Insects once had 24 legs",
+    "link": "https://www.snexplores.org/article/insects-had-24-legs",
+    "topic": "곤충"
   }
 ]
