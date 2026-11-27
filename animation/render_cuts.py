@@ -12,7 +12,9 @@ import argparse, json, os, re, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from style import CHARACTERS, DEFAULT_LOOK, LOOKS, LORAS, NEGATIVE, STYLE_TAGS, STYLE_TAGS_END  # noqa: E402
+from style import (  # noqa: E402
+    CHARACTERS, DEFAULT_LOOK, GROUP_CHARACTERS, LOOKS, LORAS, NEGATIVE, STYLE_TAGS, STYLE_TAGS_END, TIME_OF_DAY,
+)
 
 MODEL = "stabilityai/stable-diffusion-xl-base-1.0"
 # The stock SDXL VAE turns pictures black in fp16; this one is the same VAE fixed for fp16.
@@ -33,12 +35,38 @@ def clean(text: str) -> str:
     return re.sub(r"\s*,\s*,", ",", re.sub(r"\s+", " ", text)).strip()
 
 
+def time_of_day(shot: dict) -> str | None:
+    words = re.findall(r"[a-z]+", shot["picture"].lower())
+    return next((t for t in TIME_OF_DAY if t in words), None)
+
+
+def cast_line(shot: dict) -> str:
+    """SDXL likes to repeat a lone animal (3-4 tigers in the first tests): say how many."""
+    cast = [c for c in shot["characters"] if c in CHARACTERS]
+    if not cast:
+        return ""
+    names = [c.replace("_", " ") for c in cast]
+    if len(cast) == 1 and cast[0] not in GROUP_CHARACTERS:
+        return f"only one {names[0]} in the picture, a single {names[0]}"
+    return "each of these appears exactly once: " + ", ".join(names)
+
+
 def prompt_for(shot: dict, look: str = "base") -> str:
-    """Short style words, then the scene and who is in it. The long STYLE text is
-    left out: in SDXL it drowned the scene (no snow, no tiger in the 2nd test)."""
+    """Trigger words, time of day, short style words, the scene, how many characters,
+    their looks, a few more style words. The long STYLE text is left out: in SDXL it
+    drowned the scene (no snow, no tiger in the 2nd test)."""
     looks = " ".join(f"{c}: {english(CHARACTERS[c])}." for c in shot["characters"] if c in CHARACTERS)
     triggers = ", ".join(LORAS[name][2] for name in LOOKS[look])
-    return clean(f"{triggers + ', ' if triggers else ''}{STYLE_TAGS}. {shot['picture']}. {looks} {STYLE_TAGS_END}")
+    when = time_of_day(shot)
+    lead = ", ".join(x for x in (triggers, TIME_OF_DAY[when][0] if when else "") if x)
+    count = cast_line(shot)
+    return clean(f"{lead + ', ' if lead else ''}{STYLE_TAGS}. {shot['picture']}. "
+                 f"{count + '. ' if count else ''}{looks} {STYLE_TAGS_END}")
+
+
+def negative_for(shot: dict, base: str) -> str:
+    when = time_of_day(shot)
+    return clean(f"{base}, {TIME_OF_DAY[when][1]}") if when else base
 
 
 def load_pipe(model: str):
@@ -144,7 +172,7 @@ def main() -> None:
         for s in shots:
             for look in looks:
                 print(f"--- shot {s['shot']} [{look}] ({s['start']:.1f}-{s['end']:.1f}s)\n{prompt_for(s, look)}")
-        print(f"--- negative\n{negative}")
+            print(f"--- negative\n{negative_for(s, negative)}")
         return
 
     import torch
@@ -159,7 +187,7 @@ def main() -> None:
             path = os.path.join(out, name)
             print(f"[{look}] shot {s['shot']}/{len(data['shots'])}: {s['picture'][:60]}", flush=True)
             image = pipe(
-                **embeddings(pipe, prompt_for(s, look), negative),
+                **embeddings(pipe, prompt_for(s, look), negative_for(s, negative)),
                 width=WIDTH, height=HEIGHT,
                 num_inference_steps=args.steps, guidance_scale=args.guidance,
                 generator=torch.Generator("cuda").manual_seed(args.seed + s["shot"]),

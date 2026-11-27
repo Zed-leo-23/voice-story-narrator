@@ -35,7 +35,8 @@ NEGATIVE = (
     "text, letters, watermark, logo, signature, modern anime, big sparkly anime eyes, glossy 3D render, CGI, "
     "photo, realistic, realistic animal, gradient cel shading, line art only, coloring book, "
     "western house, wooden cabin, chimney, European village, Japanese kimono, oni, scary, blood, gore, dark horror lighting, "
-    "extra fingers, deformed hands, blurry"
+    "extra fingers, deformed hands, blurry, duplicate characters, clones, the same animal repeated, "
+    "group of tigers, crowd of animals"
 )
 
 # English, so the image model reads it the same way every time. Keep left/right exact.
@@ -94,5 +95,17 @@ LOOKS = {
     "gouache_90s": {"gouache": 0.7, "90s": 1.5},
     "gouache_cel": {"gouache": 0.6, "cel": 0.6},
 }
-DEFAULT_LOOK = "gouache"
+DEFAULT_LOOK = "gouache_90s"  # chosen 2026-11-27 from the 4-way comparison
+
+# Groups: these keys mean several figures, so render_cuts.py does not say "only one".
+GROUP_CHARACTERS = {"goblins", "sea_soldiers"}
+
+# Time of day found in a shot's picture -> words put first, and what to keep out.
+TIME_OF_DAY = {
+    "night": ("night scene, dark navy blue night sky, moonlight, warm lamp glow, deep blue shadows",
+              "daylight, bright day, sunny, blue daytime sky"),
+    "dusk": ("dusk, orange and purple evening sky, long shadows", "midday, bright noon"),
+    "sunset": ("sunset, warm orange evening light", "midday, bright noon"),
+    "dawn": ("early dawn, pale pink morning sky, soft first light", "night, midday"),
+}
 
