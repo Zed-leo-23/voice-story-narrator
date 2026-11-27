@@ -39,7 +39,9 @@ def main() -> None:
        redact=token or None)
 
     subprocess.run(["nvidia-smi", "--query-gpu=name,memory.total", "--format=csv"])
-    # Kaggle already has torch; add the picture libraries only.
+    # Kaggle already has torch; add the picture libraries only. Kaggle's old torchao
+    # makes peft refuse to load LoRAs, and nothing here uses it, so remove it.
+    subprocess.run(["pip", "uninstall", "-y", "-q", "torchao"])
     sh(["pip", "install", "-q", "diffusers>=0.30", "transformers", "accelerate", "safetensors", "peft", "requests"])
 
     out = f"/kaggle/working/out/{story}"
