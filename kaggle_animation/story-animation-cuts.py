@@ -3,7 +3,7 @@ then uploads them to the GitHub Release `cuts-<story id>`.
 
 Started by .github/workflows/animation-kaggle.yml. Like the daily narration
 kernel, the values below (GITHUB_TOKEN, STORY_BRANCH, ANIMATION_STORY,
-ANIMATION_SHOTS, ANIMATION_LOOKS) are prepended as `os.environ[...] = ...` lines by
+ANIMATION_SHOTS, ANIMATION_LOOKS, ANIMATION_MODE) are prepended as `os.environ[...] = ...` lines by
 scripts/write_kaggle_secrets.py in the Actions runner's throwaway checkout
 right before `kaggle kernels push`. This file as committed has no secrets.
 """
@@ -31,6 +31,9 @@ def main() -> None:
     shots = os.environ.get("ANIMATION_SHOTS", "").strip()
     branch = os.environ.get("STORY_BRANCH", "").strip()
     looks = os.environ.get("ANIMATION_LOOKS", "").strip()
+    # layered: backgrounds and characters drawn apart, then put together (default).
+    # single: one SDXL picture per shot (render_cuts.py).
+    mode = os.environ.get("ANIMATION_MODE", "").strip() or "layered"
 
     if os.path.isdir(REPO_DIR):
         shutil.rmtree(REPO_DIR)
@@ -42,11 +45,15 @@ def main() -> None:
     # Kaggle already has torch; add the picture libraries only. Kaggle's old torchao
     # makes peft refuse to load LoRAs, and nothing here uses it, so remove it.
     subprocess.run(["pip", "uninstall", "-y", "-q", "torchao"])
-    sh(["pip", "install", "-q", "diffusers>=0.30", "transformers", "accelerate", "safetensors", "peft", "requests"])
+    sh(["pip", "install", "-q", "diffusers>=0.30", "transformers", "accelerate", "safetensors", "peft", "requests", "rembg[cpu]"])
 
     out = f"/kaggle/working/out/{story}"
-    sh([sys.executable, f"{REPO_DIR}/animation/render_cuts.py", story, "--out", out,
-        *(["--shots", shots] if shots else []), *(["--looks", looks] if looks else [])])
+    if mode == "layered":
+        sh([sys.executable, f"{REPO_DIR}/animation/render_layered.py", story, "--out", out,
+            *(["--shots", shots] if shots else []), *(["--look", looks] if looks else [])])
+    else:
+        sh([sys.executable, f"{REPO_DIR}/animation/render_cuts.py", story, "--out", out,
+            *(["--shots", shots] if shots else []), *(["--looks", looks] if looks else [])])
 
     archive = shutil.make_archive(f"/kaggle/working/{story}-cuts", "zip", out)
     if not token:
@@ -55,7 +62,9 @@ def main() -> None:
     sys.path.insert(0, f"{REPO_DIR}/scripts")
     from github_release import upload_release_asset  # noqa: E402
 
-    files = [archive, f"{out}/contact_sheet.jpg", f"{out}/prompts.json", *sorted(glob.glob(f"{out}/shot_*.png"))]
+    files = [archive, f"{out}/contact_sheet.jpg", f"{out}/prompts.json",
+             *glob.glob(f"{out}/layout.json"), *sorted(glob.glob(f"{out}/shot_*.png")),
+             *sorted(glob.glob(f"{out}/layers/sprite_*.png"))]
     for path in files:
         link = upload_release_asset(REPO, f"cuts-{story}", f"Animation cuts: {story}", path, token,
                                     body=f"SDXL shot pictures for {story} (branch {branch or 'default'}).")

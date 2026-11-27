@@ -26,6 +26,18 @@ STYLE_TAGS = (
     "flat solid colors, no shading, plain simple background, Joseon dynasty Korean countryside"
 )
 
+# Sprites (render_layered.py): one character on plain white, to be cut out.
+SPRITE_TAGS = (
+    "full body character, whole figure visible, isolated on a plain pure white background, no background, "
+    "simple Korean webtoon cartoon, thick bold black outlines, flat solid colors, no shading"
+)
+
+# Backgrounds (render_layered.py): the place only, Korean village things, no people.
+KOREAN_PLACE = (
+    "Joseon dynasty Korean countryside: round golden straw thatched choga houses, low stone walls, "
+    "brown onggi clay jars, persimmon trees, gentle hills"
+)
+
 # Korean feel in every SDXL prompt: clothes, houses and things of an old Korean village.
 KOREAN = (
     "people wear Korean hanbok: short jeogori jacket tied with a long otgoreum ribbon, "

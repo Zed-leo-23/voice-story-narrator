@@ -16,6 +16,10 @@ on:
         description: "Only these shots, e.g. 1,2,3 (empty = all)"
         required: false
         default: ""
+      mode:
+        description: "layered = backgrounds and characters drawn apart, then put together; single = one picture per shot"
+        required: false
+        default: "layered"
       looks:
         description: "Style LoRA look(s) from animation/style.py LOOKS, e.g. gouache or base,gouache,gouache_90s to compare (empty = default)"
         required: false
@@ -43,9 +47,10 @@ jobs:
           ANIMATION_STORY: ${{ inputs.story }}
           ANIMATION_SHOTS: ${{ inputs.shots }}
           ANIMATION_LOOKS: ${{ inputs.looks }}
+          ANIMATION_MODE: ${{ inputs.mode }}
         run: >
           python3 scripts/write_kaggle_secrets.py kaggle_animation/story-animation-cuts.py
-          GITHUB_TOKEN STORY_BRANCH ANIMATION_STORY ANIMATION_SHOTS ANIMATION_LOOKS
+          GITHUB_TOKEN STORY_BRANCH ANIMATION_STORY ANIMATION_SHOTS ANIMATION_LOOKS ANIMATION_MODE
 
       - name: Push and run the Kaggle kernel
         env:
