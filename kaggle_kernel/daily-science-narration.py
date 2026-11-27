@@ -51,7 +51,11 @@ def main() -> None:
     # voice-story-narrator is a private repo -- an unauthenticated clone 404s.
     token = os.environ.get("GITHUB_TOKEN", "")
     repo_url = REPO_URL.replace("https://", f"https://x-access-token:{token}@") if token else REPO_URL
-    sh(["git", "clone", "--depth", "1", repo_url, REPO_DIR], redact=token or None)
+    # Clone the branch the run was started from (main on the daily schedule),
+    # so story branches can be recorded without merging into main first.
+    branch = os.environ.get("STORY_BRANCH", "").strip()
+    sh(["git", "clone", "--depth", "1", *(["--branch", branch] if branch else []), repo_url, REPO_DIR],
+       redact=token or None)
     if not os.path.isdir(ENGINE_DIR):
         sh(["git", "init", "-q", ENGINE_DIR])
         sh(["git", "-C", ENGINE_DIR, "fetch", "-q", "--depth", "1", ENGINE_URL, ENGINE_COMMIT])

@@ -1,0 +1,313 @@
+{
+  "id": "hump-old-man",
+  "title": "혹부리 영감과 노래 주머니",
+  "audio": "https://github.com/Zed-leo-23/voice-story-narrator/releases/download/story-hump-old-man/full_story.wav",
+  "timeline": "https://github.com/Zed-leo-23/voice-story-narrator/releases/download/story-hump-old-man/timeline.json",
+  "duration": 222.67,
+  "style": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles.",
+  "negative_prompt": "text, letters, watermark, logo, signature, modern anime, big sparkly anime eyes, glossy 3D render, CGI, photo, realistic, gradient cel shading, Japanese kimono, oni, scary, blood, gore, dark horror lighting, extra fingers, deformed hands, blurry",
+  "cast": {
+    "hump_man": "혹부리 영감: kind old Korean man, round smiling face, small white topknot, short white beard, white hanbok with a faded indigo vest, straw sandals; a big round fist-sized lump on his RIGHT cheek",
+    "greedy_man": "욕심 영감: thin old Korean man, sharp eyebrows, narrow eyes, grey topknot, thin grey goatee, grey hanbok with a brown vest; a lump on his LEFT cheek",
+    "goblin_chief": "도깨비 대장: chubby, cheerful Korean dokkaebi goblin, bright red skin, shaggy black hair, one small yellow horn, big round eyes, patched blue-and-green hanbok jacket, holding a knobby wooden magic club",
+    "goblins": "도깨비들: small round goblins in different colors (green, blue, purple), one tiny horn each, patched hanbok scraps, cheerful and silly"
+  },
+  "shots": [
+    {
+      "shot": 1,
+      "scene": 1,
+      "start": 0.0,
+      "end": 15.2,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "엉뚱한 동화극장, 오늘의 이야기는 혹부리 영감과 노래 주머니. 볼에 커다란 혹을 달고 다니던 할아버지가, 노래 한 곡 덕분에 혹을 떼었대. 그런데 그걸 따라 한 이웃은 어떻게 됐을까?",
+          "start": 0.0,
+          "end": 14.3
+        }
+      ],
+      "characters": [
+        "hump_man"
+      ],
+      "picture": "hump_man smiling and humming on a mountain path in autumn, a big round lump on his RIGHT cheek, thatched village far below",
+      "motion": "slow zoom in",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [hump_man] 혹부리 영감: kind old Korean man, round smiling face, small white topknot, short white beard, white hanbok with a faded indigo vest, straw sandals; a big round fist-sized lump on his RIGHT cheek. Scene: hump_man smiling and humming on a mountain path in autumn, a big round lump on his RIGHT cheek, thatched village far below."
+    },
+    {
+      "shot": 2,
+      "scene": 2,
+      "start": 15.2,
+      "end": 45.66,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "옛날 옛날 어느 산골 마을에, 오른쪽 볼에 주먹만 한 혹이 달린 할아버지가 살았어. 사람들은 그 할아버지를 혹부리 영감이라고 불렀지. 혹부리 영감은 혹 때문에 조금 불편했지만, 늘 웃는 얼굴로 노래를 흥얼거리는 사람이었어. 어느 날 혹부리 영감은 산에 나무를 하러 갔다가, 그만 해가 꼴딱 넘어가 버렸어. 깜깜한 산길을 헤매다 보니, 낡은 빈집 하나가 보였지.",
+          "start": 15.2,
+          "end": 45.26
+        }
+      ],
+      "characters": [
+        "hump_man"
+      ],
+      "picture": "hump_man carrying an A-frame of firewood on his back, the sun setting behind dark mountains, an old empty wooden house with a sagging roof among the trees",
+      "motion": "slow pan right",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [hump_man] 혹부리 영감: kind old Korean man, round smiling face, small white topknot, short white beard, white hanbok with a faded indigo vest, straw sandals; a big round fist-sized lump on his RIGHT cheek. Scene: hump_man carrying an A-frame of firewood on his back, the sun setting behind dark mountains, an old empty wooden house with a sagging roof among the trees."
+    },
+    {
+      "shot": 3,
+      "scene": 2,
+      "start": 45.66,
+      "end": 56.18,
+      "lines": [
+        {
+          "speaker": "혹부리영감",
+          "text": "아이고, 오늘 밤은 여기서 쉬어 가야겠구나. 무서우니까 노래나 한 곡 불러 볼까?",
+          "start": 45.66,
+          "end": 55.28
+        }
+      ],
+      "characters": [
+        "hump_man"
+      ],
+      "picture": "hump_man sitting on the wooden floor of the dark empty house, one small oil lamp, singing with his eyes closed, mouth open",
+      "motion": "gentle zoom in, lamp flicker",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [hump_man] 혹부리 영감: kind old Korean man, round smiling face, small white topknot, short white beard, white hanbok with a faded indigo vest, straw sandals; a big round fist-sized lump on his RIGHT cheek. Scene: hump_man sitting on the wooden floor of the dark empty house, one small oil lamp, singing with his eyes closed, mouth open."
+    },
+    {
+      "shot": 4,
+      "scene": 3,
+      "start": 56.18,
+      "end": 78.37,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "혹부리 영감이 신나게 노래를 부르는데, 갑자기 문이 덜컹 열리더니 뿔 달린 도깨비들이 우르르 몰려 들어왔어. 맨 앞에는 방망이를 든 도깨비 대장이 서 있었지.",
+          "start": 56.18,
+          "end": 69.09
+        },
+        {
+          "speaker": "도깨비대장",
+          "text": "우와, 영감! 그 노래 정말 좋다! 그렇게 고운 소리는 대체 어디서 나오는 거야?",
+          "start": 69.49,
+          "end": 77.97
+        }
+      ],
+      "characters": [
+        "hump_man",
+        "goblin_chief",
+        "goblins"
+      ],
+      "picture": "the paper door bursting open, goblin_chief and the goblins crowding in with wide happy eyes, pointing at hump_man",
+      "motion": "quick push in",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [hump_man] 혹부리 영감: kind old Korean man, round smiling face, small white topknot, short white beard, white hanbok with a faded indigo vest, straw sandals; a big round fist-sized lump on his RIGHT cheek. [goblin_chief] 도깨비 대장: chubby, cheerful Korean dokkaebi goblin, bright red skin, shaggy black hair, one small yellow horn, big round eyes, patched blue-and-green hanbok jacket, holding a knobby wooden magic club. [goblins] 도깨비들: small round goblins in different colors (green, blue, purple), one tiny horn each, patched hanbok scraps, cheerful and silly. Scene: the paper door bursting open, goblin_chief and the goblins crowding in with wide happy eyes, pointing at hump_man."
+    },
+    {
+      "shot": 5,
+      "scene": 3,
+      "start": 78.37,
+      "end": 93.11,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "혹부리 영감은 겁이 났지만, 꾀를 하나 냈어. 볼에 달린 혹을 톡톡 두드리며 말했지.",
+          "start": 78.37,
+          "end": 85.43
+        },
+        {
+          "speaker": "혹부리영감",
+          "text": "그, 그건 말이야, 바로 이 노래 주머니에서 나오는 소리란다.",
+          "start": 85.83,
+          "end": 92.71
+        }
+      ],
+      "characters": [
+        "hump_man",
+        "goblin_chief"
+      ],
+      "picture": "hump_man, nervous but clever, tapping the lump on his RIGHT cheek with one finger while goblin_chief leans in, amazed",
+      "motion": "slow zoom on the lump",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [hump_man] 혹부리 영감: kind old Korean man, round smiling face, small white topknot, short white beard, white hanbok with a faded indigo vest, straw sandals; a big round fist-sized lump on his RIGHT cheek. [goblin_chief] 도깨비 대장: chubby, cheerful Korean dokkaebi goblin, bright red skin, shaggy black hair, one small yellow horn, big round eyes, patched blue-and-green hanbok jacket, holding a knobby wooden magic club. Scene: hump_man, nervous but clever, tapping the lump on his RIGHT cheek with one finger while goblin_chief leans in, amazed."
+    },
+    {
+      "shot": 6,
+      "scene": 3,
+      "start": 93.11,
+      "end": 100.66,
+      "lines": [
+        {
+          "speaker": "도깨비대장",
+          "text": "노래 주머니라고? 그거 나한테 팔아! 금은보화를 잔뜩 줄게!",
+          "start": 93.11,
+          "end": 99.76
+        }
+      ],
+      "characters": [
+        "goblin_chief",
+        "goblins"
+      ],
+      "picture": "goblin_chief holding out an open treasure chest full of gold bars and silk, begging, the goblins cheering behind",
+      "motion": "slight bounce",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [goblin_chief] 도깨비 대장: chubby, cheerful Korean dokkaebi goblin, bright red skin, shaggy black hair, one small yellow horn, big round eyes, patched blue-and-green hanbok jacket, holding a knobby wooden magic club. [goblins] 도깨비들: small round goblins in different colors (green, blue, purple), one tiny horn each, patched hanbok scraps, cheerful and silly. Scene: goblin_chief holding out an open treasure chest full of gold bars and silk, begging, the goblins cheering behind."
+    },
+    {
+      "shot": 7,
+      "scene": 4,
+      "start": 100.66,
+      "end": 119.37,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "도깨비 대장이 방망이를 뚝딱 휘두르자, 혹이 쏙 떨어져 나갔어. 하나도 아프지 않았지. 도깨비들은 혹 대신 금덩이며 비단을 한 보따리 안겨 주었어. 혹부리 영감은 매끈해진 볼을 쓰다듬으며 싱글벙글 집으로 돌아왔지.",
+          "start": 100.66,
+          "end": 118.47
+        }
+      ],
+      "characters": [
+        "hump_man",
+        "goblin_chief"
+      ],
+      "picture": "goblin_chief swinging his magic club, the lump popping off hump_man's cheek with sparkles, then hump_man walking home at dawn rubbing his smooth cheek with a big bundle of gold and silk",
+      "motion": "pan left to right",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [hump_man] 혹부리 영감: kind old Korean man, round smiling face, small white topknot, short white beard, white hanbok with a faded indigo vest, straw sandals; a big round fist-sized lump on his RIGHT cheek. [goblin_chief] 도깨비 대장: chubby, cheerful Korean dokkaebi goblin, bright red skin, shaggy black hair, one small yellow horn, big round eyes, patched blue-and-green hanbok jacket, holding a knobby wooden magic club. Scene: goblin_chief swinging his magic club, the lump popping off hump_man's cheek with sparkles, then hump_man walking home at dawn rubbing his smooth cheek with a big bundle of gold and silk."
+    },
+    {
+      "shot": 8,
+      "scene": 5,
+      "start": 119.37,
+      "end": 135.9,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "이 소문은 금세 이웃 마을까지 퍼졌어. 그 마을에도 왼쪽 볼에 혹이 달린 욕심 많은 영감이 살았거든.",
+          "start": 119.37,
+          "end": 127.33
+        },
+        {
+          "speaker": "욕심영감",
+          "text": "흥, 노래 한 곡에 금덩이라니! 나도 혹 떼고 부자가 되어야지!",
+          "start": 127.73,
+          "end": 135.5
+        }
+      ],
+      "characters": [
+        "greedy_man"
+      ],
+      "picture": "greedy_man with a lump on his LEFT cheek, rubbing his hands greedily as villagers whisper the rumour in the background",
+      "motion": "slow zoom in",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [greedy_man] 욕심 영감: thin old Korean man, sharp eyebrows, narrow eyes, grey topknot, thin grey goatee, grey hanbok with a brown vest; a lump on his LEFT cheek. Scene: greedy_man with a lump on his LEFT cheek, rubbing his hands greedily as villagers whisper the rumour in the background."
+    },
+    {
+      "shot": 9,
+      "scene": 5,
+      "start": 135.9,
+      "end": 154.27,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "욕심 많은 영감은 일부러 그 빈집을 찾아가, 목청껏 노래를 불렀어. 그런데 노래 실력은 영 꽝이었지. 도깨비들이 귀를 막으며 몰려왔어.",
+          "start": 135.9,
+          "end": 147.42
+        },
+        {
+          "speaker": "도깨비대장",
+          "text": "으악, 이게 무슨 소리야! 너도 노래 주머니를 팔러 왔냐?",
+          "start": 147.82,
+          "end": 153.87
+        }
+      ],
+      "characters": [
+        "greedy_man",
+        "goblins"
+      ],
+      "picture": "greedy_man singing terribly in the empty house, musical notes drawn crooked, goblins covering their ears and grimacing",
+      "motion": "shake slightly",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [greedy_man] 욕심 영감: thin old Korean man, sharp eyebrows, narrow eyes, grey topknot, thin grey goatee, grey hanbok with a brown vest; a lump on his LEFT cheek. [goblins] 도깨비들: small round goblins in different colors (green, blue, purple), one tiny horn each, patched hanbok scraps, cheerful and silly. Scene: greedy_man singing terribly in the empty house, musical notes drawn crooked, goblins covering their ears and grimacing."
+    },
+    {
+      "shot": 10,
+      "scene": 5,
+      "start": 154.27,
+      "end": 175.11,
+      "lines": [
+        {
+          "speaker": "욕심영감",
+          "text": "그럼요, 그럼요! 이 혹이 바로 노래 주머니랍니다. 얼른 금덩이나 주세요!",
+          "start": 154.27,
+          "end": 163.87
+        },
+        {
+          "speaker": "도깨비대장",
+          "text": "거짓말쟁이! 지난번에 산 노래 주머니에서는 노래가 하나도 안 나오더라! 이것도 도로 가져가!",
+          "start": 164.27,
+          "end": 174.71
+        }
+      ],
+      "characters": [
+        "greedy_man",
+        "goblin_chief"
+      ],
+      "picture": "greedy_man grinning and pointing at the lump on his LEFT cheek, goblin_chief frowning with arms crossed, holding the old lump in one hand",
+      "motion": "slow push in",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [greedy_man] 욕심 영감: thin old Korean man, sharp eyebrows, narrow eyes, grey topknot, thin grey goatee, grey hanbok with a brown vest; a lump on his LEFT cheek. [goblin_chief] 도깨비 대장: chubby, cheerful Korean dokkaebi goblin, bright red skin, shaggy black hair, one small yellow horn, big round eyes, patched blue-and-green hanbok jacket, holding a knobby wooden magic club. Scene: greedy_man grinning and pointing at the lump on his LEFT cheek, goblin_chief frowning with arms crossed, holding the old lump in one hand."
+    },
+    {
+      "shot": 11,
+      "scene": 5,
+      "start": 175.11,
+      "end": 191.37,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "도깨비 대장이 방망이를 뚝딱 휘두르자, 지난번 혹이 날아와 욕심 많은 영감의 오른쪽 볼에 철썩 붙어 버렸어. 욕심 많은 영감은 양쪽 볼에 혹을 하나씩 달고, 엉엉 울며 산을 내려갔대.",
+          "start": 175.11,
+          "end": 190.47
+        }
+      ],
+      "characters": [
+        "greedy_man"
+      ],
+      "picture": "the old lump flying through the air and sticking to greedy_man's RIGHT cheek, greedy_man now has lumps on both cheeks, crying and running down the mountain",
+      "motion": "pan down",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [greedy_man] 욕심 영감: thin old Korean man, sharp eyebrows, narrow eyes, grey topknot, thin grey goatee, grey hanbok with a brown vest; a lump on his LEFT cheek. Scene: the old lump flying through the air and sticking to greedy_man's RIGHT cheek, greedy_man now has lumps on both cheeks, crying and running down the mountain."
+    },
+    {
+      "shot": 12,
+      "scene": 6,
+      "start": 191.37,
+      "end": 217.61,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "얘들아, 여기서 과학 한 스푼! 노래는 정말 어디서 나올까? 우리 목 안에는 성대라는 얇은 막 두 개가 있어. 숨을 내쉬면 그 막이 아주 빠르게 떨리면서 소리가 나지. 높은 소리를 낼 때는 성대가 1초에 수백 번이나 떨린대. 목에 손을 살짝 대고 아 하고 소리를 내 봐. 손끝이 간질간질 떨리지? 그게 바로 진짜 노래 주머니야!",
+          "start": 191.37,
+          "end": 216.71
+        }
+      ],
+      "characters": [],
+      "picture": "a cute cutaway picture of a child singing, showing the throat with two small vocal folds vibrating, gentle sound waves around, simple and friendly, no labels",
+      "motion": "slow zoom in",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters:  Scene: a cute cutaway picture of a child singing, showing the throat with two small vocal folds vibrating, gentle sound waves around, simple and friendly, no labels."
+    },
+    {
+      "shot": 13,
+      "scene": 7,
+      "start": 217.61,
+      "end": 222.67,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "엉뚱한 동화극장, 다음에 또 만나요",
+          "start": 217.61,
+          "end": 220.67
+        }
+      ],
+      "characters": [
+        "hump_man",
+        "goblins"
+      ],
+      "picture": "hump_man and the goblins waving goodbye together in front of the old house under a starry sky",
+      "motion": "slow zoom out",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [hump_man] 혹부리 영감: kind old Korean man, round smiling face, small white topknot, short white beard, white hanbok with a faded indigo vest, straw sandals; a big round fist-sized lump on his RIGHT cheek. [goblins] 도깨비들: small round goblins in different colors (green, blue, purple), one tiny horn each, patched hanbok scraps, cheerful and silly. Scene: hump_man and the goblins waving goodbye together in front of the old house under a starry sky."
+    }
+  ]
+}

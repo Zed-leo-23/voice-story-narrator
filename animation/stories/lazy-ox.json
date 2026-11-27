@@ -1,0 +1,325 @@
+{
+  "id": "lazy-ox",
+  "title": "소가 된 게으름뱅이",
+  "audio": "https://github.com/Zed-leo-23/voice-story-narrator/releases/download/story-lazy-ox/full_story.wav",
+  "timeline": "https://github.com/Zed-leo-23/voice-story-narrator/releases/download/story-lazy-ox/timeline.json",
+  "duration": 223.41,
+  "style": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles.",
+  "negative_prompt": "text, letters, watermark, logo, signature, modern anime, big sparkly anime eyes, glossy 3D render, CGI, photo, realistic, gradient cel shading, Japanese kimono, oni, scary, blood, gore, dark horror lighting, extra fingers, deformed hands, blurry",
+  "cast": {
+    "lazy_man": "게으름뱅이: young Korean man, messy black hair, half-closed sleepy eyes, wrinkled beige hanbok, barefoot",
+    "lazy_ox": "게으름뱅이 소: yellowish-brown Korean ox with the same half-closed sleepy eyes and a messy black hair tuft between its horns",
+    "mask_old_man": "탈 만드는 노인: mysterious old man, long white beard, dark grey robe, black gat hat, knowing smile",
+    "farmer": "농부: sturdy cheerful farmer, white headband, rolled-up sleeves, brown hanbok trousers, straw hat on his back"
+  },
+  "shots": [
+    {
+      "shot": 1,
+      "scene": 1,
+      "start": 0.0,
+      "end": 14.14,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "엉뚱한 동화극장, 오늘의 이야기는 소가 된 게으름뱅이. 일하기 싫어서 빈둥거리던 사람이, 하루아침에 진짜 소가 되어 버렸대. 어쩌다 그런 일이 생긴 걸까?",
+          "start": 0.0,
+          "end": 13.24
+        }
+      ],
+      "characters": [
+        "lazy_man"
+      ],
+      "picture": "lazy_man yawning hugely while lying on a straw mat, next to him a brown ox chewing grass, both with the same sleepy face",
+      "motion": "slow zoom in",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [lazy_man] 게으름뱅이: young Korean man, messy black hair, half-closed sleepy eyes, wrinkled beige hanbok, barefoot. Scene: lazy_man yawning hugely while lying on a straw mat, next to him a brown ox chewing grass, both with the same sleepy face."
+    },
+    {
+      "shot": 2,
+      "scene": 2,
+      "start": 14.14,
+      "end": 41.23,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "옛날 옛날 어느 마을에, 세상에서 제일 게으른 사람이 살았어. 해가 중천에 떠도 이불 속에서 뒹굴뒹굴, 밥을 먹고 나면 또 뒹굴뒹굴. 마당 쓸기도, 물 긷기도, 나무하기도 모두 싫었지.",
+          "start": 14.14,
+          "end": 29.31
+        },
+        {
+          "speaker": "게으름뱅이",
+          "text": "아함, 귀찮아. 누가 대신 밥 좀 떠먹여 주면 좋겠다. 아, 소는 좋겠다. 하루 종일 누워서 풀만 먹으면 되잖아.",
+          "start": 29.71,
+          "end": 40.83
+        }
+      ],
+      "characters": [
+        "lazy_man"
+      ],
+      "picture": "lazy_man rolling around under a quilt in a thatched house at noon, family members with brooms and water jars frowning at him; he daydreams of a relaxed ox",
+      "motion": "slow pan right",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [lazy_man] 게으름뱅이: young Korean man, messy black hair, half-closed sleepy eyes, wrinkled beige hanbok, barefoot. Scene: lazy_man rolling around under a quilt in a thatched house at noon, family members with brooms and water jars frowning at him; he daydreams of a relaxed ox."
+    },
+    {
+      "shot": 3,
+      "scene": 2,
+      "start": 41.23,
+      "end": 48.77,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "식구들의 잔소리가 듣기 싫었던 게으름뱅이는, 어느 날 슬그머니 집을 나와 버렸어.",
+          "start": 41.23,
+          "end": 47.87
+        }
+      ],
+      "characters": [
+        "lazy_man"
+      ],
+      "picture": "lazy_man sneaking out of the gate with a tiny bundle, looking back nervously",
+      "motion": "pan left to right",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [lazy_man] 게으름뱅이: young Korean man, messy black hair, half-closed sleepy eyes, wrinkled beige hanbok, barefoot. Scene: lazy_man sneaking out of the gate with a tiny bundle, looking back nervously."
+    },
+    {
+      "shot": 4,
+      "scene": 3,
+      "start": 48.77,
+      "end": 59.14,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "고개를 넘어가는데, 길가 오두막에서 웬 노인이 무언가를 열심히 만들고 있었어. 가까이 가 보니, 커다란 소머리 모양의 탈이었지.",
+          "start": 48.77,
+          "end": 58.74
+        }
+      ],
+      "characters": [
+        "lazy_man",
+        "mask_old_man"
+      ],
+      "picture": "a small hut by a mountain pass, mask_old_man carving a big wooden ox-head mask, lazy_man peeking curiously",
+      "motion": "slow push in",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [lazy_man] 게으름뱅이: young Korean man, messy black hair, half-closed sleepy eyes, wrinkled beige hanbok, barefoot. [mask_old_man] 탈 만드는 노인: mysterious old man, long white beard, dark grey robe, black gat hat, knowing smile. Scene: a small hut by a mountain pass, mask_old_man carving a big wooden ox-head mask, lazy_man peeking curiously."
+    },
+    {
+      "shot": 5,
+      "scene": 3,
+      "start": 59.14,
+      "end": 77.56,
+      "lines": [
+        {
+          "speaker": "게으름뱅이",
+          "text": "할아버지, 그건 뭐예요?",
+          "start": 59.14,
+          "end": 61.37
+        },
+        {
+          "speaker": "노인",
+          "text": "이건 아주 신기한 탈이란다. 이걸 쓰면 일 안 하고 편하게 살 수 있지. 한번 써 보겠느냐?",
+          "start": 61.77,
+          "end": 73.05
+        },
+        {
+          "speaker": "게으름뱅이",
+          "text": "정말요? 저 그런 거 정말 좋아해요!",
+          "start": 73.45,
+          "end": 77.16
+        }
+      ],
+      "characters": [
+        "lazy_man",
+        "mask_old_man"
+      ],
+      "picture": "mask_old_man holding up the ox-head mask with a mysterious smile, lazy_man's eyes sparkling with excitement",
+      "motion": "gentle zoom in",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [lazy_man] 게으름뱅이: young Korean man, messy black hair, half-closed sleepy eyes, wrinkled beige hanbok, barefoot. [mask_old_man] 탈 만드는 노인: mysterious old man, long white beard, dark grey robe, black gat hat, knowing smile. Scene: mask_old_man holding up the ox-head mask with a mysterious smile, lazy_man's eyes sparkling with excitement."
+    },
+    {
+      "shot": 6,
+      "scene": 3,
+      "start": 77.56,
+      "end": 98.09,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "게으름뱅이가 탈을 덥석 쓰자, 노인은 소가죽까지 등에 척 걸쳐 주었어. 그랬더니 이게 웬일이야! 탈과 가죽이 몸에 착 달라붙더니, 게으름뱅이는 정말로 누렁소가 되어 버렸어. 말을 하려 해도 입에서는 음매, 음매 소리만 나왔지.",
+          "start": 77.56,
+          "end": 97.19
+        }
+      ],
+      "characters": [
+        "lazy_man",
+        "lazy_ox"
+      ],
+      "picture": "lazy_man wearing the ox mask, an oxhide draped over his back, magical swirls as he turns into lazy_ox, mouth open in a surprised moo",
+      "motion": "zoom in with sparkle",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [lazy_man] 게으름뱅이: young Korean man, messy black hair, half-closed sleepy eyes, wrinkled beige hanbok, barefoot. [lazy_ox] 게으름뱅이 소: yellowish-brown Korean ox with the same half-closed sleepy eyes and a messy black hair tuft between its horns. Scene: lazy_man wearing the ox mask, an oxhide draped over his back, magical swirls as he turns into lazy_ox, mouth open in a surprised moo."
+    },
+    {
+      "shot": 7,
+      "scene": 4,
+      "start": 98.09,
+      "end": 118.18,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "노인은 소가 된 게으름뱅이를 끌고 장터로 가서, 한 농부에게 팔았어.",
+          "start": 98.09,
+          "end": 104.05
+        },
+        {
+          "speaker": "노인",
+          "text": "이 소는 일을 아주 잘한다오. 다만 무밭 근처에는 절대 데려가지 마시오. 무를 먹으면 큰일 나니까.",
+          "start": 104.45,
+          "end": 117.78
+        }
+      ],
+      "characters": [
+        "lazy_ox",
+        "mask_old_man",
+        "farmer"
+      ],
+      "picture": "a busy market, mask_old_man leading lazy_ox by a rope and talking to farmer, pointing a warning finger",
+      "motion": "slow pan right",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [lazy_ox] 게으름뱅이 소: yellowish-brown Korean ox with the same half-closed sleepy eyes and a messy black hair tuft between its horns. [mask_old_man] 탈 만드는 노인: mysterious old man, long white beard, dark grey robe, black gat hat, knowing smile. [farmer] 농부: sturdy cheerful farmer, white headband, rolled-up sleeves, brown hanbok trousers, straw hat on his back. Scene: a busy market, mask_old_man leading lazy_ox by a rope and talking to farmer, pointing a warning finger."
+    },
+    {
+      "shot": 8,
+      "scene": 4,
+      "start": 118.18,
+      "end": 125.27,
+      "lines": [
+        {
+          "speaker": "농부",
+          "text": "걱정 마시오. 우리 밭엔 무 한 뿌리도 없다오. 자, 이랴! 가자!",
+          "start": 118.18,
+          "end": 124.87
+        }
+      ],
+      "characters": [
+        "farmer"
+      ],
+      "picture": "farmer laughing and slapping his chest, holding the rope, ready to go",
+      "motion": "slight bounce",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [farmer] 농부: sturdy cheerful farmer, white headband, rolled-up sleeves, brown hanbok trousers, straw hat on his back. Scene: farmer laughing and slapping his chest, holding the rope, ready to go."
+    },
+    {
+      "shot": 9,
+      "scene": 4,
+      "start": 125.27,
+      "end": 144.96,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "그날부터 게으름뱅이 소는 아침부터 저녁까지 쉴 틈이 없었어. 무거운 쟁기를 끌고, 짐을 나르고, 조금만 느려도 엉덩이를 찰싹 맞았지. 게으름뱅이는 눈물을 뚝뚝 흘리며 생각했어. 차라리 집에서 마당이라도 쓸 걸, 하고 말이야.",
+          "start": 125.27,
+          "end": 144.06
+        }
+      ],
+      "characters": [
+        "lazy_ox",
+        "farmer"
+      ],
+      "picture": "lazy_ox pulling a heavy plough through a field from morning to sunset, tears in his eyes, farmer behind with a whip of reeds",
+      "motion": "slow pan left to right",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [lazy_ox] 게으름뱅이 소: yellowish-brown Korean ox with the same half-closed sleepy eyes and a messy black hair tuft between its horns. [farmer] 농부: sturdy cheerful farmer, white headband, rolled-up sleeves, brown hanbok trousers, straw hat on his back. Scene: lazy_ox pulling a heavy plough through a field from morning to sunset, tears in his eyes, farmer behind with a whip of reeds."
+    },
+    {
+      "shot": 10,
+      "scene": 5,
+      "start": 144.96,
+      "end": 167.82,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "견디다 못한 게으름뱅이 소는 생각했어. 무를 먹으면 큰일 난다고 했지? 차라리 무를 먹고 죽어 버리자. 그래서 몰래 이웃 무밭으로 들어가 무 하나를 아작아작 씹어 먹었어. 그런데 이게 웬일이야! 소가죽이 스르르 벗겨지고, 탈이 툭 떨어지더니 다시 사람으로 돌아온 거야.",
+          "start": 144.96,
+          "end": 167.42
+        }
+      ],
+      "characters": [
+        "lazy_ox"
+      ],
+      "picture": "lazy_ox sneaking into a radish field at dusk and biting a big white radish, then the mask falling off with sparkles as he turns back into a man",
+      "motion": "zoom in",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [lazy_ox] 게으름뱅이 소: yellowish-brown Korean ox with the same half-closed sleepy eyes and a messy black hair tuft between its horns. Scene: lazy_ox sneaking into a radish field at dusk and biting a big white radish, then the mask falling off with sparkles as he turns back into a man."
+    },
+    {
+      "shot": 11,
+      "scene": 5,
+      "start": 167.82,
+      "end": 175.71,
+      "lines": [
+        {
+          "speaker": "게으름뱅이",
+          "text": "돌아왔다! 사람으로 돌아왔어! 이제부터는 정말 부지런하게 살 거야!",
+          "start": 167.82,
+          "end": 175.31
+        }
+      ],
+      "characters": [
+        "lazy_man"
+      ],
+      "picture": "lazy_man back as a human, jumping with joy with arms raised, the ox mask and hide lying on the ground",
+      "motion": "slight bounce",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [lazy_man] 게으름뱅이: young Korean man, messy black hair, half-closed sleepy eyes, wrinkled beige hanbok, barefoot. Scene: lazy_man back as a human, jumping with joy with arms raised, the ox mask and hide lying on the ground."
+    },
+    {
+      "shot": 12,
+      "scene": 5,
+      "start": 175.71,
+      "end": 190.65,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "집으로 돌아간 게으름뱅이는 그날부터 누구보다 먼저 일어나 마당을 쓸고, 물을 긷고, 밭을 갈았대. 마을 사람들은 사람이 저렇게 변할 수도 있느냐며 깜짝 놀랐다지.",
+          "start": 175.71,
+          "end": 189.75
+        }
+      ],
+      "characters": [
+        "lazy_man"
+      ],
+      "picture": "lazy_man sweeping the yard at sunrise, carrying water, working hard and smiling, surprised villagers watching over the fence",
+      "motion": "slow pan right",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [lazy_man] 게으름뱅이: young Korean man, messy black hair, half-closed sleepy eyes, wrinkled beige hanbok, barefoot. Scene: lazy_man sweeping the yard at sunrise, carrying water, working hard and smiling, surprised villagers watching over the fence."
+    },
+    {
+      "shot": 13,
+      "scene": 6,
+      "start": 190.65,
+      "end": 218.25,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "얘들아, 여기서 과학 한 스푼! 소는 정말 하루 종일 편하게 풀만 먹을까? 사실 소의 위는 방이 네 개로 나뉘어 있어. 풀을 대충 삼켰다가 다시 입으로 올려서 또 씹고, 또 삼키지. 이걸 되새김질이라고 하는데, 소는 하루에 여덟 시간 넘게 꼭꼭 씹는대. 질긴 풀을 소화하느라, 소도 사실은 하루 종일 바쁘게 일하고 있는 셈이야!",
+          "start": 190.65,
+          "end": 217.35
+        }
+      ],
+      "characters": [],
+      "picture": "a friendly cutaway picture of a cow showing a stomach with four round rooms, grass going up and down, the cow chewing happily, no labels",
+      "motion": "slow zoom in",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters:  Scene: a friendly cutaway picture of a cow showing a stomach with four round rooms, grass going up and down, the cow chewing happily, no labels."
+    },
+    {
+      "shot": 14,
+      "scene": 7,
+      "start": 218.25,
+      "end": 223.41,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "엉뚱한 동화극장, 다음에 또 만나요",
+          "start": 218.25,
+          "end": 221.41
+        }
+      ],
+      "characters": [
+        "lazy_man"
+      ],
+      "picture": "lazy_man and a real ox resting together under a tree after work, waving",
+      "motion": "slow zoom out",
+      "image_prompt": "Hand-drawn 2D cel animation still in a 1990s TV folktale style, characters in flat solid colors with clean dark brown outlines and almost no shading, simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, exaggerated, rubbery comical facial expressions that fit the moment, soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, earthy browns, painterly and detailed, clearly different from the flat characters. Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). Wide 16:9 frame, full scene, warm and funny, safe for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [lazy_man] 게으름뱅이: young Korean man, messy black hair, half-closed sleepy eyes, wrinkled beige hanbok, barefoot. Scene: lazy_man and a real ox resting together under a tree after work, waving."
+    }
+  ]
+}

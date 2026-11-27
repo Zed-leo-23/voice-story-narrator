@@ -46,6 +46,9 @@ gh api -X POST repos/Zed-leo-23/voice-story-narrator/actions/workflows/daily-kag
   -f ref=main -f 'inputs[story]=samani.txt,bird-talk.txt'
 ```
 
+- **main에 합치지 않고 녹음하기**: 새 대본을 따로 브랜치(예: `story/folktales-2`)에 올리고
+  `-f ref=<그 브랜치>` 로 실행하면, Kaggle이 그 브랜치를 클론해서 녹음한다.
+  매일 아침 뉴스(스케줄 실행)는 계속 main을 쓴다. 다 확인한 대본만 나중에 main에 합치면 된다.
 - 실행 확인: Kaggle이 실제로 시작하면 `Update topic history` 커밋이 생긴다.
 - 실패하면 `automation_state/run_logs/last_error.txt` 에 오류와 로그 끝부분이 저장된다
   (`Run error: …` 커밋).
@@ -92,6 +95,8 @@ gh api -H "Accept: application/octet-stream" \
 3. **자막**: `timeline.json` 의 `lines` 로 SRT를 만든다. 긴 대사는 문장 단위로 쪼개서
    대사 시간 안에서 글자 수 비율로 나눈다. 영상에 굽거나(burn-in) 유튜브에 따로 올린다.
 4. **썸네일**: 제목 글자 + 대표 장면 그림, 1280×720.
+
+> 대사에 맞춘 그림 애니메이션(Gemini 그림, 고정 그림체)은 `animation/README.md` 에 따로 정리했다.
 
 ## 3. 효과음
 

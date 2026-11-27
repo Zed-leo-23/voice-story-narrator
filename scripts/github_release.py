@@ -13,7 +13,9 @@ import requests
 API = "https://api.github.com"
 
 
-def upload_release_asset(repo: str, tag: str, title: str, asset_path: str, token: str) -> str:
+def upload_release_asset(
+    repo: str, tag: str, title: str, asset_path: str, token: str, body: str = "Automated daily narration."
+) -> str:
     headers = {
         "Authorization": f"Bearer {token}",
         "Accept": "application/vnd.github+json",
@@ -26,7 +28,7 @@ def upload_release_asset(repo: str, tag: str, title: str, asset_path: str, token
         json={
             "tag_name": tag,
             "name": title,
-            "body": "Automated daily narration.",
+            "body": body,
             "draft": False,
             "prerelease": False,
         },
