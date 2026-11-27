@@ -1,0 +1,329 @@
+{
+  "id": "rabbit-liver",
+  "title": "간을 두고 온 토끼",
+  "audio": "https://github.com/Zed-leo-23/voice-story-narrator/releases/download/story-rabbit-liver/full_story.wav",
+  "timeline": "https://github.com/Zed-leo-23/voice-story-narrator/releases/download/story-rabbit-liver/timeline.json",
+  "duration": 215.87,
+  "style": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles.",
+  "negative_prompt": "text, letters, Japanese style, oni, anime, 3D render, photo, realistic, scary, blood, gore, dark horror lighting, extra fingers, deformed faces, watermark, logo",
+  "cast": {
+    "rabbit": "토끼: small white rabbit with long pink-lined ears, clever bright eyes, a tiny blue silk vest",
+    "turtle": "자라: olive-green soft-shelled turtle with a long neck and kind worried eyes, wearing a small black Joseon official's hat",
+    "dragon_king": "용왕: friendly blue-green Eastern dragon king with long white whiskers, golden royal robe and small crown, pale and sick with a wet cloth on his forehead",
+    "sea_soldiers": "용궁 군사: crabs and fish soldiers holding little spears, wearing tiny red helmets"
+  },
+  "shots": [
+    {
+      "shot": 1,
+      "scene": 1,
+      "start": 0.0,
+      "end": 12.3,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "엉뚱한 동화극장, 오늘의 이야기는 간을 두고 온 토끼. 바닷속 용궁까지 끌려간 토끼가 꾀 하나로 살아 돌아왔대. 도대체 무슨 꾀를 냈을까?",
+          "start": 0.0,
+          "end": 11.4
+        }
+      ],
+      "characters": [
+        "rabbit",
+        "turtle"
+      ],
+      "picture": "rabbit riding on turtle's back through blue water with bubbles, an underwater palace glowing far below",
+      "motion": "slow zoom in",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [rabbit] 토끼: small white rabbit with long pink-lined ears, clever bright eyes, a tiny blue silk vest. [turtle] 자라: olive-green soft-shelled turtle with a long neck and kind worried eyes, wearing a small black Joseon official's hat. Scene: rabbit riding on turtle's back through blue water with bubbles, an underwater palace glowing far below."
+    },
+    {
+      "shot": 2,
+      "scene": 2,
+      "start": 12.3,
+      "end": 34.56,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "옛날 옛날 깊고 푸른 바닷속에, 으리으리한 용궁이 있었어. 그런데 용궁의 주인 용왕님이 그만 큰 병에 걸리고 말았지. 바다의 의원들이 모두 모여 머리를 맞댔지만, 약을 찾을 수가 없었어. 그때 늙은 거북 의원이 말했어. 육지에 사는 토끼의 간을 먹으면 병이 낫는다고 말이야.",
+          "start": 12.3,
+          "end": 34.16
+        }
+      ],
+      "characters": [
+        "dragon_king"
+      ],
+      "picture": "the grand underwater dragon palace with coral pillars, dragon_king lying sick in bed with a cold cloth on his forehead, fish doctors and an old sea tortoise doctor gathered around",
+      "motion": "slow pan right",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [dragon_king] 용왕: friendly blue-green Eastern dragon king with long white whiskers, golden royal robe and small crown, pale and sick with a wet cloth on his forehead. Scene: the grand underwater dragon palace with coral pillars, dragon_king lying sick in bed with a cold cloth on his forehead, fish doctors and an old sea tortoise doctor gathered around."
+    },
+    {
+      "shot": 3,
+      "scene": 2,
+      "start": 34.56,
+      "end": 42.76,
+      "lines": [
+        {
+          "speaker": "용왕",
+          "text": "토끼의 간이라고? 누가 육지에 가서 토끼를 데려오겠느냐?",
+          "start": 34.56,
+          "end": 42.36
+        }
+      ],
+      "characters": [
+        "dragon_king"
+      ],
+      "picture": "dragon_king sitting up weakly on his throne, asking his court, sea creatures looking at each other",
+      "motion": "slow push in",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [dragon_king] 용왕: friendly blue-green Eastern dragon king with long white whiskers, golden royal robe and small crown, pale and sick with a wet cloth on his forehead. Scene: dragon_king sitting up weakly on his throne, asking his court, sea creatures looking at each other."
+    },
+    {
+      "shot": 4,
+      "scene": 2,
+      "start": 42.76,
+      "end": 50.86,
+      "lines": [
+        {
+          "speaker": "자라",
+          "text": "제가 다녀오겠습니다, 용왕님! 저는 물에서도 땅에서도 다닐 수 있으니까요.",
+          "start": 42.76,
+          "end": 49.96
+        }
+      ],
+      "characters": [
+        "turtle",
+        "dragon_king"
+      ],
+      "picture": "turtle stepping forward and bowing deeply before dragon_king, proud and brave",
+      "motion": "slight zoom in",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [turtle] 자라: olive-green soft-shelled turtle with a long neck and kind worried eyes, wearing a small black Joseon official's hat. [dragon_king] 용왕: friendly blue-green Eastern dragon king with long white whiskers, golden royal robe and small crown, pale and sick with a wet cloth on his forehead. Scene: turtle stepping forward and bowing deeply before dragon_king, proud and brave."
+    },
+    {
+      "shot": 5,
+      "scene": 3,
+      "start": 50.86,
+      "end": 60.09,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "자라는 엉금엉금 바닷가로 올라가, 숲속에서 토끼를 찾아냈어. 토끼는 풀을 오물오물 뜯어 먹고 있었지.",
+          "start": 50.86,
+          "end": 59.69
+        }
+      ],
+      "characters": [
+        "rabbit",
+        "turtle"
+      ],
+      "picture": "turtle crawling up onto a sandy beach and into a green forest, finding rabbit happily munching grass",
+      "motion": "pan left to right",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [rabbit] 토끼: small white rabbit with long pink-lined ears, clever bright eyes, a tiny blue silk vest. [turtle] 자라: olive-green soft-shelled turtle with a long neck and kind worried eyes, wearing a small black Joseon official's hat. Scene: turtle crawling up onto a sandy beach and into a green forest, finding rabbit happily munching grass."
+    },
+    {
+      "shot": 6,
+      "scene": 3,
+      "start": 60.09,
+      "end": 75.13,
+      "lines": [
+        {
+          "speaker": "자라",
+          "text": "토끼님, 토끼님! 이런 좁은 숲에서 매한테 쫓기며 사느라 얼마나 힘드세요? 바닷속 용궁에 가면 맛있는 음식이 가득하고, 높은 벼슬도 준답니다.",
+          "start": 60.09,
+          "end": 74.73
+        }
+      ],
+      "characters": [
+        "rabbit",
+        "turtle"
+      ],
+      "picture": "turtle talking sweetly to rabbit, a dreamy thought bubble picture of a palace feast and an official's hat above them",
+      "motion": "gentle zoom in",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [rabbit] 토끼: small white rabbit with long pink-lined ears, clever bright eyes, a tiny blue silk vest. [turtle] 자라: olive-green soft-shelled turtle with a long neck and kind worried eyes, wearing a small black Joseon official's hat. Scene: turtle talking sweetly to rabbit, a dreamy thought bubble picture of a palace feast and an official's hat above them."
+    },
+    {
+      "shot": 7,
+      "scene": 3,
+      "start": 75.13,
+      "end": 90.95,
+      "lines": [
+        {
+          "speaker": "토끼",
+          "text": "정말? 용궁에 가면 벼슬도 준다고? 좋아, 나 지금 당장 갈래!",
+          "start": 75.13,
+          "end": 81.51
+        },
+        {
+          "speaker": "해설",
+          "text": "토끼는 신이 나서 자라 등에 폴짝 올라탔어. 자라는 토끼를 태우고 바닷속 깊이깊이 헤엄쳐 갔지.",
+          "start": 81.91,
+          "end": 90.05
+        }
+      ],
+      "characters": [
+        "rabbit",
+        "turtle"
+      ],
+      "picture": "rabbit hopping excitedly onto turtle's back, then the two diving deep into the blue sea",
+      "motion": "move downward",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [rabbit] 토끼: small white rabbit with long pink-lined ears, clever bright eyes, a tiny blue silk vest. [turtle] 자라: olive-green soft-shelled turtle with a long neck and kind worried eyes, wearing a small black Joseon official's hat. Scene: rabbit hopping excitedly onto turtle's back, then the two diving deep into the blue sea."
+    },
+    {
+      "shot": 8,
+      "scene": 4,
+      "start": 90.95,
+      "end": 109.09,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "용궁에 도착하자, 군사들이 우르르 몰려와 토끼를 꽁꽁 묶어 버렸어. 용왕님이 기침을 콜록콜록하며 말했지.",
+          "start": 90.95,
+          "end": 100.13
+        },
+        {
+          "speaker": "용왕",
+          "text": "토끼야, 미안하지만 내 병을 고치려면 네 간이 꼭 필요하구나.",
+          "start": 100.53,
+          "end": 108.69
+        }
+      ],
+      "characters": [
+        "rabbit",
+        "dragon_king",
+        "sea_soldiers"
+      ],
+      "picture": "sea_soldiers tying rabbit up with seaweed rope in the palace hall, dragon_king coughing on his throne",
+      "motion": "slow push in",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [rabbit] 토끼: small white rabbit with long pink-lined ears, clever bright eyes, a tiny blue silk vest. [dragon_king] 용왕: friendly blue-green Eastern dragon king with long white whiskers, golden royal robe and small crown, pale and sick with a wet cloth on his forehead. [sea_soldiers] 용궁 군사: crabs and fish soldiers holding little spears, wearing tiny red helmets. Scene: sea_soldiers tying rabbit up with seaweed rope in the palace hall, dragon_king coughing on his throne."
+    },
+    {
+      "shot": 9,
+      "scene": 4,
+      "start": 109.09,
+      "end": 140.1,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "토끼는 깜짝 놀라 귀가 쫑긋 섰어. 하지만 침을 꿀꺽 삼키고, 아무렇지 않은 척 웃었지.",
+          "start": 109.09,
+          "end": 116.32
+        },
+        {
+          "speaker": "토끼",
+          "text": "아이참, 용왕님! 진작 말씀하시지 그러셨어요. 저희 토끼들은 간을 몸에 넣고 다니지 않아요. 아침마다 꺼내서 맑은 시냇물에 씻어, 바위 위에 말려 두거든요. 오늘도 깜빡하고 바위에 두고 왔지 뭐예요.",
+          "start": 116.72,
+          "end": 139.7
+        }
+      ],
+      "characters": [
+        "rabbit"
+      ],
+      "picture": "rabbit, ears standing straight up in surprise but forcing a big friendly smile, explaining with paws raised; a small picture inset of a liver drying on a sunny rock by a stream",
+      "motion": "gentle zoom in",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [rabbit] 토끼: small white rabbit with long pink-lined ears, clever bright eyes, a tiny blue silk vest. Scene: rabbit, ears standing straight up in surprise but forcing a big friendly smile, explaining with paws raised; a small picture inset of a liver drying on a sunny rock by a stream."
+    },
+    {
+      "shot": 10,
+      "scene": 4,
+      "start": 140.1,
+      "end": 145.88,
+      "lines": [
+        {
+          "speaker": "용왕",
+          "text": "뭐라고? 그럼 어서 가서 가져오너라!",
+          "start": 140.1,
+          "end": 144.98
+        }
+      ],
+      "characters": [
+        "turtle",
+        "dragon_king"
+      ],
+      "picture": "dragon_king pointing toward the surface, shouting an order, turtle hurrying",
+      "motion": "quick push in",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [turtle] 자라: olive-green soft-shelled turtle with a long neck and kind worried eyes, wearing a small black Joseon official's hat. [dragon_king] 용왕: friendly blue-green Eastern dragon king with long white whiskers, golden royal robe and small crown, pale and sick with a wet cloth on his forehead. Scene: dragon_king pointing toward the surface, shouting an order, turtle hurrying."
+    },
+    {
+      "shot": 11,
+      "scene": 5,
+      "start": 145.88,
+      "end": 171.48,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "자라는 다시 토끼를 등에 태우고 바닷가로 헤엄쳐 갔어. 모래사장에 닿자마자, 토끼는 자라 등에서 폴짝 뛰어내려 숲으로 깡충깡충 달아났지.",
+          "start": 145.88,
+          "end": 157.91
+        },
+        {
+          "speaker": "토끼",
+          "text": "이 바보 자라야! 간을 빼서 말리는 동물이 세상에 어디 있니? 용왕님께 가서, 토끼는 다시는 안 속는다고 전해 줘!",
+          "start": 158.31,
+          "end": 171.08
+        }
+      ],
+      "characters": [
+        "rabbit",
+        "turtle"
+      ],
+      "picture": "rabbit leaping off turtle's back onto the beach and running into the forest, laughing and waving",
+      "motion": "pan right fast",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [rabbit] 토끼: small white rabbit with long pink-lined ears, clever bright eyes, a tiny blue silk vest. [turtle] 자라: olive-green soft-shelled turtle with a long neck and kind worried eyes, wearing a small black Joseon official's hat. Scene: rabbit leaping off turtle's back onto the beach and running into the forest, laughing and waving."
+    },
+    {
+      "shot": 12,
+      "scene": 5,
+      "start": 171.48,
+      "end": 183.26,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "자라는 그 자리에 털썩 주저앉아 한숨만 푹푹 쉬었대. 그 뒤로 토끼는 달콤한 말을 들으면, 꼭 한 번 더 생각하는 버릇이 생겼다지.",
+          "start": 171.48,
+          "end": 182.36
+        }
+      ],
+      "characters": [
+        "turtle"
+      ],
+      "picture": "turtle sitting alone on the sand, sighing with a big puff, the sunset sea behind",
+      "motion": "slow zoom out",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [turtle] 자라: olive-green soft-shelled turtle with a long neck and kind worried eyes, wearing a small black Joseon official's hat. Scene: turtle sitting alone on the sand, sighing with a big puff, the sunset sea behind."
+    },
+    {
+      "shot": 13,
+      "scene": 6,
+      "start": 183.26,
+      "end": 210.71,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "얘들아, 여기서 과학 한 스푼! 간은 우리 배 오른쪽 위에 있는, 몸속에서 제일 큰 장기야. 먹은 음식에서 나온 영양분을 저장하고, 몸에 해로운 것을 깨끗하게 걸러 주는 일을 해. 그리고 간은 아주 놀라운 힘이 있어. 다쳐서 일부가 없어져도, 남은 부분이 다시 자라서 원래 크기로 돌아온대. 물론 꺼내서 말릴 수는 없지만 말이야!",
+          "start": 183.26,
+          "end": 209.81
+        }
+      ],
+      "characters": [],
+      "picture": "a friendly cutaway picture of a child's tummy showing the liver as a big soft reddish-brown shape on the upper right, a small piece glowing and growing back, no labels",
+      "motion": "slow zoom in",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters:  Scene: a friendly cutaway picture of a child's tummy showing the liver as a big soft reddish-brown shape on the upper right, a small piece glowing and growing back, no labels."
+    },
+    {
+      "shot": 14,
+      "scene": 7,
+      "start": 210.71,
+      "end": 215.87,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "엉뚱한 동화극장, 다음에 또 만나요",
+          "start": 210.71,
+          "end": 213.87
+        }
+      ],
+      "characters": [
+        "rabbit",
+        "turtle"
+      ],
+      "picture": "rabbit waving from the forest edge, turtle waving from the waves",
+      "motion": "slow zoom out",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [rabbit] 토끼: small white rabbit with long pink-lined ears, clever bright eyes, a tiny blue silk vest. [turtle] 자라: olive-green soft-shelled turtle with a long neck and kind worried eyes, wearing a small black Joseon official's hat. Scene: rabbit waving from the forest edge, turtle waving from the waves."
+    }
+  ]
+}

@@ -4,3 +4,5 @@ __pycache__/
 *.wav
 .venv/
 video/out/
+recordings/
+animation/out/

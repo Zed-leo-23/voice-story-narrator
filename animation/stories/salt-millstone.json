@@ -1,0 +1,300 @@
+{
+  "id": "salt-millstone",
+  "title": "바닷물이 짠 까닭",
+  "audio": "https://github.com/Zed-leo-23/voice-story-narrator/releases/download/story-salt-millstone/full_story.wav",
+  "timeline": "https://github.com/Zed-leo-23/voice-story-narrator/releases/download/story-salt-millstone/timeline.json",
+  "duration": 213.32,
+  "style": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles.",
+  "negative_prompt": "text, letters, Japanese style, oni, anime, 3D render, photo, realistic, scary, blood, gore, dark horror lighting, extra fingers, deformed faces, watermark, logo",
+  "cast": {
+    "young_fisher": "청년: kind young Korean fisherman, black topknot with a white headband, light blue hanbok, gentle smile",
+    "snow_old_man": "할아버지: frail old man with a long white beard, snow on his shoulders, plain white robe, a faint magical golden glow around him",
+    "thief": "도둑: sneaky skinny man, thin curly mustache, black clothes, black cloth tied over his head, shifty eyes",
+    "millstone": "맷돌: small grey round stone hand-mill with a wooden handle, a faint golden glow"
+  },
+  "shots": [
+    {
+      "shot": 1,
+      "scene": 1,
+      "start": 0.0,
+      "end": 11.68,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "엉뚱한 동화극장, 오늘의 이야기는 바닷물이 짠 까닭. 바닷물은 왜 짤까? 아주 먼 옛날, 무엇이든 나오는 신기한 맷돌 하나 때문이었대.",
+          "start": 0.0,
+          "end": 10.78
+        }
+      ],
+      "characters": [
+        "millstone"
+      ],
+      "picture": "a small stone millstone glowing softly on the deep sea floor, white salt swirling out of it into the blue water",
+      "motion": "slow zoom in",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [millstone] 맷돌: small grey round stone hand-mill with a wooden handle, a faint golden glow. Scene: a small stone millstone glowing softly on the deep sea floor, white salt swirling out of it into the blue water."
+    },
+    {
+      "shot": 2,
+      "scene": 2,
+      "start": 11.68,
+      "end": 25.99,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "옛날 옛날 바닷가 마을에, 가난하지만 마음씨 착한 청년이 살았어. 어느 겨울날, 청년은 눈길에 쓰러진 할아버지를 발견하고, 집으로 업고 와서 따뜻한 죽을 끓여 드렸지.",
+          "start": 11.68,
+          "end": 25.59
+        }
+      ],
+      "characters": [
+        "young_fisher",
+        "snow_old_man"
+      ],
+      "picture": "young_fisher carrying snow_old_man on his back through a snowy seaside village, then feeding him warm porridge by a fire",
+      "motion": "slow pan right",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [young_fisher] 청년: kind young Korean fisherman, black topknot with a white headband, light blue hanbok, gentle smile. [snow_old_man] 할아버지: frail old man with a long white beard, snow on his shoulders, plain white robe, a faint magical golden glow around him. Scene: young_fisher carrying snow_old_man on his back through a snowy seaside village, then feeding him warm porridge by a fire."
+    },
+    {
+      "shot": 3,
+      "scene": 2,
+      "start": 25.99,
+      "end": 46.71,
+      "lines": [
+        {
+          "speaker": "할아버지",
+          "text": "고맙구나, 젊은이. 내 보답으로 이 작은 맷돌을 주마. 나와라 하고 말하면 원하는 것이 나오고, 멈춰라 하면 멈춘단다. 꼭 좋은 데만 쓰거라.",
+          "start": 25.99,
+          "end": 42.42
+        },
+        {
+          "speaker": "청년",
+          "text": "정말요? 고맙습니다, 할아버지!",
+          "start": 42.82,
+          "end": 45.81
+        }
+      ],
+      "characters": [
+        "young_fisher",
+        "snow_old_man",
+        "millstone"
+      ],
+      "picture": "snow_old_man handing millstone to young_fisher with both hands, a gentle golden glow, young_fisher bowing gratefully",
+      "motion": "gentle zoom in",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [young_fisher] 청년: kind young Korean fisherman, black topknot with a white headband, light blue hanbok, gentle smile. [snow_old_man] 할아버지: frail old man with a long white beard, snow on his shoulders, plain white robe, a faint magical golden glow around him. [millstone] 맷돌: small grey round stone hand-mill with a wooden handle, a faint golden glow. Scene: snow_old_man handing millstone to young_fisher with both hands, a gentle golden glow, young_fisher bowing gratefully."
+    },
+    {
+      "shot": 4,
+      "scene": 3,
+      "start": 46.71,
+      "end": 61.25,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "청년은 반신반의하며 맷돌을 돌렸어.",
+          "start": 46.71,
+          "end": 50.07
+        },
+        {
+          "speaker": "청년",
+          "text": "쌀아, 나와라!",
+          "start": 50.47,
+          "end": 52.47
+        },
+        {
+          "speaker": "해설",
+          "text": "그랬더니 맷돌 사이로 하얀 쌀이 사르르 쏟아지는 거야! 청년은 쌀이 한 가마 가득 차자 얼른 말했지.",
+          "start": 52.87,
+          "end": 60.85
+        }
+      ],
+      "characters": [
+        "young_fisher",
+        "millstone"
+      ],
+      "picture": "young_fisher turning millstone in his small room, white rice pouring out into a straw sack, his face amazed",
+      "motion": "slow push in",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [young_fisher] 청년: kind young Korean fisherman, black topknot with a white headband, light blue hanbok, gentle smile. [millstone] 맷돌: small grey round stone hand-mill with a wooden handle, a faint golden glow. Scene: young_fisher turning millstone in his small room, white rice pouring out into a straw sack, his face amazed."
+    },
+    {
+      "shot": 5,
+      "scene": 3,
+      "start": 61.25,
+      "end": 76.97,
+      "lines": [
+        {
+          "speaker": "청년",
+          "text": "멈춰라!",
+          "start": 61.25,
+          "end": 62.91
+        },
+        {
+          "speaker": "해설",
+          "text": "맷돌은 딱 멈췄어. 청년은 그 맷돌로 쌀이며 옷감이며 필요한 것을 조금씩 꺼내, 배고픈 이웃들과 나누며 살았지. 마을에는 웃음소리가 끊이지 않았어.",
+          "start": 63.31,
+          "end": 76.07
+        }
+      ],
+      "characters": [
+        "young_fisher"
+      ],
+      "picture": "young_fisher sharing rice and cloth with smiling neighbours in the village yard, children laughing",
+      "motion": "slow pan right",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [young_fisher] 청년: kind young Korean fisherman, black topknot with a white headband, light blue hanbok, gentle smile. Scene: young_fisher sharing rice and cloth with smiling neighbours in the village yard, children laughing."
+    },
+    {
+      "shot": 6,
+      "scene": 4,
+      "start": 76.97,
+      "end": 98.19,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "그런데 이 소문을 들은 욕심 많은 도둑이 있었어. 도둑은 깜깜한 밤에 몰래 청년의 집에 숨어들어, 맷돌을 훔쳐 달아났지.",
+          "start": 76.97,
+          "end": 87.15
+        },
+        {
+          "speaker": "도둑",
+          "text": "흐흐흐, 이제 이 맷돌은 내 거다! 멀리 바다 건너로 가서 혼자 부자가 되어야지.",
+          "start": 87.55,
+          "end": 97.79
+        }
+      ],
+      "characters": [
+        "thief",
+        "millstone"
+      ],
+      "picture": "thief sneaking out of the house at night with millstone under his arm, grinning, moonlight",
+      "motion": "pan left to right",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [thief] 도둑: sneaky skinny man, thin curly mustache, black clothes, black cloth tied over his head, shifty eyes. [millstone] 맷돌: small grey round stone hand-mill with a wooden handle, a faint golden glow. Scene: thief sneaking out of the house at night with millstone under his arm, grinning, moonlight."
+    },
+    {
+      "shot": 7,
+      "scene": 4,
+      "start": 98.19,
+      "end": 118.16,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "도둑은 작은 배를 훔쳐 타고 바다 한가운데로 노를 저어 갔어. 그런데 그때 생각이 났지. 그 시절에는 소금이 금처럼 귀했거든.",
+          "start": 98.19,
+          "end": 108.22
+        },
+        {
+          "speaker": "도둑",
+          "text": "그래, 소금을 잔뜩 만들어 팔면 큰 부자가 되겠지! 소금아, 나와라!",
+          "start": 108.62,
+          "end": 117.26
+        }
+      ],
+      "characters": [
+        "thief",
+        "millstone"
+      ],
+      "picture": "thief rowing a stolen boat to the middle of the sea, millstone in the boat, dreaming of piles of money",
+      "motion": "slow zoom out",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [thief] 도둑: sneaky skinny man, thin curly mustache, black clothes, black cloth tied over his head, shifty eyes. [millstone] 맷돌: small grey round stone hand-mill with a wooden handle, a faint golden glow. Scene: thief rowing a stolen boat to the middle of the sea, millstone in the boat, dreaming of piles of money."
+    },
+    {
+      "shot": 8,
+      "scene": 5,
+      "start": 118.16,
+      "end": 135.67,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "맷돌이 빙글빙글 돌더니, 하얀 소금이 콸콸 쏟아지기 시작했어. 배 바닥에 소금이 수북수북 쌓였지. 도둑은 신이 나서 춤을 추었어. 그런데 소금이 배 가장자리까지 차오르자, 그제야 덜컥 겁이 났지.",
+          "start": 118.16,
+          "end": 135.27
+        }
+      ],
+      "characters": [
+        "thief",
+        "millstone"
+      ],
+      "picture": "white salt pouring out of millstone, piling up in the boat, thief dancing happily",
+      "motion": "slight bounce",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [thief] 도둑: sneaky skinny man, thin curly mustache, black clothes, black cloth tied over his head, shifty eyes. [millstone] 맷돌: small grey round stone hand-mill with a wooden handle, a faint golden glow. Scene: white salt pouring out of millstone, piling up in the boat, thief dancing happily."
+    },
+    {
+      "shot": 9,
+      "scene": 5,
+      "start": 135.67,
+      "end": 141.03,
+      "lines": [
+        {
+          "speaker": "도둑",
+          "text": "이제 그만! 그만 나와! 그만하라니까!",
+          "start": 135.67,
+          "end": 140.63
+        }
+      ],
+      "characters": [
+        "thief",
+        "millstone"
+      ],
+      "picture": "thief panicking, waving his arms at millstone, salt up to the edge of the boat",
+      "motion": "shake slightly",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [thief] 도둑: sneaky skinny man, thin curly mustache, black clothes, black cloth tied over his head, shifty eyes. [millstone] 맷돌: small grey round stone hand-mill with a wooden handle, a faint golden glow. Scene: thief panicking, waving his arms at millstone, salt up to the edge of the boat."
+    },
+    {
+      "shot": 10,
+      "scene": 5,
+      "start": 141.03,
+      "end": 171.82,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "하지만 도둑은 멈추게 하는 말을 몰랐어. 맷돌은 쉬지 않고 소금을 쏟아냈고, 결국 배는 소금 무게를 못 이겨 꼬르륵 바닷속으로 가라앉고 말았어. 도둑은 겨우 나무 조각에 매달려 살아났지만, 다시는 남의 물건에 손대지 않았대. 그런데 그 맷돌은 어떻게 됐을까? 지금도 깊은 바닷속에서 빙글빙글 돌며 소금을 만들고 있대. 그래서 바닷물이 이렇게 짠 거래.",
+          "start": 141.03,
+          "end": 170.92
+        }
+      ],
+      "characters": [
+        "thief",
+        "millstone"
+      ],
+      "picture": "the boat sinking into the waves, thief clinging to a piece of wood, then millstone sinking down into the deep sea still spinning out salt",
+      "motion": "move downward",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [thief] 도둑: sneaky skinny man, thin curly mustache, black clothes, black cloth tied over his head, shifty eyes. [millstone] 맷돌: small grey round stone hand-mill with a wooden handle, a faint golden glow. Scene: the boat sinking into the waves, thief clinging to a piece of wood, then millstone sinking down into the deep sea still spinning out salt."
+    },
+    {
+      "shot": 11,
+      "scene": 6,
+      "start": 171.82,
+      "end": 208.16,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "얘들아, 여기서 과학 한 스푼! 진짜로 바닷물이 짠 이유는 뭘까? 비가 내리면 빗물이 땅과 바위를 지나면서 그 속의 소금 성분을 조금씩 녹여 강으로 데려가. 강물은 결국 바다로 모이지. 바다의 물은 햇볕에 데워져 하늘로 날아가지만, 소금은 날아가지 못하고 바다에 남아. 이런 일이 아주 오랜 세월 동안 되풀이되면서, 바다는 점점 짜졌어. 바닷물을 그릇에 담아 햇볕에 말려 보면, 하얀 소금이 남는 걸 볼 수 있을 거야!",
+          "start": 171.82,
+          "end": 207.26
+        }
+      ],
+      "characters": [],
+      "picture": "a friendly picture of the water cycle: rain on mountains, a river carrying tiny salt sparkles to the sea, sun lifting water up as clouds, salt staying in the sea, no labels",
+      "motion": "slow pan right",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters:  Scene: a friendly picture of the water cycle: rain on mountains, a river carrying tiny salt sparkles to the sea, sun lifting water up as clouds, salt staying in the sea, no labels."
+    },
+    {
+      "shot": 12,
+      "scene": 7,
+      "start": 208.16,
+      "end": 213.32,
+      "lines": [
+        {
+          "speaker": "해설",
+          "text": "엉뚱한 동화극장, 다음에 또 만나요",
+          "start": 208.16,
+          "end": 211.32
+        }
+      ],
+      "characters": [
+        "young_fisher"
+      ],
+      "picture": "young_fisher on the beach at sunset waving, the calm sea sparkling",
+      "motion": "slow zoom out",
+      "image_prompt": "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, gentle rounded shapes, cute and friendly characters with big expressive eyes, warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). Wide 16:9 frame, full scene, safe and gentle for young children. No text, no letters, no captions, no watermark, no speech bubbles. Characters: [young_fisher] 청년: kind young Korean fisherman, black topknot with a white headband, light blue hanbok, gentle smile. Scene: young_fisher on the beach at sunset waving, the calm sea sparkling."
+    }
+  ]
+}
