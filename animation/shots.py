@@ -1,6 +1,7 @@
 """Hand-written shot plan for each story: which lines a picture covers, what it shows.
 
-Each shot: (scene, first line, last line, picture, motion). Scene and line numbers
+Each shot: (scene, first line, last line, picture, motion). Optional "times" maps a
+scene number to a time of day (night, dusk, sunset, dawn). Scene and line numbers
 follow the story's timeline.json (lines counted from 0 inside each scene).
 build_shotlist.py adds the times, the spoken lines and the full prompt.
 """
@@ -86,6 +87,9 @@ STORIES = {
     "tiger-persimmon": {
         "title": "호랑이보다 무서운 곶감",
         "cast": ["tiger", "baby", "mother", "cow_thief"],
+        # Time of day per scene (scene number -> key of style.TIME_OF_DAY), for shots whose
+        # picture text doesn't say it. The whole night in the village is scenes 1-4.
+        "times": {1: "night", 2: "night", 3: "night", 4: "night", 5: "dawn"},
         "shots": [
             (1, 0, 0, "tiger running away in a panic through a snowy forest at night, a string of dried persimmons hanging from a house eave in the foreground", "slow zoom in"),
             (2, 0, 1, "tiger walking down a snowy mountain toward a village at night, belly rumbling, licking its lips", "pan left to right"),

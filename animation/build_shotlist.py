@@ -63,6 +63,7 @@ def build(story_id: str) -> dict:
             "characters": cast,
             "picture": picture,
             "motion": motion,
+            "time": plan.get("times", {}).get(scene),
             "image_prompt": f"{STYLE} Characters: {looks} Scene: {picture}.",
         })
     for cur, nxt in zip(shots, shots[1:]):

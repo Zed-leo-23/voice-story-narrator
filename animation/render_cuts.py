@@ -36,6 +36,8 @@ def clean(text: str) -> str:
 
 
 def time_of_day(shot: dict) -> str | None:
+    if shot.get("time") in TIME_OF_DAY:
+        return shot["time"]
     words = re.findall(r"[a-z]+", shot["picture"].lower())
     return next((t for t in TIME_OF_DAY if t in words), None)
 

@@ -4,37 +4,39 @@ Every image prompt = STYLE + the looks of the characters in the shot + the shot.
 Change a look here only, then rebuild, so every story stays the same.
 """
 
-# Look: hand-drawn 2D cel animation of the 1990s -- flat-colored characters with
-# clean dark outlines on top of richly hand-painted gouache backgrounds.
-# A way of drawing, not any one film: never copy existing characters.
+# Look (chosen 2026-11-27): simple Korean webtoon-style YouTube storytelling cartoon.
+# Thick black outlines, flat solid colors with no shading, a few colors only,
+# plain backgrounds with only the shapes the scene needs, big heads with dot eyes.
+# A way of drawing, not any one channel: never copy existing characters.
+# (The earlier 1990s cel + gouache look is kept as LOOKS["gouache_90s"].)
 STYLE = (
-    "Hand-drawn 2D cel animation still in a 1990s TV folktale style, "
-    "characters in flat solid colors with clean dark brown outlines and almost no shading, "
-    "simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, "
-    "exaggerated, rubbery comical facial expressions that fit the moment, "
-    "soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). "
-    "Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, "
-    "earthy browns, painterly and detailed, clearly different from the flat characters. "
-    "Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). "
-    "Wide 16:9 frame, full scene, warm and funny, safe for young children. "
+    "Simple Korean webtoon-style cartoon for a YouTube folktale, "
+    "thick bold black outlines, flat solid colors with no shading and no gradients, "
+    "a small limited palette of soft muted colors, "
+    "big round heads, small round dot eyes, simple noses and mouths, clear funny expressions, "
+    "plain simple backgrounds made of a few flat shapes (a wall, a door, a floor, a hill), not detailed. "
+    "Joseon-era Korean setting (thatched houses, hanok, hanbok). "
+    "Wide 16:9 frame, safe and friendly for young children. "
     "No text, no letters, no captions, no watermark, no speech bubbles."
 )
 
 # The style in a few words, put first in SDXL prompts (render_cuts.py).
 STYLE_TAGS = (
-    "2D hand-drawn cel animation still, flat colored cartoon characters with clean outlines, "
-    "richly hand-painted gouache background with brush strokes, Joseon Korean village"
+    "simple Korean webtoon cartoon, thick bold black outlines, flat solid colors, no shading, "
+    "plain simple background, Joseon Korea"
 )
 
 STYLE_TAGS_END = (
-    "simple rounded cartoon bodies, small dot eyes, exaggerated funny expressions, "
-    "expressive cartoon acting with a clear pose, muted pastel colors, wide 16:9 scene, for young children"
+    "big round heads, small dot eyes, clear funny expressions, clear pose, "
+    "limited soft color palette, minimal details, wide 16:9 scene, for young children"
 )
 
 NEGATIVE = (
-    "text, letters, watermark, logo, signature, modern anime, big sparkly anime eyes, glossy 3D render, CGI, "
-    "photo, realistic, realistic animal, gradient cel shading, line art only, coloring book, "
-    "western house, wooden cabin, chimney, European village, glass windows, shingled roof, two-story house, Japanese kimono, oni, scary, blood, gore, dark horror lighting, "
+    "text, letters, watermark, logo, signature, speech bubble, modern anime, big sparkly anime eyes, "
+    "glossy 3D render, CGI, photo, realistic, realistic animal, detailed fur, painterly, brush strokes, "
+    "watercolor texture, gradient shading, soft shading, detailed background, busy background, many colors, "
+    "western house, wooden cabin, chimney, European village, glass windows, shingled roof, two-story house, "
+    "Japanese kimono, oni, scary, blood, gore, dark horror lighting, "
     "extra fingers, deformed hands, blurry, duplicate characters, clones, the same animal repeated, "
     "group of tigers, crowd of animals"
 )
@@ -88,21 +90,26 @@ LORAS = {
     "90s": ("ntc-ai/SDXL-LoRA-slider.90s-anime", "90s anime.safetensors", "90s anime"),
     # Cel-shaded anime with ink lines. openrail++
     "cel": ("strkyyy/anime-cel-shaded", "anime-cel-shaded.safetensors", "4n1mec3l"),
+    # Minimal flat illustration, clean outlines, plain backgrounds. creativeml-openrail-m
+    "flat": ("ramel2/emotional-flat-illustration-sdxl-lora",
+             "minimal_flat_illustration,_emotional_scene.safetensors", "minimal flat illustration"),
 }
 LOOKS = {
     "base": {},
     "gouache": {"gouache": 0.85},
     "gouache_90s": {"gouache": 0.7, "90s": 1.5},
     "gouache_cel": {"gouache": 0.6, "cel": 0.6},
+    "flat": {"flat": 0.9},
+    "flat_light": {"flat": 0.6},
 }
-DEFAULT_LOOK = "gouache_90s"  # chosen 2026-11-27 from the 4-way comparison
+DEFAULT_LOOK = "flat"  # webtoon-style references, 2026-11-27 (was gouache_90s)
 
 # Groups: these keys mean several figures, so render_cuts.py does not say "only one".
 GROUP_CHARACTERS = {"goblins", "sea_soldiers"}
 
 # Time of day found in a shot's picture -> words put first, and what to keep out.
 TIME_OF_DAY = {
-    "night": ("night scene, dark navy blue night sky, moonlight, warm lamp glow, deep blue shadows",
+    "night": ("night scene, flat dark navy blue night sky, round moon, warm yellow lamp light in windows",
               "daylight, bright day, sunny, blue daytime sky"),
     "dusk": ("dusk, orange and purple evening sky, long shadows", "midday, bright noon"),
     "sunset": ("sunset, warm orange evening light", "midday, bright noon"),
