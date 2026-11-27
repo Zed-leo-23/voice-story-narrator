@@ -4,18 +4,26 @@ Every image prompt = STYLE + the looks of the characters in the shot + the shot.
 Change a look here only, then rebuild, so every story stays the same.
 """
 
+# Look: hand-drawn 2D cel animation of the 1990s -- flat-colored characters with
+# clean dark outlines on top of richly hand-painted gouache backgrounds.
+# A way of drawing, not any one film: never copy existing characters.
 STYLE = (
-    "Warm Korean folktale picture-book illustration, soft watercolor and colored-pencil texture, "
-    "gentle rounded shapes, cute and friendly characters with big expressive eyes, "
-    "warm earthy palette (ochre, persimmon orange, pine green, sky blue, hanji paper beige), "
-    "soft light, thin brown outlines, Joseon-era Korean village setting (thatched houses, hanok, stone walls, pine trees). "
-    "Wide 16:9 frame, full scene, safe and gentle for young children. "
+    "Hand-drawn 2D cel animation still in a 1990s TV folktale style, "
+    "characters in flat solid colors with clean dark brown outlines and almost no shading, "
+    "simple rounded chunky bodies, big round heads, small dot eyes or squinting line eyes, "
+    "exaggerated, rubbery comical facial expressions that fit the moment, "
+    "soft muted pastel clothing colors (sage green, lavender, faded blue, off-white). "
+    "Backgrounds richly hand-painted in gouache and oil with visible brush strokes, deep greens, mossy stone walls, "
+    "earthy browns, painterly and detailed, clearly different from the flat characters. "
+    "Joseon-era Korean countryside setting (thatched houses, hanok, stone walls, pine trees, straw baskets). "
+    "Wide 16:9 frame, full scene, warm and funny, safe for young children. "
     "No text, no letters, no captions, no watermark, no speech bubbles."
 )
 
 NEGATIVE = (
-    "text, letters, Japanese style, oni, anime, 3D render, photo, realistic, scary, blood, gore, "
-    "dark horror lighting, extra fingers, deformed faces, watermark, logo"
+    "text, letters, watermark, logo, signature, modern anime, big sparkly anime eyes, glossy 3D render, CGI, "
+    "photo, realistic, gradient cel shading, Japanese kimono, oni, scary, blood, gore, dark horror lighting, "
+    "extra fingers, deformed hands, blurry"
 )
 
 # English, so the image model reads it the same way every time. Keep left/right exact.
@@ -49,9 +57,9 @@ CHARACTERS = {
     "thief": "도둑: sneaky skinny man, thin curly mustache, black clothes, black cloth tied over his head, shifty eyes",
     "millstone": "맷돌: small grey round stone hand-mill with a wooden handle, a faint golden glow",
     # 호랑이와 곶감
-    "tiger": "호랑이: big orange Korean tiger with black stripes, round comical face, big expressive eyes, "
+    "tiger": "호랑이: big orange Korean tiger with black stripes, round comical face, small round eyes, "
              "funny rather than scary",
     "baby": "아기: chubby baby with rosy cheeks, wrapped in a colorful saekdong striped blanket",
     "mother": "엄마: young mother in a pale pink hanbok, seen from behind or as a soft shadow on the paper door, face not shown",
-    "cow_thief": "소도둑: clumsy round-faced man, patched brown clothes, bundle tied on his back, big surprised eyes",
+    "cow_thief": "소도둑: clumsy round-faced man, patched brown clothes, bundle tied on his back, wide surprised dot eyes",
 }
