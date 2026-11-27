@@ -2,13 +2,6 @@
   {
     "date": "2026-11-21",
     "source": "보내준 스크립트",
-    "title": "가난한 과부와 수상한 외상 손님 이야기",
-    "link": "script:2026-11-21",
-    "topic": "가난한 과부와 수상한 외상 손님"
-  },
-  {
-    "date": "2026-11-21",
-    "source": "보내준 스크립트",
     "title": "이야기 주머니 이야기",
     "link": "script:2026-11-21",
     "topic": "이야기 주머니"
@@ -208,5 +201,12 @@
     "title": "호랑이보다 무서운 곶감 이야기",
     "link": "script:2026-11-27",
     "topic": "호랑이보다 무서운 곶감"
+  },
+  {
+    "date": "2026-11-28",
+    "source": "사이언스 뉴스 익스플로어스",
+    "title": "A new flying drone uses touch to perch like a bird",
+    "link": "https://www.snexplores.org/article/flying-drone-perch-like-bird",
+    "topic": "드론"
   }
 ]
