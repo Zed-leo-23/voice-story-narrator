@@ -6,13 +6,13 @@
 
 Writes animation/out/<id>/shot_01.png ... (1920x1080) and contact_sheet.jpg.
 Prompts come from animation/stories/<id>.json and style.py, rebuilt for SDXL:
-scene first (so it is never lost), then the character looks, then the art style.
+a few style words, the scene, the character looks, then the full art style.
 """
 import argparse, json, os, re, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from style import CHARACTERS, NEGATIVE, STYLE  # noqa: E402
+from style import CHARACTERS, NEGATIVE, STYLE, STYLE_TAGS  # noqa: E402
 
 MODEL = "stabilityai/stable-diffusion-xl-base-1.0"
 # The stock SDXL VAE turns pictures black in fp16; this one is the same VAE fixed for fp16.
@@ -27,7 +27,7 @@ def english(look: str) -> str:
 
 
 def clean(text: str) -> str:
-    """Compel reads ( ) + - as weights; keep the words, drop the syntax."""
+    """Flatten ( ) + - _ into plain words and commas."""
     text = re.sub(r"\s*\(", ", ", text).replace(")", "").replace("+", " ").replace("_", " ")
     text = re.sub(r"(?<=\w)-(?=\w)", " ", text)
     return re.sub(r"\s*,\s*,", ",", re.sub(r"\s+", " ", text)).strip()
@@ -37,7 +37,8 @@ def prompt_for(shot: dict) -> str:
     looks = " ".join(f"{c}: {english(CHARACTERS[c])}." for c in shot["characters"] if c in CHARACTERS)
     # "No text, no letters..." makes SDXL think of text; the negative prompt covers it.
     style = re.sub(r"\s*No text[^.]*\.", "", STYLE)
-    return clean(f"{shot['picture']}. {looks} {style}")
+    # The look in a few words first: the start of a prompt weighs most.
+    return clean(f"{STYLE_TAGS}. {shot['picture']}. {looks} {style}")
 
 
 def load_pipe(model: str):
@@ -54,24 +55,40 @@ def load_pipe(model: str):
     return pipe
 
 
-def embeddings(pipe, prompt: str, negative: str):
-    """SDXL reads only ~77 tokens per prompt; Compel lets the whole prompt count."""
-    try:
-        from compel import Compel, ReturnedEmbeddingsType
+def _encode(pipe, text: str, chunks: int | None = None):
+    """CLIP reads 77 tokens at a time. Split the prompt into 75-token pieces,
+    encode each with both SDXL text encoders and join them, so every word counts."""
+    import torch
 
-        compel = Compel(
-            tokenizer=[pipe.tokenizer, pipe.tokenizer_2],
-            text_encoder=[pipe.text_encoder, pipe.text_encoder_2],
-            returned_embeddings_type=ReturnedEmbeddingsType.PENULTIMATE_HIDDEN_STATES_NON_NORMALIZED,
-            requires_pooled=[False, True],
-            truncate_long_prompts=False,
-        )
-        cond, pooled = compel([prompt, negative])
-        return dict(prompt_embeds=cond[0:1], pooled_prompt_embeds=pooled[0:1],
-                    negative_prompt_embeds=cond[1:2], negative_pooled_prompt_embeds=pooled[1:2])
-    except Exception as e:  # noqa: BLE001 -- any Compel problem: still draw, just truncated
-        print(f"note: Compel unavailable ({e!r}); long prompts are cut at 77 tokens")
-        return dict(prompt=prompt, negative_prompt=negative)
+    parts, pooled = [], None
+    for tok, enc in ((pipe.tokenizer, pipe.text_encoder), (pipe.tokenizer_2, pipe.text_encoder_2)):
+        ids = tok(text, add_special_tokens=False, truncation=False).input_ids
+        n = chunks or max(1, -(-len(ids) // 75))
+        pad = tok.pad_token_id if tok.pad_token_id is not None else tok.eos_token_id
+        hidden = []
+        for i in range(n):
+            piece = [tok.bos_token_id, *ids[i * 75:(i + 1) * 75], tok.eos_token_id]
+            piece += [pad] * (77 - len(piece))
+            out = enc(torch.tensor([piece], device=enc.device), output_hidden_states=True)
+            hidden.append(out.hidden_states[-2])
+            if enc is pipe.text_encoder_2 and pooled is None:
+                pooled = out[0]  # projected text embedding of the first piece
+        parts.append(torch.cat(hidden, dim=1))
+    return torch.cat(parts, dim=-1), pooled, n
+
+
+def embeddings(pipe, prompt: str, negative: str):
+    import torch
+
+    def pieces(text: str) -> int:
+        return max(1, -(-len(pipe.tokenizer(text, add_special_tokens=False).input_ids) // 75))
+
+    n = max(pieces(prompt), pieces(negative))  # both sides need the same length
+    with torch.no_grad():
+        cond, pooled, _ = _encode(pipe, prompt, n)
+        ncond, npooled, _ = _encode(pipe, negative, n)
+    return dict(prompt_embeds=cond, pooled_prompt_embeds=pooled,
+                negative_prompt_embeds=ncond, negative_pooled_prompt_embeds=npooled)
 
 
 def contact_sheet(paths: list[str], out: str) -> None:

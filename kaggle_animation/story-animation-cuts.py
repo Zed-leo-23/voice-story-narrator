@@ -39,7 +39,7 @@ def main() -> None:
 
     subprocess.run(["nvidia-smi", "--query-gpu=name,memory.total", "--format=csv"])
     # Kaggle already has torch; add the picture libraries only.
-    sh(["pip", "install", "-q", "diffusers>=0.30", "transformers", "accelerate", "safetensors", "compel", "requests"])
+    sh(["pip", "install", "-q", "diffusers>=0.30", "transformers", "accelerate", "safetensors", "requests"])
 
     out = f"/kaggle/working/out/{story}"
     sh([sys.executable, f"{REPO_DIR}/animation/render_cuts.py", story, "--out", out,

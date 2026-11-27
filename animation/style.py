@@ -20,9 +20,16 @@ STYLE = (
     "No text, no letters, no captions, no watermark, no speech bubbles."
 )
 
+# The style in a few words, put first in SDXL prompts (render_cuts.py).
+STYLE_TAGS = (
+    "2D hand-drawn cel animation still, flat colored cartoon characters with clean outlines, "
+    "richly hand-painted gouache background with brush strokes, Joseon Korean village"
+)
+
 NEGATIVE = (
     "text, letters, watermark, logo, signature, modern anime, big sparkly anime eyes, glossy 3D render, CGI, "
-    "photo, realistic, gradient cel shading, Japanese kimono, oni, scary, blood, gore, dark horror lighting, "
+    "photo, realistic, realistic animal, gradient cel shading, line art only, coloring book, "
+    "western house, wooden cabin, chimney, European village, Japanese kimono, oni, scary, blood, gore, dark horror lighting, "
     "extra fingers, deformed hands, blurry"
 )
 
