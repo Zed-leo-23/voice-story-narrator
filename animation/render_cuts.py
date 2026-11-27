@@ -6,13 +6,13 @@
 
 Writes animation/out/<id>/shot_01.png ... (1920x1080) and contact_sheet.jpg.
 Prompts come from animation/stories/<id>.json and style.py, rebuilt for SDXL:
-a few style words, the scene, the character looks, then the full art style.
+a few style words, the scene, the character looks, a few more style words.
 """
 import argparse, json, os, re, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from style import CHARACTERS, NEGATIVE, STYLE, STYLE_TAGS  # noqa: E402
+from style import CHARACTERS, NEGATIVE, STYLE_TAGS, STYLE_TAGS_END  # noqa: E402
 
 MODEL = "stabilityai/stable-diffusion-xl-base-1.0"
 # The stock SDXL VAE turns pictures black in fp16; this one is the same VAE fixed for fp16.
@@ -34,11 +34,10 @@ def clean(text: str) -> str:
 
 
 def prompt_for(shot: dict) -> str:
+    """Short style words, then the scene and who is in it. The long STYLE text is
+    left out: in SDXL it drowned the scene (no snow, no tiger in the 2nd test)."""
     looks = " ".join(f"{c}: {english(CHARACTERS[c])}." for c in shot["characters"] if c in CHARACTERS)
-    # "No text, no letters..." makes SDXL think of text; the negative prompt covers it.
-    style = re.sub(r"\s*No text[^.]*\.", "", STYLE)
-    # The look in a few words first: the start of a prompt weighs most.
-    return clean(f"{STYLE_TAGS}. {shot['picture']}. {looks} {style}")
+    return clean(f"{STYLE_TAGS}. {shot['picture']}. {looks} {STYLE_TAGS_END}")
 
 
 def load_pipe(model: str):

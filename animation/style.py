@@ -26,6 +26,11 @@ STYLE_TAGS = (
     "richly hand-painted gouache background with brush strokes, Joseon Korean village"
 )
 
+STYLE_TAGS_END = (
+    "simple rounded cartoon bodies, small dot eyes, exaggerated funny expressions, "
+    "muted pastel colors, wide 16:9 scene, for young children"
+)
+
 NEGATIVE = (
     "text, letters, watermark, logo, signature, modern anime, big sparkly anime eyes, glossy 3D render, CGI, "
     "photo, realistic, realistic animal, gradient cel shading, line art only, coloring book, "
