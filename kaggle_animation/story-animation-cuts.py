@@ -32,6 +32,7 @@ def main() -> None:
     branch = os.environ.get("STORY_BRANCH", "").strip()
     looks = os.environ.get("ANIMATION_LOOKS", "").strip()
     # layered: backgrounds and characters drawn apart, then put together (default).
+    # sheets: character sheet candidates only, to choose each character's look.
     # single: one SDXL picture per shot (render_cuts.py).
     mode = os.environ.get("ANIMATION_MODE", "").strip() or "layered"
 
@@ -48,8 +49,9 @@ def main() -> None:
     sh(["pip", "install", "-q", "diffusers>=0.30", "transformers", "accelerate", "safetensors", "peft", "requests", "rembg[cpu]"])
 
     out = f"/kaggle/working/out/{story}"
-    if mode == "layered":
+    if mode in ("layered", "sheets"):
         sh([sys.executable, f"{REPO_DIR}/animation/render_layered.py", story, "--out", out,
+            *(["--sheets"] if mode == "sheets" else []),
             *(["--shots", shots] if shots else []), *(["--look", looks] if looks else [])])
     else:
         sh([sys.executable, f"{REPO_DIR}/animation/render_cuts.py", story, "--out", out,
@@ -64,7 +66,7 @@ def main() -> None:
 
     files = [archive, f"{out}/contact_sheet.jpg", f"{out}/prompts.json",
              *glob.glob(f"{out}/layout.json"), *sorted(glob.glob(f"{out}/shot_*.png")),
-             *sorted(glob.glob(f"{out}/layers/sprite_*.png"))]
+             *sorted(glob.glob(f"{out}/layers/sprite_*.png")), *sorted(glob.glob(f"{out}/sheets/*.png"))]
     for path in files:
         link = upload_release_asset(REPO, f"cuts-{story}", f"Animation cuts: {story}", path, token,
                                     body=f"SDXL shot pictures for {story} (branch {branch or 'default'}).")

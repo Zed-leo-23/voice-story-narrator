@@ -17,7 +17,7 @@ on:
         required: false
         default: ""
       mode:
-        description: "layered = backgrounds and characters drawn apart, then put together; single = one picture per shot"
+        description: "sheets = character sheet candidates (do first); layered = backgrounds and characters drawn apart, then put together; single = one picture per shot"
         required: false
         default: "layered"
       looks:

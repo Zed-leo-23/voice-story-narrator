@@ -3,6 +3,7 @@
     python3 animation/render_layered.py tiger-persimmon               # every shot
     python3 animation/render_layered.py tiger-persimmon --shots 1,4   # only these shots
     python3 animation/render_layered.py tiger-persimmon --dry-run     # print prompts only
+    python3 animation/render_layered.py tiger-persimmon --sheets      # character sheet candidates only
 
 Plan: animation/layers.py. Writes animation/out/<id>/
   layers/bg_<name>.png         background, no characters (1920x1080)
@@ -11,8 +12,11 @@ Plan: animation/layers.py. Writes animation/out/<id>/
   layout.json                  which layers make each shot and where (for animating later)
   contact_sheet.jpg, prompts.json
 
-Each character's first sprite is its reference picture; every later sprite of
-that character gets it through IP-Adapter so the character keeps one look.
+Character looks: first run --sheets, which draws SHEET_CANDIDATES full-body
+candidates per character (sheets/<character>_1.png ... and sheets.jpg). Copy the
+chosen one to animation/reference/<character>.png and commit it. Every sprite of
+that character then copies it through IP-Adapter. A character with no picture in
+reference/ falls back to its first sprite in layers.py as the reference.
 """
 import argparse, json, os, re, sys, zlib
 
@@ -27,6 +31,9 @@ from style import (  # noqa: E402
 BG_SIZE = (1344, 768)
 SPRITE_SIZE = (1024, 1024)
 IP_ADAPTER = ("h94/IP-Adapter", "sdxl_models", "ip-adapter_sdxl.safetensors")
+REF_DIR = os.path.join(HERE, "reference")
+SHEET_CANDIDATES = 4
+SHEET_POSE = "standing full body, front view, arms relaxed, neutral friendly expression, character design"
 IP_SCALE = 0.55  # how strongly a sprite copies its character's reference picture
 NIGHT_TINT = (0.80, 0.84, 1.0)  # sprites drawn in white light, darkened a little for night shots
 
@@ -62,11 +69,17 @@ def sprite_prompt(chars: list[str], pose: str, look: str) -> tuple[str, str]:
     return prompt, negative
 
 
+def chosen_reference(character: str) -> str | None:
+    path = os.path.join(REF_DIR, f"{character}.png")
+    return path if os.path.exists(path) else None
+
+
 def references(sprites: dict) -> dict:
-    """Character -> the sprite that defines its look (its first single-character sprite)."""
+    """Character -> the sprite that defines its look (its first single-character sprite),
+    for characters without a chosen picture in reference/."""
     refs = {}
     for name, (chars, _) in sprites.items():
-        if len(chars) == 1:
+        if len(chars) == 1 and not chosen_reference(chars[0]):
             refs.setdefault(chars[0], name)
     return refs
 
@@ -126,6 +139,7 @@ def main() -> None:
     ap.add_argument("--look", default=os.environ.get("ANIMATION_LOOKS") or DEFAULT_LOOK)
     ap.add_argument("--steps", type=int, default=30)
     ap.add_argument("--guidance", type=float, default=6.0)
+    ap.add_argument("--sheets", action="store_true", help="draw character sheet candidates only")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
     look = args.look.split(",")[0].strip()
@@ -144,6 +158,10 @@ def main() -> None:
     needed = used | {refs[c] for s in used for c in plan["sprites"][s][0] if c in refs}
     order = [s for s in plan["sprites"] if s in needed and s in refs.values()] + \
             [s for s in plan["sprites"] if s in needed and s not in refs.values()]
+
+    cast = list(dict.fromkeys(c for chars, _ in plan["sprites"].values() for c in chars))
+    if args.sheets:
+        return draw_sheets(args, plan, cast, look)
 
     prompts = {}
     for b in sorted(bgs):
@@ -193,7 +211,9 @@ def main() -> None:
     except Exception as e:  # noqa: BLE001
         print(f"note: rembg unavailable ({e!r}); using flood fill")
         session = None
-    ref_pictures = {}
+    ref_pictures = {c: Image.open(chosen_reference(c)).convert("RGB") for c in cast if chosen_reference(c)}
+    if ref_pictures:
+        print("chosen references:", sorted(ref_pictures))
     for s in order:
         chars = plan["sprites"][s][0]
         ref = next((ref_pictures[c] for c in chars if c in ref_pictures), None)
@@ -222,6 +242,44 @@ def main() -> None:
                "prompts": {k: {"prompt": p, "negative": n} for k, (p, n) in prompts.items()}},
               open(os.path.join(out, "prompts.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=2)
     print(f"{len(done)} pictures in {out}")
+
+
+def draw_sheets(args, plan, cast: list[str], look: str) -> None:
+    """SHEET_CANDIDATES full-body candidates per character, numbered, to choose a look from."""
+    prompts = {c: sprite_prompt([c], SHEET_POSE, look) for c in cast}
+    if args.dry_run:
+        for c, (p, n) in prompts.items():
+            print(f"--- sheet {c}\n{p}")
+        return
+    import torch
+    from PIL import Image, ImageDraw, ImageFont
+
+    out = os.path.join(args.out or os.path.join(HERE, "out", args.story), "sheets")
+    os.makedirs(out, exist_ok=True)
+    pipe = load_pipe(args.model)
+    use_look(pipe, look)
+    cell, top = 400, 46
+    grid = Image.new("RGB", (cell * SHEET_CANDIDATES, (cell + top) * len(cast)), "white")
+    d = ImageDraw.Draw(grid)
+    try:
+        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 26)
+    except OSError:
+        font = ImageFont.load_default()
+    for row, c in enumerate(cast):
+        prompt, negative = prompts[c]
+        for i in range(1, SHEET_CANDIDATES + 1):
+            print(f"sheet {c} {i}/{SHEET_CANDIDATES}", flush=True)
+            image = pipe(**embeddings(pipe, prompt, negative), width=SPRITE_SIZE[0], height=SPRITE_SIZE[1],
+                         num_inference_steps=args.steps, guidance_scale=args.guidance,
+                         generator=torch.Generator("cuda").manual_seed(seed(f"sheet_{c}") + i)).images[0]
+            image.save(os.path.join(out, f"{c}_{i}.png"))
+            x, y = (i - 1) * cell, row * (cell + top)
+            grid.paste(image.resize((cell, cell)), (x, y + top))
+            d.text((x + 10, y + 8), f"{c}  #{i}", fill="black", font=font)
+    grid.save(os.path.join(out, "..", "contact_sheet.jpg"), quality=88)
+    json.dump({"look": look, "pose": SHEET_POSE, "prompts": {c: p for c, (p, _) in prompts.items()}},
+              open(os.path.join(out, "prompts.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+    print(f"{len(cast) * SHEET_CANDIDATES} pictures in {out}")
 
 
 if __name__ == "__main__":
