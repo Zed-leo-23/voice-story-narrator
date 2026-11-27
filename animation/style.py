@@ -22,8 +22,15 @@ STYLE = (
 
 # The style in a few words, put first in SDXL prompts (render_cuts.py).
 STYLE_TAGS = (
-    "simple Korean webtoon cartoon, thick bold black outlines, flat solid colors, no shading, "
-    "plain simple background, Joseon Korea"
+    "simple Korean webtoon cartoon of a Korean folktale (jeollae donghwa), thick bold black outlines, "
+    "flat solid colors, no shading, plain simple background, Joseon dynasty Korean countryside"
+)
+
+# Korean feel in every SDXL prompt: clothes, houses and things of an old Korean village.
+KOREAN = (
+    "people wear Korean hanbok: short jeogori jacket tied with a long otgoreum ribbon, "
+    "women in a long full chima skirt with hair in a low bun and a binyeo pin, men in baggy baji trousers, "
+    "round golden straw thatched choga houses, low stone walls, brown onggi clay jars, persimmon trees, gentle hills"
 )
 
 STYLE_TAGS_END = (
@@ -36,7 +43,8 @@ NEGATIVE = (
     "glossy 3D render, CGI, photo, realistic, realistic animal, detailed fur, painterly, brush strokes, "
     "watercolor texture, gradient shading, soft shading, detailed background, busy background, many colors, "
     "western house, wooden cabin, chimney, European village, glass windows, shingled roof, two-story house, "
-    "Japanese kimono, oni, scary, blood, gore, dark horror lighting, "
+    "Japanese kimono, obi belt, geta, Japanese house, tatami, torii, Chinese clothes, qipao, Chinese pagoda, "
+    "western clothes, oni, scary, horror, blood, gore, "
     "extra fingers, deformed hands, blurry, duplicate characters, clones, the same animal repeated, "
     "group of tigers, crowd of animals"
 )
@@ -74,9 +82,11 @@ CHARACTERS = {
     # 호랑이와 곶감
     "tiger": "호랑이: big orange Korean tiger with black stripes, round comical face, small round eyes, "
              "funny rather than scary",
-    "baby": "아기: chubby baby with rosy cheeks, wrapped in a colorful saekdong striped blanket",
-    "mother": "엄마: young mother in a pale pink hanbok, seen from behind or as a soft shadow on the paper door, face not shown",
-    "cow_thief": "소도둑: clumsy round-faced man, patched brown clothes, bundle tied on his back, wide surprised dot eyes",
+    "baby": "아기: chubby Korean baby with rosy cheeks in a little saekdong rainbow-striped hanbok",
+    "mother": "엄마: young Korean mother in a pale yellow jeogori with a white otgoreum ribbon and a long full pink chima skirt, "
+              "black hair in a low bun with a binyeo hairpin",
+    "cow_thief": "소도둑: clumsy round-faced Korean man in a patched brown jeogori and baggy grey baji trousers, "
+                 "white headband, a cloth bundle tied on his back, wide surprised dot eyes",
 }
 
 
@@ -109,7 +119,7 @@ GROUP_CHARACTERS = {"goblins", "sea_soldiers"}
 
 # Time of day found in a shot's picture -> words put first, and what to keep out.
 TIME_OF_DAY = {
-    "night": ("night scene, flat dark navy blue night sky, round moon, warm yellow lamp light in windows",
+    "night": ("night, flat dark navy blue sky filling the background, big yellow full moon, yellow glowing paper windows",
               "daylight, bright day, sunny, blue daytime sky"),
     "dusk": ("dusk, orange and purple evening sky, long shadows", "midday, bright noon"),
     "sunset": ("sunset, warm orange evening light", "midday, bright noon"),

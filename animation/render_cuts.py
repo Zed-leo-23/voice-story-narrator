@@ -13,7 +13,7 @@ import argparse, json, os, re, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from style import (  # noqa: E402
-    BUILDINGS, CHARACTERS, DEFAULT_LOOK, GROUP_CHARACTERS, LOOKS, LORAS, NEGATIVE, STYLE_TAGS, STYLE_TAGS_END, TIME_OF_DAY,
+    BUILDINGS, CHARACTERS, DEFAULT_LOOK, KOREAN, GROUP_CHARACTERS, LOOKS, LORAS, NEGATIVE, STYLE_TAGS, STYLE_TAGS_END, TIME_OF_DAY,
 )
 
 MODEL = "stabilityai/stable-diffusion-xl-base-1.0"
@@ -65,7 +65,7 @@ def prompt_for(shot: dict, look: str = "base") -> str:
     buildings = BUILDINGS[1] + ". " if re.search(rf"\b({BUILDINGS[0]})\b", shot["picture"].lower()) else ""
     # The scene (what happens, the pose) comes before the style words: it weighs more there.
     return clean(f"{lead + ', ' if lead else ''}{shot['picture']}. {count + '. ' if count else ''}"
-                 f"{STYLE_TAGS}. {buildings}{looks} {STYLE_TAGS_END}")
+                 f"{STYLE_TAGS}. {buildings}{looks} {KOREAN}. {STYLE_TAGS_END}")
 
 
 def negative_for(shot: dict, base: str) -> str:
