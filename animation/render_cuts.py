@@ -48,7 +48,9 @@ def load_pipe(model: str):
     pipe = StableDiffusionXLPipeline.from_pretrained(
         model, vae=vae, torch_dtype=torch.float16, variant="fp16", use_safetensors=True
     ).to("cuda")
-    pipe.enable_vae_slicing()
+    # Newer diffusers moved VAE slicing from the pipeline onto the VAE itself.
+    if hasattr(pipe.vae, "enable_slicing"):
+        pipe.vae.enable_slicing()
     return pipe
 
 
