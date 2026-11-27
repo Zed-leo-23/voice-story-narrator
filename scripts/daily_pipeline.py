@@ -483,7 +483,7 @@ def run_once(
 
 if __name__ == "__main__":
     main(
-        engine_path=os.environ.get("ENGINE_PATH", "/kaggle/working/voicestudio"),
+        engine_path=os.environ.get("ENGINE_PATH", "/tmp/voicestudio"),
         ref_audio_search_dirs=[os.environ.get("REF_AUDIO_DIR", "/kaggle/input")],
         outdir=os.environ.get("OUTDIR", "/kaggle/working/output"),
     )

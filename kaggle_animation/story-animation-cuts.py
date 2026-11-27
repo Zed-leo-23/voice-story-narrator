@@ -15,7 +15,10 @@ import subprocess
 import sys
 
 REPO = "Zed-leo-23/voice-story-narrator"
-REPO_DIR = "/kaggle/working/voice-story-narrator"
+# Not under /kaggle/working: that is saved as the kernel's Output, and the
+# clone's .git/config holds the token-bearing clone URL.
+REPO_DIR = "/tmp/voice-story-narrator"
+LEGACY_REPO_DIR = "/kaggle/working/voice-story-narrator"  # older versions cloned here
 
 
 def sh(cmd: list[str], redact: str | None = None) -> None:
@@ -29,9 +32,10 @@ def main() -> None:
     shots = os.environ.get("ANIMATION_SHOTS", "").strip()
     branch = os.environ.get("STORY_BRANCH", "").strip()
 
-    # Always a fresh clone: /kaggle/working survives between versions of this kernel.
-    if os.path.isdir(REPO_DIR):
-        shutil.rmtree(REPO_DIR)
+    # Always a fresh clone; also drop a token-bearing clone left in Output by older versions.
+    for d in (LEGACY_REPO_DIR, REPO_DIR):
+        if os.path.isdir(d):
+            shutil.rmtree(d)
     url = f"https://x-access-token:{token}@github.com/{REPO}" if token else f"https://github.com/{REPO}"
     sh(["git", "clone", "--depth", "1", *(["--branch", branch] if branch else []), url, REPO_DIR],
        redact=token or None)

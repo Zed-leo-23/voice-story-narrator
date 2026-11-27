@@ -26,8 +26,15 @@ import sys
 
 REPO_URL = "https://github.com/Zed-leo-23/voice-story-narrator"
 ENGINE_URL = "https://github.com/debpalash/voicestudio"
-REPO_DIR = "/kaggle/working/voice-story-narrator"
-ENGINE_DIR = "/kaggle/working/voicestudio"
+# Clones live in /tmp, not /kaggle/working: everything under /kaggle/working
+# is saved as the kernel's Output on every run, and the repo clone's
+# .git/config holds the token-bearing clone URL. Only real results go to
+# /kaggle/working/output.
+REPO_DIR = "/tmp/voice-story-narrator"
+ENGINE_DIR = "/tmp/voicestudio"
+# Where older versions of this kernel cloned to; removed if still present so
+# that a leftover token-bearing clone isn't carried into new Output versions.
+LEGACY_DIRS = ["/kaggle/working/voice-story-narrator", "/kaggle/working/voicestudio"]
 # The engine changes almost daily upstream; a new version on 2026-11-22 refused
 # to load the model. Use one tested version, and move this pin on purpose.
 ENGINE_COMMIT = "54465ec203e7a7d68894a09d89c1f6002bc70e59"
@@ -40,12 +47,13 @@ def sh(cmd: list[str], redact: str | None = None) -> None:
 
 
 def main() -> None:
-    # /kaggle/working survives across saved versions of this same kernel, so
-    # skipping the clone when REPO_DIR already exists (as this used to do)
-    # means every run after the first keeps using whatever commit happened
-    # to be checked out that first time -- silently stale, never the
-    # "latest code on GitHub" the docstring above promises. Always discard
-    # and re-clone so a push to main actually takes effect the next run.
+    for d in LEGACY_DIRS:
+        if os.path.isdir(d):
+            sh(["rm", "-rf", d])
+    # Always clone fresh so a push to main takes effect the next run. /tmp
+    # should already be empty at the start of a run, but this keeps it safe
+    # if it isn't (an older version skipped the clone when the dir existed
+    # and kept running stale code).
     if os.path.isdir(REPO_DIR):
         sh(["rm", "-rf", REPO_DIR])
     # voice-story-narrator is a private repo -- an unauthenticated clone 404s.
