@@ -3,7 +3,7 @@ then uploads them to the GitHub Release `cuts-<story id>`.
 
 Started by .github/workflows/animation-kaggle.yml. Like the daily narration
 kernel, the values below (GITHUB_TOKEN, STORY_BRANCH, ANIMATION_STORY,
-ANIMATION_SHOTS) are prepended as `os.environ[...] = ...` lines by
+ANIMATION_SHOTS, ANIMATION_LOOKS) are prepended as `os.environ[...] = ...` lines by
 scripts/write_kaggle_secrets.py in the Actions runner's throwaway checkout
 right before `kaggle kernels push`. This file as committed has no secrets.
 """
@@ -30,6 +30,7 @@ def main() -> None:
     story = os.environ.get("ANIMATION_STORY", "").strip() or "tiger-persimmon"
     shots = os.environ.get("ANIMATION_SHOTS", "").strip()
     branch = os.environ.get("STORY_BRANCH", "").strip()
+    looks = os.environ.get("ANIMATION_LOOKS", "").strip()
 
     if os.path.isdir(REPO_DIR):
         shutil.rmtree(REPO_DIR)
@@ -39,11 +40,11 @@ def main() -> None:
 
     subprocess.run(["nvidia-smi", "--query-gpu=name,memory.total", "--format=csv"])
     # Kaggle already has torch; add the picture libraries only.
-    sh(["pip", "install", "-q", "diffusers>=0.30", "transformers", "accelerate", "safetensors", "requests"])
+    sh(["pip", "install", "-q", "diffusers>=0.30", "transformers", "accelerate", "safetensors", "peft", "requests"])
 
     out = f"/kaggle/working/out/{story}"
     sh([sys.executable, f"{REPO_DIR}/animation/render_cuts.py", story, "--out", out,
-        *(["--shots", shots] if shots else [])])
+        *(["--shots", shots] if shots else []), *(["--looks", looks] if looks else [])])
 
     archive = shutil.make_archive(f"/kaggle/working/{story}-cuts", "zip", out)
     if not token:

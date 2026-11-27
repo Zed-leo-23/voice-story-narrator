@@ -29,6 +29,7 @@ OPTIONAL_SECRETS = {
     "STORY_BRANCH",
     "ANIMATION_STORY",
     "ANIMATION_SHOTS",
+    "ANIMATION_LOOKS",
 }
 
 SECRET_ENV_MAPPING = {
@@ -57,6 +58,7 @@ SECRET_ENV_MAPPING = {
     # Not secrets: which story / shots the animation kernel draws.
     "ANIMATION_STORY": os.environ.get("ANIMATION_STORY", ""),
     "ANIMATION_SHOTS": os.environ.get("ANIMATION_SHOTS", ""),
+    "ANIMATION_LOOKS": os.environ.get("ANIMATION_LOOKS", ""),
 }
 
 KERNEL_SCRIPT = os.path.join(

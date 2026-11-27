@@ -75,3 +75,24 @@ CHARACTERS = {
     "mother": "엄마: young mother in a pale pink hanbok, seen from behind or as a soft shadow on the paper door, face not shown",
     "cow_thief": "소도둑: clumsy round-faced man, patched brown clothes, bundle tied on his back, wide surprised dot eyes",
 }
+
+
+# Style LoRAs (all SDXL 1.0, from Hugging Face, licenses allow commercial use).
+# A "look" is a set of LoRAs: (repo, file, weight, trigger words put first in the prompt).
+# render_cuts.py --looks gouache,gouache_90s draws every shot once per look, to compare.
+LORAS = {
+    # Warm hand-painted gouache storybook, visible brush strokes. openrail++
+    "gouache": ("strkyyy/gouache-storybook", "gouache-storybook.safetensors", "g0u4ch3"),
+    # Slider toward a 1990s anime look. MIT
+    "90s": ("ntc-ai/SDXL-LoRA-slider.90s-anime", "90s anime.safetensors", "90s anime"),
+    # Cel-shaded anime with ink lines. openrail++
+    "cel": ("strkyyy/anime-cel-shaded", "anime-cel-shaded.safetensors", "4n1mec3l"),
+}
+LOOKS = {
+    "base": {},
+    "gouache": {"gouache": 0.85},
+    "gouache_90s": {"gouache": 0.7, "90s": 1.5},
+    "gouache_cel": {"gouache": 0.6, "cel": 0.6},
+}
+DEFAULT_LOOK = "gouache"
+

@@ -16,6 +16,10 @@ on:
         description: "Only these shots, e.g. 1,2,3 (empty = all)"
         required: false
         default: ""
+      looks:
+        description: "Style LoRA look(s) from animation/style.py LOOKS, e.g. gouache or base,gouache,gouache_90s to compare (empty = default)"
+        required: false
+        default: ""
 
 jobs:
   trigger:
@@ -38,9 +42,10 @@ jobs:
           STORY_BRANCH: ${{ github.ref_name }}
           ANIMATION_STORY: ${{ inputs.story }}
           ANIMATION_SHOTS: ${{ inputs.shots }}
+          ANIMATION_LOOKS: ${{ inputs.looks }}
         run: >
           python3 scripts/write_kaggle_secrets.py kaggle_animation/story-animation-cuts.py
-          GITHUB_TOKEN STORY_BRANCH ANIMATION_STORY ANIMATION_SHOTS
+          GITHUB_TOKEN STORY_BRANCH ANIMATION_STORY ANIMATION_SHOTS ANIMATION_LOOKS
 
       - name: Push and run the Kaggle kernel
         env:

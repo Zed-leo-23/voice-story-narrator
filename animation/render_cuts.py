@@ -12,7 +12,7 @@ import argparse, json, os, re, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from style import CHARACTERS, NEGATIVE, STYLE_TAGS, STYLE_TAGS_END  # noqa: E402
+from style import CHARACTERS, DEFAULT_LOOK, LOOKS, LORAS, NEGATIVE, STYLE_TAGS, STYLE_TAGS_END  # noqa: E402
 
 MODEL = "stabilityai/stable-diffusion-xl-base-1.0"
 # The stock SDXL VAE turns pictures black in fp16; this one is the same VAE fixed for fp16.
@@ -33,11 +33,12 @@ def clean(text: str) -> str:
     return re.sub(r"\s*,\s*,", ",", re.sub(r"\s+", " ", text)).strip()
 
 
-def prompt_for(shot: dict) -> str:
+def prompt_for(shot: dict, look: str = "base") -> str:
     """Short style words, then the scene and who is in it. The long STYLE text is
     left out: in SDXL it drowned the scene (no snow, no tiger in the 2nd test)."""
     looks = " ".join(f"{c}: {english(CHARACTERS[c])}." for c in shot["characters"] if c in CHARACTERS)
-    return clean(f"{STYLE_TAGS}. {shot['picture']}. {looks} {STYLE_TAGS_END}")
+    triggers = ", ".join(LORAS[name][2] for name in LOOKS[look])
+    return clean(f"{triggers + ', ' if triggers else ''}{STYLE_TAGS}. {shot['picture']}. {looks} {STYLE_TAGS_END}")
 
 
 def load_pipe(model: str):
@@ -51,7 +52,20 @@ def load_pipe(model: str):
     # Newer diffusers moved VAE slicing from the pipeline onto the VAE itself.
     if hasattr(pipe.vae, "enable_slicing"):
         pipe.vae.enable_slicing()
+    names = sorted({n for look in LOOKS.values() for n in look})
+    for name in names:
+        repo, weight_file, _ = LORAS[name]
+        pipe.load_lora_weights(repo, weight_name=weight_file, adapter_name=name)
     return pipe
+
+
+def use_look(pipe, look: str) -> None:
+    weights = LOOKS[look]
+    if not weights:
+        pipe.disable_lora()
+        return
+    pipe.enable_lora()
+    pipe.set_adapters(list(weights), adapter_weights=list(weights.values()))
 
 
 def _encode(pipe, text: str, chunks: int | None = None):
@@ -90,10 +104,10 @@ def embeddings(pipe, prompt: str, negative: str):
                 negative_prompt_embeds=ncond, negative_pooled_prompt_embeds=npooled)
 
 
-def contact_sheet(paths: list[str], out: str) -> None:
+def contact_sheet(paths: list[str], out: str, cols: int = 4) -> None:
     from PIL import Image
 
-    cols, w, h = 4, 480, 270
+    w, h = 480, 270
     rows = (len(paths) + cols - 1) // cols
     sheet = Image.new("RGB", (cols * w, rows * h), "white")
     for i, p in enumerate(paths):
@@ -110,6 +124,8 @@ def main() -> None:
     ap.add_argument("--steps", type=int, default=30)
     ap.add_argument("--guidance", type=float, default=6.0)
     ap.add_argument("--seed", type=int, default=1234, help="same seed + same prompt = same picture")
+    ap.add_argument("--looks", default=os.environ.get("ANIMATION_LOOKS") or DEFAULT_LOOK,
+                    help=f"comma list of {', '.join(LOOKS)}; more than one = one picture per look to compare")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
@@ -119,10 +135,15 @@ def main() -> None:
     out = args.out or os.path.join(HERE, "out", args.story)
     os.makedirs(out, exist_ok=True)
     negative = clean(data.get("negative_prompt") or NEGATIVE)
+    looks = [x.strip() for x in args.looks.split(",") if x.strip()]
+    unknown = [x for x in looks if x not in LOOKS]
+    if unknown:
+        raise SystemExit(f"unknown look {unknown}; choose from {list(LOOKS)}")
 
     if args.dry_run:
         for s in shots:
-            print(f"--- shot {s['shot']} ({s['start']:.1f}-{s['end']:.1f}s)\n{prompt_for(s)}")
+            for look in looks:
+                print(f"--- shot {s['shot']} [{look}] ({s['start']:.1f}-{s['end']:.1f}s)\n{prompt_for(s, look)}")
         print(f"--- negative\n{negative}")
         return
 
@@ -130,21 +151,27 @@ def main() -> None:
     from PIL import Image
 
     pipe = load_pipe(args.model)
-    done = []
-    for s in shots:
-        path = os.path.join(out, f"shot_{s['shot']:02d}.png")
-        print(f"shot {s['shot']}/{len(data['shots'])}: {s['picture'][:70]}", flush=True)
-        image = pipe(
-            **embeddings(pipe, prompt_for(s), negative),
-            width=WIDTH, height=HEIGHT,
-            num_inference_steps=args.steps, guidance_scale=args.guidance,
-            generator=torch.Generator("cuda").manual_seed(args.seed + s["shot"]),
-        ).images[0]
-        image.resize(FINAL, Image.LANCZOS).save(path)
-        done.append(path)
-    contact_sheet(done, os.path.join(out, "contact_sheet.jpg"))
-    json.dump({"story": args.story, "model": args.model, "seed": args.seed, "steps": args.steps,
-               "shots": {os.path.basename(p): prompt_for(s) for p, s in zip(done, shots)}},
+    done = []  # (path, shot, look)
+    for look in looks:
+        use_look(pipe, look)
+        for s in shots:
+            name = f"shot_{s['shot']:02d}.png" if len(looks) == 1 else f"shot_{s['shot']:02d}_{look}.png"
+            path = os.path.join(out, name)
+            print(f"[{look}] shot {s['shot']}/{len(data['shots'])}: {s['picture'][:60]}", flush=True)
+            image = pipe(
+                **embeddings(pipe, prompt_for(s, look), negative),
+                width=WIDTH, height=HEIGHT,
+                num_inference_steps=args.steps, guidance_scale=args.guidance,
+                generator=torch.Generator("cuda").manual_seed(args.seed + s["shot"]),
+            ).images[0]
+            image.resize(FINAL, Image.LANCZOS).save(path)
+            done.append((path, s, look))
+    # Same shot side by side across looks: one row per shot when comparing.
+    done.sort(key=lambda d: (d[1]["shot"], looks.index(d[2])))
+    contact_sheet([p for p, _, _ in done], os.path.join(out, "contact_sheet.jpg"), cols=len(looks) if len(looks) > 1 else 4)
+    json.dump({"story": args.story, "model": args.model, "seed": args.seed, "steps": args.steps, "looks": looks,
+               "loras": {n: LORAS[n] for look in looks for n in LOOKS[look]},
+               "shots": {os.path.basename(p): prompt_for(s, look) for p, s, look in done}},
               open(os.path.join(out, "prompts.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=2)
     print(f"{len(done)} pictures in {out}")
 
