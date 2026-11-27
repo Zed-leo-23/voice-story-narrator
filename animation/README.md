@@ -75,17 +75,48 @@
 | 그림체 | `style.py` 의 `STYLE`, `NEGATIVE` |
 | 캐릭터 외형 | `style.py` 의 `CHARACTERS` |
 | 샷 나누기·장면 내용·움직임 | `shots.py` |
+| SDXL 모델·크기·단계 수 | `render_cuts.py` |
 
 고친 뒤 `python3 animation/build_shotlist.py` 로 `stories/*.json` 을 다시 만든다.
 새 이야기를 추가하면 `shots.py` 에 같은 모양으로 넣는다(장면·대사 번호는 그 이야기의 `timeline.json` 순서, 0부터).
 
-## 5. 주의
+## 5. Kaggle 무료 GPU로 컷 그리기 (SDXL, 오픈소스)
+
+Gemini 대신 Kaggle 무료 GPU에서 SDXL로 샷 그림을 그린다. API 요금이 없다.
+
+| 파일 | 하는 일 |
+|---|---|
+| `animation/render_cuts.py` | 샷 목록을 읽어 샷마다 그림 1장(1920×1080)을 그린다 |
+| `kaggle_animation/` | Kaggle 노트북 `funstoy_youtube/story-animation-cuts`. 저장소를 받아 위 스크립트를 돌리고 결과를 올린다 |
+| `.github/workflows/animation-kaggle.yml` | 수동 실행 버튼. Kaggle에 노트북을 올려 실행시킨다 |
+
+**실행:** GitHub → Actions → *Draw animation cuts on Kaggle* → Run workflow
+→ 브랜치 선택, `story`(예: `tiger-persimmon`), 필요하면 `shots`(예: `1,2,3`) 입력.
+처음엔 `shots` 에 `1,2` 처럼 몇 장만 넣어 그림체를 먼저 본다.
+
+**결과:** 15~30분 뒤 GitHub Release `cuts-<id>` 에 올라온다.
+`contact_sheet.jpg`(한눈에 보기), `shot_01.png`…, 전체 묶음 zip, 사용한 프롬프트 `prompts.json`.
+실패하면 Kaggle 노트북 페이지의 로그를 본다.
+
+**필요한 GitHub Secrets**
+- `RELEASE_PAT`: 저장소 받기·Release 올리기 (이미 있음)
+- Kaggle 토큰: 노트북이 `funstoy_youtube` 계정 소속이므로 **그 계정의 토큰**이어야 한다.
+  기존 `KAGGLE_API_TOKEN` 이 다른 계정(raon07) 것이면 `KAGGLE_ANIMATION_API_TOKEN` 을 새로 넣는다
+  (있으면 이것을, 없으면 `KAGGLE_API_TOKEN` 을 쓴다).
+- 그 Kaggle 계정은 휴대폰 인증이 되어 있어야 GPU와 인터넷이 켜진다.
+
+**그림 바꾸기:** 같은 seed + 같은 프롬프트 = 같은 그림. 그림체는 `style.py` 를 고친다.
+SDXL은 한국어를 못 읽어서 `render_cuts.py` 가 캐릭터 이름표(`호랑이:`)를 빼고
+장면 → 캐릭터 외형 → 그림체 순서로 프롬프트를 다시 만든다. 미리 보기:
+`python3 animation/render_cuts.py tiger-persimmon --dry-run` (GPU 필요 없음).
+
+## 6. 주의
 
 - Gemini API 키는 채팅이나 코드에 넣지 않는다. 환경 변수 또는 GitHub Secrets(`GEMINI_API_KEY`)에만 둔다.
 - 완성 영상은 유튜브에 올리기 전에 반드시 사람이 본다(`docs/youtube-pipeline.md` 4장).
 - AI로 만든 그림·목소리이므로 업로드할 때 "변경되거나 합성된 콘텐츠"를 켠다.
 
-## 6. 새 세션 첫 메시지 예시
+## 7. 새 세션 첫 메시지 예시
 
 ```
 https://github.com/Zed-leo-23/voice-story-narrator 저장소의

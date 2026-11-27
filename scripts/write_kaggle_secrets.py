@@ -18,6 +18,7 @@ repository.
 """
 
 import os
+import sys
 
 OPTIONAL_SECRETS = {
     "KAKAO_CLIENT_SECRET",
@@ -26,6 +27,8 @@ OPTIONAL_SECRETS = {
     "FIREBASE_SERVICE_ACCOUNT_JSON",
     "STORY_SCRIPT",
     "STORY_BRANCH",
+    "ANIMATION_STORY",
+    "ANIMATION_SHOTS",
 }
 
 SECRET_ENV_MAPPING = {
@@ -51,6 +54,9 @@ SECRET_ENV_MAPPING = {
     "STORY_SCRIPT": os.environ.get("STORY_SCRIPT", ""),
     # Not a secret: which branch the kernel clones (the run's own branch).
     "STORY_BRANCH": os.environ.get("STORY_BRANCH", ""),
+    # Not secrets: which story / shots the animation kernel draws.
+    "ANIMATION_STORY": os.environ.get("ANIMATION_STORY", ""),
+    "ANIMATION_SHOTS": os.environ.get("ANIMATION_SHOTS", ""),
 }
 
 KERNEL_SCRIPT = os.path.join(
@@ -59,32 +65,39 @@ KERNEL_SCRIPT = os.path.join(
 
 
 def main() -> None:
+    # Default: the daily narration kernel with every value. Or name another
+    # kernel file and only the keys it needs, e.g.
+    #   write_kaggle_secrets.py kaggle_animation/story-animation-cuts.py GITHUB_TOKEN STORY_BRANCH
+    kernel_script = sys.argv[1] if len(sys.argv) > 1 else KERNEL_SCRIPT
+    keys = sys.argv[2:] or list(SECRET_ENV_MAPPING)
+    mapping = {k: SECRET_ENV_MAPPING[k] for k in keys}
+
     if os.environ.get("GITHUB_ACTIONS") != "true":
         raise SystemExit(
             "Refusing to run outside GitHub Actions: this overwrites "
-            "kaggle_kernel/daily-science-narration.py in place with secret "
+            "the Kaggle kernel script in place with secret "
             "values. Running it locally risks accidentally committing them."
         )
 
-    with open(KERNEL_SCRIPT, encoding="utf-8") as f:
+    with open(kernel_script, encoding="utf-8") as f:
         original = f.read()
 
-    missing_required = [k for k, v in SECRET_ENV_MAPPING.items() if not v and k not in OPTIONAL_SECRETS]
-    missing_optional = [k for k, v in SECRET_ENV_MAPPING.items() if not v and k in OPTIONAL_SECRETS]
+    missing_required = [k for k, v in mapping.items() if not v and k not in OPTIONAL_SECRETS]
+    missing_optional = [k for k, v in mapping.items() if not v and k in OPTIONAL_SECRETS]
 
     header_lines = ["import os", ""]
-    for key, value in SECRET_ENV_MAPPING.items():
+    for key, value in mapping.items():
         header_lines.append(f"os.environ[{key!r}] = {value!r}")
     header = "\n".join(header_lines) + "\n\n"
 
-    with open(KERNEL_SCRIPT, "w", encoding="utf-8") as f:
+    with open(kernel_script, "w", encoding="utf-8") as f:
         f.write(header + original)
 
     if missing_required:
         print("warning: these GitHub repo secrets are empty/not set yet:", missing_required)
     if missing_optional:
         print("note: optional secrets not set (features using them are skipped):", missing_optional)
-    print(f"injected secrets into {KERNEL_SCRIPT} (local checkout only, not committed)")
+    print(f"injected secrets into {kernel_script} (local checkout only, not committed)")
 
 
 if __name__ == "__main__":

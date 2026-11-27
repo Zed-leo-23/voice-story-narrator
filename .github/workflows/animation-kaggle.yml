@@ -1,0 +1,51 @@
+name: Draw animation cuts on Kaggle
+
+# Manual only (Actions tab -> this workflow -> Run workflow).
+# Asks Kaggle's free GPU to run kaggle_animation/story-animation-cuts.py, which
+# draws one SDXL picture per shot and uploads them to the GitHub Release
+# cuts-<story>. The Kaggle run takes ~15-30 min after this job ends.
+
+on:
+  workflow_dispatch:
+    inputs:
+      story:
+        description: "Story id in animation/stories/ (e.g. tiger-persimmon)"
+        required: true
+        default: "tiger-persimmon"
+      shots:
+        description: "Only these shots, e.g. 1,2,3 (empty = all)"
+        required: false
+        default: ""
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: pip install six kaggle
+
+      - name: Check the story exists
+        run: test -f "animation/stories/${{ inputs.story }}.json"
+
+      - name: Inject values into the kernel script (not committed, local checkout only)
+        env:
+          RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
+          STORY_BRANCH: ${{ github.ref_name }}
+          ANIMATION_STORY: ${{ inputs.story }}
+          ANIMATION_SHOTS: ${{ inputs.shots }}
+        run: >
+          python3 scripts/write_kaggle_secrets.py kaggle_animation/story-animation-cuts.py
+          GITHUB_TOKEN STORY_BRANCH ANIMATION_STORY ANIMATION_SHOTS
+
+      - name: Push and run the Kaggle kernel
+        env:
+          # The kernel lives under the Kaggle account funstoy_youtube, so the token
+          # must be that account's. KAGGLE_ANIMATION_API_TOKEN if it differs from
+          # the daily narration's account, else the existing KAGGLE_API_TOKEN.
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_ANIMATION_API_TOKEN || secrets.KAGGLE_API_TOKEN }}
+        run: kaggle kernels push -p kaggle_animation/
