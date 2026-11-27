@@ -87,7 +87,7 @@ Gemini 대신 Kaggle 무료 GPU에서 SDXL로 샷 그림을 그린다. API 요�
 | 파일 | 하는 일 |
 |---|---|
 | `animation/render_cuts.py` | 샷 목록을 읽어 샷마다 그림 1장(1920×1080)을 그린다 |
-| `kaggle_animation/` | Kaggle 노트북 `funstoy_youtube/story-animation-cuts`. 저장소를 받아 위 스크립트를 돌리고 결과를 올린다 |
+| `kaggle_animation/` | Kaggle 노트북 `raon07/story-animation-cuts`. 저장소를 받아 위 스크립트를 돌리고 결과를 올린다 |
 | `.github/workflows/animation-kaggle.yml` | 수동 실행 버튼. Kaggle에 노트북을 올려 실행시킨다 |
 
 **실행:** GitHub → Actions → *Draw animation cuts on Kaggle* → Run workflow
@@ -100,10 +100,8 @@ Gemini 대신 Kaggle 무료 GPU에서 SDXL로 샷 그림을 그린다. API 요�
 
 **필요한 GitHub Secrets**
 - `RELEASE_PAT`: 저장소 받기·Release 올리기 (이미 있음)
-- Kaggle 토큰: 노트북이 `funstoy_youtube` 계정 소속이므로 **그 계정의 토큰**이어야 한다.
-  기존 `KAGGLE_API_TOKEN` 이 다른 계정(raon07) 것이면 `KAGGLE_ANIMATION_API_TOKEN` 을 새로 넣는다
-  (있으면 이것을, 없으면 `KAGGLE_API_TOKEN` 을 쓴다).
-- 그 Kaggle 계정은 휴대폰 인증이 되어 있어야 GPU와 인터넷이 켜진다.
+- `KAGGLE_API_TOKEN`: 매일 도는 낭독과 같은 Kaggle 계정(raon07) 토큰 (이미 있음).
+  주당 무료 GPU 시간(약 30시간)을 낭독과 함께 쓴다. 낭독은 하루 10분 정도라 여유가 있다.
 
 **그림 바꾸기:** 같은 seed + 같은 프롬프트 = 같은 그림. 그림체는 `style.py` 를 고친다.
 SDXL은 한국어를 못 읽어서 `render_cuts.py` 가 캐릭터 이름표(`호랑이:`)를 빼고

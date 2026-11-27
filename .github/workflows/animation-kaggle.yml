@@ -44,8 +44,7 @@ jobs:
 
       - name: Push and run the Kaggle kernel
         env:
-          # The kernel lives under the Kaggle account funstoy_youtube, so the token
-          # must be that account's. KAGGLE_ANIMATION_API_TOKEN if it differs from
-          # the daily narration's account, else the existing KAGGLE_API_TOKEN.
-          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_ANIMATION_API_TOKEN || secrets.KAGGLE_API_TOKEN }}
+          # Same Kaggle account (raon07) and token as the daily narration;
+          # the two kernels share its weekly free GPU hours.
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
         run: kaggle kernels push -p kaggle_animation/
