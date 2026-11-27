@@ -28,13 +28,13 @@ STYLE_TAGS = (
 
 STYLE_TAGS_END = (
     "simple rounded cartoon bodies, small dot eyes, exaggerated funny expressions, "
-    "muted pastel colors, wide 16:9 scene, for young children"
+    "expressive cartoon acting with a clear pose, muted pastel colors, wide 16:9 scene, for young children"
 )
 
 NEGATIVE = (
     "text, letters, watermark, logo, signature, modern anime, big sparkly anime eyes, glossy 3D render, CGI, "
     "photo, realistic, realistic animal, gradient cel shading, line art only, coloring book, "
-    "western house, wooden cabin, chimney, European village, Japanese kimono, oni, scary, blood, gore, dark horror lighting, "
+    "western house, wooden cabin, chimney, European village, glass windows, shingled roof, two-story house, Japanese kimono, oni, scary, blood, gore, dark horror lighting, "
     "extra fingers, deformed hands, blurry, duplicate characters, clones, the same animal repeated, "
     "group of tigers, crowd of animals"
 )
@@ -108,4 +108,12 @@ TIME_OF_DAY = {
     "sunset": ("sunset, warm orange evening light", "midday, bright noon"),
     "dawn": ("early dawn, pale pink morning sky, soft first light", "night, midday"),
 }
+
+# Words in a shot's picture -> how Korean buildings must look (SDXL drew Western
+# cottages with glass windows for "house" and "village").
+BUILDINGS = (
+    r"house|houses|village|hut|eave|eaves|window|gate|yard|shed|room|roof|wall|market|door",
+    "traditional Korean choga cottages with thick rounded golden straw thatched roofs, "
+    "low mud and stone walls, wooden posts, hanji paper sliding doors and windows",
+)
 

@@ -13,7 +13,7 @@ import argparse, json, os, re, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from style import (  # noqa: E402
-    CHARACTERS, DEFAULT_LOOK, GROUP_CHARACTERS, LOOKS, LORAS, NEGATIVE, STYLE_TAGS, STYLE_TAGS_END, TIME_OF_DAY,
+    BUILDINGS, CHARACTERS, DEFAULT_LOOK, GROUP_CHARACTERS, LOOKS, LORAS, NEGATIVE, STYLE_TAGS, STYLE_TAGS_END, TIME_OF_DAY,
 )
 
 MODEL = "stabilityai/stable-diffusion-xl-base-1.0"
@@ -52,16 +52,18 @@ def cast_line(shot: dict) -> str:
 
 
 def prompt_for(shot: dict, look: str = "base") -> str:
-    """Trigger words, time of day, short style words, the scene, how many characters,
-    their looks, a few more style words. The long STYLE text is left out: in SDXL it
+    """Trigger words, time of day, the scene, how many characters, short style words,
+    Korean buildings if any, the character looks, a few more style words. The long STYLE text is left out: in SDXL it
     drowned the scene (no snow, no tiger in the 2nd test)."""
     looks = " ".join(f"{c}: {english(CHARACTERS[c])}." for c in shot["characters"] if c in CHARACTERS)
     triggers = ", ".join(LORAS[name][2] for name in LOOKS[look])
     when = time_of_day(shot)
     lead = ", ".join(x for x in (triggers, TIME_OF_DAY[when][0] if when else "") if x)
     count = cast_line(shot)
-    return clean(f"{lead + ', ' if lead else ''}{STYLE_TAGS}. {shot['picture']}. "
-                 f"{count + '. ' if count else ''}{looks} {STYLE_TAGS_END}")
+    buildings = BUILDINGS[1] + ". " if re.search(rf"\b({BUILDINGS[0]})\b", shot["picture"].lower()) else ""
+    # The scene (what happens, the pose) comes before the style words: it weighs more there.
+    return clean(f"{lead + ', ' if lead else ''}{shot['picture']}. {count + '. ' if count else ''}"
+                 f"{STYLE_TAGS}. {buildings}{looks} {STYLE_TAGS_END}")
 
 
 def negative_for(shot: dict, base: str) -> str:
