@@ -41,6 +41,9 @@ jobs:
           FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
           # Not a secret: which story file a manual run reads (empty on the schedule).
           STORY_SCRIPT: ${{ inputs.story }}
+          # Not a secret: the branch this run was started from. Kaggle clones it,
+          # so a story branch can be recorded without merging into main first.
+          STORY_BRANCH: ${{ github.ref_name }}
         run: python3 scripts/write_kaggle_secrets.py
 
       - name: Push and run the Kaggle kernel

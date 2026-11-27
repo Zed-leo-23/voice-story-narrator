@@ -25,6 +25,7 @@ OPTIONAL_SECRETS = {
     "FIREBASE_SITE_ID",
     "FIREBASE_SERVICE_ACCOUNT_JSON",
     "STORY_SCRIPT",
+    "STORY_BRANCH",
 }
 
 SECRET_ENV_MAPPING = {
@@ -48,6 +49,8 @@ SECRET_ENV_MAPPING = {
     "FIREBASE_SERVICE_ACCOUNT_JSON": os.environ.get("FIREBASE_SERVICE_ACCOUNT_JSON", ""),
     # Not a secret: a manual run can name a story file to read instead of the news.
     "STORY_SCRIPT": os.environ.get("STORY_SCRIPT", ""),
+    # Not a secret: which branch the kernel clones (the run's own branch).
+    "STORY_BRANCH": os.environ.get("STORY_BRANCH", ""),
 }
 
 KERNEL_SCRIPT = os.path.join(

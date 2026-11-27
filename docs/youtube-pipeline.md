@@ -46,6 +46,9 @@ gh api -X POST repos/Zed-leo-23/voice-story-narrator/actions/workflows/daily-kag
   -f ref=main -f 'inputs[story]=samani.txt,bird-talk.txt'
 ```
 
+- **main에 합치지 않고 녹음하기**: 새 대본을 따로 브랜치(예: `story/folktales-2`)에 올리고
+  `-f ref=<그 브랜치>` 로 실행하면, Kaggle이 그 브랜치를 클론해서 녹음한다.
+  매일 아침 뉴스(스케줄 실행)는 계속 main을 쓴다. 다 확인한 대본만 나중에 main에 합치면 된다.
 - 실행 확인: Kaggle이 실제로 시작하면 `Update topic history` 커밋이 생긴다.
 - 실패하면 `automation_state/run_logs/last_error.txt` 에 오류와 로그 끝부분이 저장된다
   (`Run error: …` 커밋).
