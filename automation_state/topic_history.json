@@ -2,13 +2,6 @@
   {
     "date": "2026-11-21",
     "source": "보내준 스크립트",
-    "title": "이야기 주머니 이야기",
-    "link": "script:2026-11-21",
-    "topic": "이야기 주머니"
-  },
-  {
-    "date": "2026-11-21",
-    "source": "보내준 스크립트",
     "title": "삼년고개 이야기",
     "link": "script:2026-11-21",
     "topic": "삼년고개"
@@ -208,5 +201,12 @@
     "title": "A new flying drone uses touch to perch like a bird",
     "link": "https://www.snexplores.org/article/flying-drone-perch-like-bird",
     "topic": "드론"
+  },
+  {
+    "date": "2026-11-28",
+    "source": "보내준 스크립트",
+    "title": "좁쌀 한 톨로 장가든 총각 이야기",
+    "link": "script:2026-11-28",
+    "topic": "좁쌀 한 톨로 장가든 총각"
   }
 ]
