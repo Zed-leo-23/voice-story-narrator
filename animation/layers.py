@@ -57,14 +57,15 @@ STORIES = {
                                          "question mark feeling"),
             "tiger_scared": (["tiger"], "sitting facing left, shaking and trembling, very wide scared eyes, tail tucked, "
                                         "teeth chattering"),
-            "tiger_ridden": (["tiger", "cow_thief"], "the tiger leaping and running fast to the right with the man "
-                                                     "sitting on its back hugging its neck tightly, both screaming"),
+            "tiger_ridden": (["tiger", "cow_thief"], "side view, a man in hanbok riding on the back of a running tiger like "
+                                                     "a horse, hugging the tiger's neck, the tiger galloping to the right, "
+                                                     "both screaming"),
             "tiger_peek": (["tiger"], "lying down facing left, peeking, sighing with relief, a little shiver"),
             "tiger_wave": (["tiger"], "sitting facing the viewer, waving one front paw, sheepish embarrassed smile"),
             "thief_climb": (["cow_thief"], "reaching forward with both hands and lifting one leg to climb onto something "
                                            "in the dark, sly whisper face"),
-            "thief_hang": (["cow_thief"], "hanging from above with both arms stretched up, legs dangling, "
-                                          "relieved and scared"),
+            "thief_hang": (["cow_thief"], "one man alone hanging in the air holding a stick above his head with both "
+                                          "hands, legs dangling, relieved and scared"),
             "mother_offer": (["mother"], "kneeling and holding out a dried persimmon with one hand, gentle smile, "
                                          "side view facing left"),
             "baby_chew": (["baby"], "sitting and happily chewing a dried persimmon with both hands, eyes closed in joy"),

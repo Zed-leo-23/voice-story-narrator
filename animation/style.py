@@ -32,6 +32,16 @@ SPRITE_TAGS = (
     "simple Korean webtoon cartoon, thick bold black outlines, flat solid colors, no shading"
 )
 
+# How characters are named in SDXL prompts when the key misleads it
+# ("cow_thief" drew horns and a cow hat).
+PROMPT_NAMES = {"cow_thief": "Joseon thief man", "mother": "Joseon mother", "baby": "Korean baby"}
+
+# Kept out of every human sprite: modern clothes and Japanese/Chinese dress.
+HUMAN_NEGATIVE = (
+    "hoodie, jacket with zipper, baseball cap, sneakers, jeans, t-shirt, modern clothes, horns, horned hat, helmet, "
+    "kimono, yukata, obi belt, kimono collar, Japanese hairstyle, Chinese hanfu, two people"
+)
+
 # Backgrounds (render_layered.py): the place only, Korean village things, no people.
 KOREAN_PLACE = (
     "Joseon dynasty Korean countryside: round golden straw thatched choga houses, low stone walls, "
@@ -95,10 +105,12 @@ CHARACTERS = {
     "tiger": "호랑이: big orange Korean tiger with black stripes, round comical face, small round eyes, "
              "funny rather than scary",
     "baby": "아기: chubby Korean baby with rosy cheeks in a little saekdong rainbow-striped hanbok",
-    "mother": "엄마: young Korean mother in a pale yellow jeogori with a white otgoreum ribbon and a long full pink chima skirt, "
-              "black hair in a low bun with a binyeo hairpin",
-    "cow_thief": "소도둑: clumsy round-faced Korean man in a patched brown jeogori and baggy grey baji trousers, "
-                 "white headband, a cloth bundle tied on his back, wide surprised dot eyes",
+    "mother": "엄마: young Korean mother in hanbok: short pale yellow jeogori jacket with a white otgoreum bow, "
+              "a high-waisted full bell-shaped pink chima skirt from the chest to the floor, black hair in a low bun "
+              "with a binyeo hairpin",
+    "cow_thief": "소도둑: clumsy round-faced Joseon man in old Korean hanbok: patched brown jeogori jacket, baggy grey "
+                 "baji trousers tied at the ankles, straw sandals, a white cloth headband, black topknot, "
+                 "a cloth bundle tied on his back, wide surprised dot eyes",
 }
 
 

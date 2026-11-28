@@ -25,7 +25,7 @@ sys.path.insert(0, HERE)
 from layers import STORIES  # noqa: E402
 from render_cuts import FINAL, MODEL, clean, contact_sheet, embeddings, english, load_pipe, use_look  # noqa: E402
 from style import (  # noqa: E402
-    BUILDINGS, CHARACTERS, DEFAULT_LOOK, KOREAN_PLACE, LOOKS, LORAS, NEGATIVE, SPRITE_TAGS, STYLE_TAGS, TIME_OF_DAY,
+    BUILDINGS, CHARACTERS, DEFAULT_LOOK, HUMAN_NEGATIVE, KOREAN_PLACE, PROMPT_NAMES, LOOKS, LORAS, NEGATIVE, SPRITE_TAGS, STYLE_TAGS, TIME_OF_DAY,
 )
 
 BG_SIZE = (1344, 768)
@@ -34,7 +34,7 @@ IP_ADAPTER = ("h94/IP-Adapter", "sdxl_models", "ip-adapter_sdxl.safetensors")
 REF_DIR = os.path.join(HERE, "reference")
 SHEET_CANDIDATES = 4
 SHEET_POSE = "standing full body, front view, arms relaxed, neutral friendly expression, character design"
-IP_SCALE = 0.55  # how strongly a sprite copies its character's reference picture
+IP_SCALE = 0.4  # how strongly a sprite copies its character's reference picture
 NIGHT_TINT = (0.80, 0.84, 1.0)  # sprites drawn in white light, darkened a little for night shots
 
 
@@ -48,9 +48,12 @@ def triggers(look: str) -> str:
 
 def background_prompt(time: str | None, place: str, look: str) -> tuple[str, str]:
     lead = ", ".join(x for x in (triggers(look), TIME_OF_DAY[time][0] if time else "") if x)
-    buildings = BUILDINGS[1] + ". " if re.search(rf"\b({BUILDINGS[0]})\b", place.lower()) else ""
-    prompt = clean(f"{lead}, {place}. empty scene, no characters. {STYLE_TAGS}. {buildings}{KOREAN_PLACE}. "
-                   f"limited soft color palette, minimal details, wide 16:9 background")
+    has_buildings = re.search(rf"\b({BUILDINGS[0]})\b", place.lower())
+    # Village words only where the place has buildings: on every background they turned
+    # the cave, the cow shed and the mountain path into the same village.
+    village = f"{BUILDINGS[1]}. {KOREAN_PLACE}. " if has_buildings else "Korean mountains and pine trees. "
+    prompt = clean(f"{lead}, {place}. empty scene, no characters. {STYLE_TAGS}. {village}"
+                   f"the main subject is: {place}. limited soft color palette, minimal details, wide 16:9 background")
     # Silhouettes on a paper window are part of some backgrounds; otherwise keep everyone out.
     keep_out = "tiger, animal, cow, character" + ("" if re.search(r"silhouette|shadow", place) else
                                                  ", people, person, man, woman, child")
@@ -58,14 +61,19 @@ def background_prompt(time: str | None, place: str, look: str) -> tuple[str, str
     return prompt, clean(negative)
 
 
+def name(c: str) -> str:
+    return PROMPT_NAMES.get(c, c.replace("_", " "))
+
+
 def sprite_prompt(chars: list[str], pose: str, look: str) -> tuple[str, str]:
-    looks = " ".join(f"{c.replace('_', ' ')}: {english(CHARACTERS[c])}." for c in chars)
-    count = (f"only one {chars[0].replace('_', ' ')}" if len(chars) == 1
-             else "exactly these: " + " and ".join(c.replace("_", " ") for c in chars))
+    looks = " ".join(f"{name(c)}: {english(CHARACTERS[c])}." for c in chars)
+    count = (f"only one {name(chars[0])}" if len(chars) == 1
+             else "exactly these: " + " and ".join(name(c) for c in chars))
     prompt = clean(f"{triggers(look)}, {count}, {pose}. {looks} {SPRITE_TAGS}. big round heads, small dot eyes, "
                    f"clear funny expressions, clear pose, limited soft color palette, minimal details, for young children")
+    humans = [c for c in chars if c in PROMPT_NAMES and c != "baby"] or [c for c in chars if c == "baby"]
     negative = clean(f"{NEGATIVE}, background, scenery, landscape, ground, floor, grass, snow, trees, house, "
-                     f"room, frame, border, cast shadow, cropped, cut off")
+                     f"room, frame, border, cast shadow, cropped, cut off" + (f", {HUMAN_NEGATIVE}" if humans else ""))
     return prompt, negative
 
 
