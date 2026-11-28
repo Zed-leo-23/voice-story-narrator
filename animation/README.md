@@ -120,6 +120,11 @@ Gemini 대신 Kaggle 무료 GPU에서 SDXL로 샷 그림을 그린다. API 요�
 그래서 따로 그려서 합친다.
 
 1. **배경**: 인물 없이 장소만 그린다 (`layers.py` 의 `backgrounds`). 여러 컷이 같은 배경을 다시 쓴다.
+0. **사용자 캐릭터 시트 (2026-11-28)**: `reference/sheets/` 에 사용자가 만든 시트가 있다
+   (호랑이 대호, 도둑 칠성, 엄마 춘심, 아기 복동, 소 누렁이, 곶감 달콤이, 초가집). 그림은 "아주 단순하게"
+   그리기로 해서, 시트는 **디자인(옷·색·머리 모양)만** 따르고 `style.py` 의 `CHARACTERS` 에 글로 옮겼다.
+   세밀한 시트 그림을 IP-Adapter 기준 그림으로 바로 쓰면 질감·사실감까지 따라오므로 `reference/` 바로 아래에 두지 않는다.
+   잘라 둔 전신 그림은 `reference/sheets/crops/`.
 0. **캐릭터 시트 먼저**: Actions에서 `mode` 를 `sheets` 로 실행하면 캐릭터마다 전신 후보 4개를 그린다.
    마음에 드는 것을 `animation/reference/<캐릭터키>.png` 로 저장해 커밋한다 (예: `reference/tiger.png`).
 2. **캐릭터**: 흰 배경에 한 동작씩 그린다 (`sprites`). `reference/` 의 고른 그림을 IP-Adapter로 참고해서

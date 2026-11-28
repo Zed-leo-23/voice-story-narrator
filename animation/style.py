@@ -10,7 +10,7 @@ Change a look here only, then rebuild, so every story stays the same.
 # A way of drawing, not any one channel: never copy existing characters.
 # (The earlier 1990s cel + gouache look is kept as LOOKS["gouache_90s"].)
 STYLE = (
-    "Simple Korean webtoon-style cartoon for a YouTube folktale, "
+    "Very simple cute Korean webtoon-style cartoon for a YouTube folktale, few clean lines, simple round shapes, "
     "thick bold black outlines, flat solid colors with no shading and no gradients, "
     "a small limited palette of soft muted colors, "
     "big round heads, small round dot eyes, simple noses and mouths, clear funny expressions, "
@@ -22,14 +22,14 @@ STYLE = (
 
 # The style in a few words, put first in SDXL prompts (render_cuts.py).
 STYLE_TAGS = (
-    "simple Korean webtoon cartoon of a Korean folktale (jeollae donghwa), thick bold black outlines, "
-    "flat solid colors, no shading, plain simple background, Joseon dynasty Korean countryside"
+    "very simple cute cartoon of a Korean folktale, few clean thick black lines, simple round shapes, "
+    "flat solid colors, no shading, no texture, plain simple background, Joseon dynasty Korea"
 )
 
 # Sprites (render_layered.py): one character on plain white, to be cut out.
 SPRITE_TAGS = (
     "full body character, whole figure visible, isolated on a plain pure white background, no background, "
-    "simple Korean webtoon cartoon, thick bold black outlines, flat solid colors, no shading"
+    "very simple cute cartoon, few clean thick black lines, simple round shapes, flat solid colors, no shading"
 )
 
 # How characters are named in SDXL prompts when the key misleads it
@@ -63,6 +63,7 @@ STYLE_TAGS_END = (
 NEGATIVE = (
     "text, letters, watermark, logo, signature, speech bubble, modern anime, big sparkly anime eyes, "
     "glossy 3D render, CGI, photo, realistic, realistic animal, detailed fur, painterly, brush strokes, "
+    "detailed, intricate, hatching, crosshatching, many lines, wrinkles, paper texture, realistic proportions, "
     "watercolor texture, gradient shading, soft shading, detailed background, busy background, many colors, "
     "western house, wooden cabin, chimney, European village, glass windows, shingled roof, two-story house, "
     "Japanese kimono, obi belt, geta, Japanese house, tatami, torii, Chinese clothes, qipao, Chinese pagoda, "
@@ -102,15 +103,15 @@ CHARACTERS = {
     "thief": "도둑: sneaky skinny man, thin curly mustache, black clothes, black cloth tied over his head, shifty eyes",
     "millstone": "맷돌: small grey round stone hand-mill with a wooden handle, a faint golden glow",
     # 호랑이와 곶감
-    "tiger": "호랑이: big orange Korean tiger with black stripes, round comical face, small round eyes, "
+    "tiger": "호랑이 대호: big orange Korean tiger with black stripes, white belly and muzzle, round comical face, small round eyes, "
              "funny rather than scary",
-    "baby": "아기: chubby Korean baby with rosy cheeks in a little saekdong rainbow-striped hanbok",
-    "mother": "엄마: young Korean mother in hanbok: short pale yellow jeogori jacket with a white otgoreum bow, "
-              "a high-waisted full bell-shaped pink chima skirt from the chest to the floor, black hair in a low bun "
-              "with a binyeo hairpin",
-    "cow_thief": "소도둑: clumsy round-faced Joseon man in old Korean hanbok: patched brown jeogori jacket, baggy grey "
-                 "baji trousers tied at the ankles, straw sandals, a white cloth headband, black topknot, "
-                 "a cloth bundle tied on his back, wide surprised dot eyes",
+    "baby": "아기 복동: chubby Korean baby boy, shaved head with one small tuft of hair on top, round face, "
+            "rosy cheeks, plain white baenaet jeogori",
+    "mother": "엄마 춘심: kind Korean village woman, rosy cheeks, black hair in a low bun, ochre yellow jeogori "
+              "with a brown otgoreum ribbon, long navy blue chima skirt with a few square patches, straw shoes",
+    "cow_thief": "소도둑 칠성: skinny sly Joseon man, black topknot, a tattered white headband, short stubble, "
+                 "dark grey patched ragged hanbok jacket and baggy trousers tied with a rope belt, white leg wraps, "
+                 "straw sandals, a big brown cloth sack",
 }
 
 
