@@ -113,6 +113,7 @@ CHARACTERS = {
             "rosy cheeks, plain white baenaet jeogori",
     "mother": "엄마 춘심: kind Korean village mother, black hair parted in the middle in a low bun, ochre yellow "
               "jeogori with a brown otgoreum ribbon, long navy blue chima skirt with a square patch, straw shoes",
+    "cow": "소 누렁이: gentle Korean native hanu cow, yellow-brown, short curved horns, a nose ring, calm kind eyes",
     "cow_thief": "소도둑 칠성: sly funny Joseon man, black topknot on top of the head, a white headband, "
                  "a few stubble dots on the chin, dark grey hanbok jacket and baggy trousers with square patches, "
                  "rope belt, straw sandals, a big brown cloth sack over one shoulder",
