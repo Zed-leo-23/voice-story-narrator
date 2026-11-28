@@ -33,6 +33,9 @@ SPRITE_SIZE = (1024, 1024)
 IP_ADAPTER = ("h94/IP-Adapter", "sdxl_models", "ip-adapter_sdxl.safetensors")
 REF_DIR = os.path.join(HERE, "reference")
 SHEET_CANDIDATES = 4
+# Candidates 3 and 4 also look at reference/style.png (the chosen drawing style) at this strength,
+# low enough to take the line and color style without copying that character's face.
+STYLE_REF_SCALE = 0.3
 SHEET_POSE = "standing full body, front view, arms relaxed, neutral friendly expression, character design"
 IP_SCALE = 0.4  # how strongly a sprite copies its character's reference picture
 NIGHT_TINT = (0.80, 0.84, 1.0)  # sprites drawn in white light, darkened a little for night shots
@@ -148,6 +151,8 @@ def main() -> None:
     ap.add_argument("--steps", type=int, default=30)
     ap.add_argument("--guidance", type=float, default=6.0)
     ap.add_argument("--sheets", action="store_true", help="draw character sheet candidates only")
+    ap.add_argument("--characters", default=os.environ.get("ANIMATION_CHARACTERS", ""),
+                    help="sheets for these characters only (default: those without reference/<character>.png)")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
     look = args.look.split(",")[0].strip()
@@ -169,7 +174,9 @@ def main() -> None:
 
     cast = list(dict.fromkeys(c for chars, _ in plan["sprites"].values() for c in chars))
     if args.sheets:
-        return draw_sheets(args, plan, cast, look)
+        chosen = [c.strip() for c in args.characters.split(",") if c.strip()]
+        todo = chosen or [c for c in cast if not chosen_reference(c)] or cast
+        return draw_sheets(args, plan, todo, look)
 
     prompts = {}
     for b in sorted(bgs):
@@ -266,6 +273,15 @@ def draw_sheets(args, plan, cast: list[str], look: str) -> None:
     os.makedirs(out, exist_ok=True)
     pipe = load_pipe(args.model)
     use_look(pipe, look)
+    style_path = os.path.join(REF_DIR, "style.png")
+    style_ref = Image.open(style_path).convert("RGB") if os.path.exists(style_path) else None
+    if style_ref is not None:
+        try:
+            pipe.load_ip_adapter(IP_ADAPTER[0], subfolder=IP_ADAPTER[1], weight_name=IP_ADAPTER[2])
+        except Exception as e:  # noqa: BLE001
+            print(f"note: IP-Adapter unavailable ({e!r}); no style reference")
+            style_ref = None
+    blank = Image.new("RGB", (224, 224), "white")
     cell, top = 400, 46
     grid = Image.new("RGB", (cell * SHEET_CANDIDATES, (cell + top) * len(cast)), "white")
     d = ImageDraw.Draw(grid)
@@ -279,14 +295,19 @@ def draw_sheets(args, plan, cast: list[str], look: str) -> None:
     for row, c in enumerate(cast):
         prompt, negative = prompts[c]
         for i in range(1, SHEET_CANDIDATES + 1):
-            print(f"sheet {c} {i}/{SHEET_CANDIDATES}", flush=True)
-            image = pipe(**embeddings(pipe, prompt, negative), width=SPRITE_SIZE[0], height=SPRITE_SIZE[1],
+            with_style = style_ref is not None and i > SHEET_CANDIDATES // 2
+            extra = {}
+            if style_ref is not None:
+                pipe.set_ip_adapter_scale(STYLE_REF_SCALE if with_style else 0.0)
+                extra["ip_adapter_image"] = style_ref if with_style else blank
+            print(f"sheet {c} {i}/{SHEET_CANDIDATES}{' (style reference)' if with_style else ''}", flush=True)
+            image = pipe(**embeddings(pipe, prompt, negative), **extra, width=SPRITE_SIZE[0], height=SPRITE_SIZE[1],
                          num_inference_steps=args.steps, guidance_scale=args.guidance,
                          generator=torch.Generator("cuda").manual_seed(seed(f"sheet_{c}") + i)).images[0]
             image.save(os.path.join(out, f"{c}_{i}.png"))
             x, y = (i - 1) * cell, row * (cell + top)
             grid.paste(image.resize((cell, cell)), (x, y + top))
-            d.text((x + 10, y + 8), f"{c}  #{i}", fill="black", font=font)
+            d.text((x + 10, y + 8), f"{c}  #{i}{'  (style ref)' if with_style else ''}", fill="black", font=font)
     grid.save(os.path.join(out, "..", "contact_sheet.jpg"), quality=88)
     json.dump({"look": look, "pose": SHEET_POSE, "prompts": {c: p for c, (p, _) in prompts.items()}},
               open(os.path.join(out, "prompts.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=2)

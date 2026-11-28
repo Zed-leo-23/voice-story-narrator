@@ -31,6 +31,7 @@ OPTIONAL_SECRETS = {
     "ANIMATION_SHOTS",
     "ANIMATION_LOOKS",
     "ANIMATION_MODE",
+    "ANIMATION_CHARACTERS",
 }
 
 SECRET_ENV_MAPPING = {
@@ -61,6 +62,7 @@ SECRET_ENV_MAPPING = {
     "ANIMATION_SHOTS": os.environ.get("ANIMATION_SHOTS", ""),
     "ANIMATION_LOOKS": os.environ.get("ANIMATION_LOOKS", ""),
     "ANIMATION_MODE": os.environ.get("ANIMATION_MODE", ""),
+    "ANIMATION_CHARACTERS": os.environ.get("ANIMATION_CHARACTERS", ""),
 }
 
 KERNEL_SCRIPT = os.path.join(

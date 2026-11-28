@@ -27,9 +27,13 @@ STYLE_TAGS = (
 )
 
 # Sprites (render_layered.py): one character on plain white, to be cut out.
+# Chosen 2026-11-28 from the sheet candidates (baby #3): tiny chibi figures with a big round
+# head, a small soft body, dot eyes, thin brown outlines and pale flat colors.
 SPRITE_TAGS = (
     "full body character, whole figure visible, isolated on a plain pure white background, no background, "
-    "very simple cute cartoon, few clean thick black lines, simple round shapes, flat solid colors, no shading"
+    "very simple cute chibi character, big round head, small soft round body, short arms and legs, "
+    "small black dot eyes, pink blush cheeks, tiny mouth, thin clean dark brown outline, pale soft flat colors, "
+    "no shading, minimal details"
 )
 
 # How characters are named in SDXL prompts when the key misleads it
@@ -107,11 +111,11 @@ CHARACTERS = {
              "funny rather than scary",
     "baby": "아기 복동: chubby Korean baby boy, shaved head with one small tuft of hair on top, round face, "
             "rosy cheeks, plain white baenaet jeogori",
-    "mother": "엄마 춘심: kind Korean village woman, rosy cheeks, black hair in a low bun, ochre yellow jeogori "
-              "with a brown otgoreum ribbon, long navy blue chima skirt with a few square patches, straw shoes",
-    "cow_thief": "소도둑 칠성: skinny sly Joseon man, black topknot, a tattered white headband, short stubble, "
-                 "dark grey patched ragged hanbok jacket and baggy trousers tied with a rope belt, white leg wraps, "
-                 "straw sandals, a big brown cloth sack",
+    "mother": "엄마 춘심: kind Korean village mother, black hair parted in the middle in a low bun, ochre yellow "
+              "jeogori with a brown otgoreum ribbon, long navy blue chima skirt with a square patch, straw shoes",
+    "cow_thief": "소도둑 칠성: sly funny Joseon man, black topknot on top of the head, a white headband, "
+                 "a few stubble dots on the chin, dark grey hanbok jacket and baggy trousers with square patches, "
+                 "rope belt, straw sandals, a big brown cloth sack over one shoulder",
 }
 
 

@@ -35,6 +35,7 @@ def main() -> None:
     # sheets: character sheet candidates only, to choose each character's look.
     # single: one SDXL picture per shot (render_cuts.py).
     mode = os.environ.get("ANIMATION_MODE", "").strip() or "layered"
+    characters = os.environ.get("ANIMATION_CHARACTERS", "").strip()
 
     if os.path.isdir(REPO_DIR):
         shutil.rmtree(REPO_DIR)
@@ -51,7 +52,7 @@ def main() -> None:
     out = f"/kaggle/working/out/{story}"
     if mode in ("layered", "sheets"):
         sh([sys.executable, f"{REPO_DIR}/animation/render_layered.py", story, "--out", out,
-            *(["--sheets"] if mode == "sheets" else []),
+            *(["--sheets"] if mode == "sheets" else []), *(["--characters", characters] if characters else []),
             *(["--shots", shots] if shots else []), *(["--look", looks] if looks else [])])
     else:
         sh([sys.executable, f"{REPO_DIR}/animation/render_cuts.py", story, "--out", out,

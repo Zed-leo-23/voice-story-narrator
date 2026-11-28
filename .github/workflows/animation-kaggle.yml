@@ -20,6 +20,10 @@ on:
         description: "sheets = character sheet candidates (do first); layered = backgrounds and characters drawn apart, then put together; single = one picture per shot"
         required: false
         default: "layered"
+      characters:
+        description: "sheets mode only: these characters, e.g. mother,cow_thief (empty = those without a chosen reference)"
+        required: false
+        default: ""
       looks:
         description: "Style LoRA look(s) from animation/style.py LOOKS, e.g. gouache or base,gouache,gouache_90s to compare (empty = default)"
         required: false
@@ -48,9 +52,10 @@ jobs:
           ANIMATION_SHOTS: ${{ inputs.shots }}
           ANIMATION_LOOKS: ${{ inputs.looks }}
           ANIMATION_MODE: ${{ inputs.mode }}
+          ANIMATION_CHARACTERS: ${{ inputs.characters }}
         run: >
           python3 scripts/write_kaggle_secrets.py kaggle_animation/story-animation-cuts.py
-          GITHUB_TOKEN STORY_BRANCH ANIMATION_STORY ANIMATION_SHOTS ANIMATION_LOOKS ANIMATION_MODE
+          GITHUB_TOKEN STORY_BRANCH ANIMATION_STORY ANIMATION_SHOTS ANIMATION_LOOKS ANIMATION_MODE ANIMATION_CHARACTERS
 
       - name: Push and run the Kaggle kernel
         env:
