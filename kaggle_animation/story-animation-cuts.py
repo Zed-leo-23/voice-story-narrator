@@ -64,8 +64,8 @@ def main() -> None:
     sys.path.insert(0, f"{REPO_DIR}/scripts")
     from github_release import upload_release_asset  # noqa: E402
 
-    files = [archive, f"{out}/contact_sheet.jpg", f"{out}/prompts.json",
-             *glob.glob(f"{out}/layout.json"), *sorted(glob.glob(f"{out}/shot_*.png")),
+    files = [archive, f"{out}/contact_sheet.jpg",
+             *glob.glob(f"{out}/prompts.json"), *glob.glob(f"{out}/layout.json"), *sorted(glob.glob(f"{out}/shot_*.png")),
              *sorted(glob.glob(f"{out}/layers/sprite_*.png")), *sorted(glob.glob(f"{out}/sheets/*.png"))]
     for path in files:
         link = upload_release_asset(REPO, f"cuts-{story}", f"Animation cuts: {story}", path, token,

@@ -271,8 +271,11 @@ def draw_sheets(args, plan, cast: list[str], look: str) -> None:
     d = ImageDraw.Draw(grid)
     try:
         font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 26)
-    except OSError:
-        font = ImageFont.load_default()
+    except OSError:  # Kaggle has no DejaVu; Pillow's own font can be sized since 10.1
+        try:
+            font = ImageFont.load_default(size=30)
+        except TypeError:
+            font = ImageFont.load_default()
     for row, c in enumerate(cast):
         prompt, negative = prompts[c]
         for i in range(1, SHEET_CANDIDATES + 1):
