@@ -66,6 +66,7 @@ STORIES = {
                                            "in the dark, sly whisper face"),
             "thief_hang": (["cow_thief"], "one man alone hanging in the air holding a stick above his head with both "
                                           "hands, legs dangling, relieved and scared"),
+            "cow_sleep": (["cow"], "lying down on its belly asleep, eyes closed, peaceful, side view facing right"),
             "mother_offer": (["mother"], "kneeling and holding out a dried persimmon with one hand, gentle smile, "
                                          "side view facing left"),
             "baby_chew": (["baby"], "sitting and happily chewing a dried persimmon with both hands, eyes closed in joy"),
@@ -78,7 +79,8 @@ STORIES = {
             5: ("window_crying", [("tiger_scratch", 0.74, 0.96, 0.50, False)]),
             6: ("room", [("mother_offer", 0.62, 0.95, 0.70, False), ("baby_chew", 0.32, 0.95, 0.40, False)]),
             7: ("monster_wall", [("tiger_scared", 0.66, 0.96, 0.48, False)]),
-            8: ("cow_shed", [("tiger_listen", 0.40, 0.95, 0.40, True), ("thief_climb", 0.72, 0.95, 0.55, False)]),
+            8: ("cow_shed", [("cow_sleep", 0.14, 0.95, 0.28, False), ("tiger_listen", 0.42, 0.95, 0.40, True),
+                             ("thief_climb", 0.74, 0.95, 0.55, False)]),
             9: ("mountain_path", [("tiger_ridden", 0.50, 0.95, 0.62, False)]),
             10: ("forest_persimmon", [("tiger_ridden", 0.55, 0.96, 0.66, False)]),
             11: ("tree_dawn", [("thief_hang", 0.32, 0.62, 0.42, False), ("tiger_run_scared", 0.72, 0.96, 0.32, False)]),
